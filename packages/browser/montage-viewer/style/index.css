@@ -4,7 +4,18 @@
     font-size: 12px;
     position: relative;
     min-height: 100%;
-    min-width: 1260px;
+
+    /* See below for why this is commented out. */
+    /* min-width: 1260px; */
+}
+
+/* Don't make the display too small.
+Lack of shadowdom in Edge seems to cause this style to propogate to all children, messing up columns,
+so don't set it there. */
+@supports not (-ms-ime-align: auto) {
+    .montage-viewer {
+        min-width: 1260px;
+    }
 }
 
 .montage-viewer-header,
