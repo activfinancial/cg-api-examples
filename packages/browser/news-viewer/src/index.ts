@@ -29,6 +29,8 @@ import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
 // TODO just using the polyfill everywhere isn't working in Openfin.
 import { TextDecoder as TextDecoderPF } from "text-encoding";
 
+import { detect as detectBrowser } from "detect-browser";
+
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // TODO surely we can automagically generate this (or vice-versa) from the props static below? Too much repetition.
@@ -56,8 +58,9 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
     private headlineRequestHandle: News.RequestHandle | null = null;
     private bodyRequestHandle: News.RequestHandle | null = null;
 
-    private readonly storyBodyDecoder: TextDecoder;
-    private readonly storyBodyParser: DOMParser;
+    // TODO just using the polyfill isn't working in Openfin, so runtime check here.
+    private readonly storyBodyDecoder = typeof TextDecoder === "undefined" ? new TextDecoderPF("utf-8") : new TextDecoder("utf-8");
+    private readonly storyBodyParser = new DOMParser();
 
     private nextStorySymbol: string | null = null;
     private previousStorySymbol: string | null = null;
@@ -90,6 +93,13 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
         this.rootElement = document.createElement("div");
         this.rootElement.className = "activ-cg-api-webcomponent news-viewer";
         this.rootElement.innerHTML = `<style>${commonCss}${indexCss}</style>${indexHtml}`;
+
+        // HACK setting height in the CSS breaks Edge (see index.css).
+        const browserInfo = detectBrowser();
+        if (browserInfo != null && browserInfo.name === "edge") {
+            this.rootElement.style.height = "100%";
+        }
+
         (this.renderRoot as HTMLElement).appendChild(this.rootElement);
 
         this.status = this.rootElement.querySelector(".news-viewer-status") as HTMLDivElement;
@@ -129,10 +139,6 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
 
         const comtexLogoElement = this.rootElement.querySelector("#comtexLogo") as HTMLImageElement;
         comtexLogoElement.src = comtexLogo;
-
-        // TODO just using the polyfill isn't working in Openfin.
-        this.storyBodyDecoder = TextDecoder == null ? new TextDecoderPF("utf-8") : new TextDecoder("utf-8");
-        this.storyBodyParser = new DOMParser();
 
         addUnloadHandler(() => this.unsubscribe());
 

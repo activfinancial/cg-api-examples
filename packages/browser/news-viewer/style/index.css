@@ -3,10 +3,20 @@
     box-sizing: border-box;
     font-size: 12px;
     width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
     position: relative;
+    flex-direction: column;
+
+    /* See below for why this is commented out. */
+    /* display: flex; */
+}
+
+/* Don't set display: flex in Edge. All the CSS appears as text in the display! Can't find a reason yet.
+Similarly height: 100% causes issues in Edge as it propogates to all children (shadowdom not available). */
+@supports not (-ms-ime-align: auto) {
+    .news-viewer {
+        height: 100%;
+        display: flex;
+    }
 }
 
 .news-viewer * {
