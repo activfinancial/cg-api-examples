@@ -9,8 +9,17 @@
     font-size: 12px;
     position: relative;
     min-height: 100%;
-    display: flex;
     flex-direction: column;
+
+    /* See below for why this is commented out. */
+    /* display: flex; */
+}
+
+/* Don't set display: flex in Edge. All the CSS appears as text in the display! Can't find a reason yet. */
+@supports not (-ms-ime-align: auto) {
+    .time-series-chart {
+        display: flex;
+    }
 }
 
 .time-series-chart * {
