@@ -26,12 +26,15 @@
 </head>
 
 <body>
-	<time-series-chart symbol="MSFT."></time-series-chart>
-	<!-- <time-series-chart symbol="IBM."></time-series-chart> -->
+	<script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 	<script src="@activfinancial/cg-api/lib/index.js"></script>
 	<script src="./lib/index.js"></script>
+
+	<time-series-chart symbol="MSFT."></time-series-chart>
+	<!-- <time-series-chart symbol="IBM."></time-series-chart> -->
+
 	<script>
-		(() => {
+		window.addEventListener("WebComponentsReady", function() {
 			const clientPromise = activ.connect({
 				// userId: "USERNAME",
 				// password: "PASSWORD",
@@ -43,7 +46,7 @@
 			for (const chart of charts) {
 				chart.connect(clientPromise);
 			}
-		})();
+		});
 	</script>
 </body>
 

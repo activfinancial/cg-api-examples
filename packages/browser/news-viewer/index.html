@@ -27,12 +27,15 @@
 </head>
 
 <body>
-	<news-viewer query="*"></news-viewer>
-	<!-- <news-viewer query="symbol=IBM."></news-viewer> -->
+	<script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 	<script src="@activfinancial/cg-api/lib/index.js"></script>
 	<script src="./lib/index.js"></script>
+
+	<news-viewer query="*"></news-viewer>
+	<!-- <news-viewer query="symbol=IBM."></news-viewer> -->
+
 	<script>
-		(() => {
+		window.addEventListener("WebComponentsReady", function() {
 			const clientPromise = activ.connect({
 				// userId: "USERNAME",
 				// password: "PASSWORD",
@@ -44,7 +47,7 @@
 			for (const newsViewer of newsViewers) {
 				newsViewer.connect(clientPromise);
 			}
-		})();
+		});
 	</script>
 </body>
 

@@ -25,11 +25,14 @@
 </head>
 
 <body>
-	<tpi-viewer symbol="AMPAGAMKR5%TPI"></tpi-viewer>
+	<script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 	<script src="@activfinancial/cg-api/lib/index.js"></script>
 	<script src="./lib/index.js"></script>
+
+	<tpi-viewer symbol="AMPAGAMKR5%TPI"></tpi-viewer>
+
 	<script>
-		(() => {
+		window.addEventListener("WebComponentsReady", function() {
 			const clientPromise = activ.connect({
 				// userId: "USERNAME",
 				// password: "PASSWORD",
@@ -41,7 +44,7 @@
 			for (const tpiViewer of tpiViewers) {
 				tpiViewer.connect(clientPromise);
 			}
-		})();
+		});
 	</script>
 </body>
 

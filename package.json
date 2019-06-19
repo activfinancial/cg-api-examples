@@ -30,6 +30,9 @@
         "yarn:use-links": "yarn link @activfinancial/cg-api",
         "yarn:disuse-links": "yarn link @activfinancial/cg-api"
     },
+    "dependencies": {
+        "@webcomponents/webcomponentsjs": "^2.2.10"
+    },
     "devDependencies": {
         "@commitlint/cli": "^8.0.0",
         "@commitlint/config-conventional": "^8.0.0",

@@ -26,12 +26,15 @@
 </head>
 
 <body>
-	<option-chain symbol="AAPL." relationship-id="nbboOption"></option-chain>
-	<!-- <option-chain symbol="AAPL." conflation-type="quote" conflation-interval="100"></option-chain> -->
+	<script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 	<script src="@activfinancial/cg-api/lib/index.js"></script>
 	<script src="./lib/index.js"></script>
+
+	<option-chain symbol="AAPL." relationship-id="nbboOption"></option-chain>
+	<!-- <option-chain symbol="AAPL." conflation-type="quote" conflation-interval="100"></option-chain> -->
+
 	<script>
-		(() => {
+		window.addEventListener("WebComponentsReady", function() {
 			const clientPromise = activ.connect({
 				// userId: "USERNAME",
 				// password: "PASSWORD",
@@ -43,7 +46,7 @@
 			for (const optionChain of optionChains) {
 				optionChain.connect(clientPromise);
 			}
-		})();
+		});
 	</script>
 </body>
 

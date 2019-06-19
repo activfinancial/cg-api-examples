@@ -26,11 +26,14 @@
 </head>
 
 <body>
-	<montage-viewer symbol-list="A*;B*" table-number="usListing"></montage-viewer>
+	<script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 	<script src="@activfinancial/cg-api/lib/index.js"></script>
 	<script src="./lib/index.js"></script>
+
+	<montage-viewer symbol-list="A*;B*" table-number="usListing"></montage-viewer>
+
 	<script>
-		(() => {
+		window.addEventListener("WebComponentsReady", function() {
 			const clientPromise = activ.connect({
 				// userId: "USERNAME",
 				// password: "PASSWORD",
@@ -42,7 +45,7 @@
 			for (const montageViewer of montageViewers) {
 				montageViewer.connect(clientPromise);
 			}
-		})();
+		});
 	</script>
 </body>
 

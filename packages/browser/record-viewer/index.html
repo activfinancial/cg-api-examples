@@ -25,12 +25,15 @@
 </head>
 
 <body>
-	<!--<record-viewer symbol="CME.Q"></record-viewer>-->
-	<record-viewer symbol="CAJ."></record-viewer>
+	<script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 	<script src="@activfinancial/cg-api/lib/index.js"></script>
 	<script src="./lib/index.js"></script>
+
+	<record-viewer symbol="CAJ."></record-viewer>
+	<!--<record-viewer symbol="CME.Q"></record-viewer>-->
+
 	<script>
-		(() => {
+		window.addEventListener("WebComponentsReady", function() {
 			const clientPromise = activ.connect({
 				// userId: "USERNAME",
 				// password: "PASSWORD",
@@ -42,7 +45,7 @@
 			for (const recordViewer of recordViewers) {
 				recordViewer.connect(clientPromise);
 			}
-		})();
+		});
 	</script>
 </body>
 
