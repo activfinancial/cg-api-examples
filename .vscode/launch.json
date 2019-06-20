@@ -12,7 +12,7 @@
             "preLaunchTask": "serve-cg-api-explorer",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/browser/cg-api-explorer",
+            "webRoot": "${workspaceFolder}/packages/browser/cg-api-explorer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -30,7 +30,7 @@
             "preLaunchTask": "serve-montage-viewer",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/browser/montage-viewer",
+            "webRoot": "${workspaceFolder}/packages/browser/montage-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -47,7 +47,7 @@
             "preLaunchTask": "serve-option-chain",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/browser/option-chain",
+            "webRoot": "${workspaceFolder}/packages/browser/option-chain",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -64,7 +64,7 @@
             "preLaunchTask": "serve-record-viewer",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/browser/record-viewer",
+            "webRoot": "${workspaceFolder}/packages/browser/record-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -81,7 +81,7 @@
             "preLaunchTask": "serve-time-series-chart",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/browser/time-series-chart",
+            "webRoot": "${workspaceFolder}/packages/browser/time-series-chart",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -97,7 +97,7 @@
             "url": "http://localhost:8880/index.html",
             "preLaunchTask": "serve-chartiq-sample",
             "smartStep": true,
-            "webRoot": "${workspaceFolder}/packages/examples/chartiq/chartiq-sample",
+            "webRoot": "${workspaceFolder}/packages/chartiq/chartiq-sample",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
@@ -113,7 +113,7 @@
             "keepProfileChanges": true,
             "name": "Launch Firefox to chartiq-sample",
             "url": "http://localhost:8880/index.html",
-            "webRoot": "${workspaceFolder}/packages/examples/chartiq/chartiq-sample",
+            "webRoot": "${workspaceFolder}/packages/chartiq/chartiq-sample",
             "sourceMaps": "server",
             "pathMappings": [
                 {
@@ -130,7 +130,7 @@
             "preLaunchTask": "serve-news-viewer",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/browser/news-viewer",
+            "webRoot": "${workspaceFolder}/packages/browser/news-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -147,7 +147,7 @@
             "preLaunchTask": "serve-tpi-viewer",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/browser/tpi-viewer",
+            "webRoot": "${workspaceFolder}/packages/browser/tpi-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -164,7 +164,7 @@
             "preLaunchTask": "start-activ-workstation",
             "smartStep": true,
             // The same as devServer's base directory (i.e. the package directory).
-            "webRoot": "${workspaceFolder}/packages/examples/openfin/activ-workstation",
+            "webRoot": "${workspaceFolder}/packages/openfin/activ-workstation",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
@@ -176,28 +176,28 @@
             "type": "node",
             "request": "launch",
             "name": "Launch get-match",
-            "program": "${workspaceFolder}/packages/examples/node/get-match/lib/get-match.js",
-            "preLaunchTask": "npm: develop - packages/examples/node/get-match",
+            "program": "${workspaceFolder}/packages/node/get-match/lib/get-match.js",
+            "preLaunchTask": "npm: develop - packages/node/get-match",
             "smartStep": true,
             "sourceMaps": true,
-            "outFiles": [ "${workspaceFolder}/packages/examples/node/get-match/lib/*" ],
+            "outFiles": [ "${workspaceFolder}/packages/node/get-match/lib/*" ],
             "sourceMapPathOverrides": {
                 "webpack:///webpack:///*": "${workspaceFolder}/packages/cg-api/*",
-                "webpack:///*": "${workspaceFolder}/packages/examples/node/get-match/*"
+                "webpack:///*": "${workspaceFolder}/packages/node/get-match/*"
             }
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Launch get-history",
-            "program": "${workspaceFolder}/packages/examples/node/get-history/lib/get-history.js",
-            "preLaunchTask": "npm: develop - packages/examples/node/get-history",
+            "program": "${workspaceFolder}/packages/node/get-history/lib/get-history.js",
+            "preLaunchTask": "npm: develop - packages/node/get-history",
             "smartStep": true,
             "sourceMaps": true,
-            "outFiles": [ "${workspaceFolder}/packages/examples/node/get-history/lib/*" ],
+            "outFiles": [ "${workspaceFolder}/packages/node/get-history/lib/*" ],
             "sourceMapPathOverrides": {
                 "webpack:///webpack:///*": "${workspaceFolder}/packages/cg-api/*",
-                "webpack:///*": "${workspaceFolder}/packages/examples/node/get-history/*"
+                "webpack:///*": "${workspaceFolder}/packages/node/get-history/*"
             }
         }
     ]
