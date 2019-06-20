@@ -493,12 +493,24 @@ namespace SnapshotsAndStreamingSection {
         }
 
         private setCommonParameters(requestParameters: Partial<Streaming.RequestParameters>) {
-            requestParameters.relationships = [];
+            requestParameters.relationships = {};
+
             for (const relationshipInfo of this.props.relationships) {
+                const relationship = {
+                    ...relationshipInfo
+                };
+
+                // Cleanup for display in output.
+                delete relationship.id;
+                delete relationship.key;
+
                 // Undefined is equivalent to RelationshipId.none.
-                requestParameters.relationships[
-                    relationshipInfo.id != null ? relationshipInfo.id : RelationshipId.none
-                ] = relationshipInfo;
+                const key = relationshipInfo.id != null ? relationshipInfo.id : RelationshipId.none;
+
+                requestParameters.relationships = {
+                    ...requestParameters.relationships,
+                    [key]: relationship
+                };
             }
 
             if (this.props.subscriptionType != null) {
