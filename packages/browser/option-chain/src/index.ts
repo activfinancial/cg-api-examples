@@ -10,7 +10,6 @@ import {
     FieldId,
     FieldType,
     getExchangeCode,
-    isBrowserEdge,
     StatusCode,
     RelationshipId,
     Streaming,
@@ -40,6 +39,8 @@ import expirationSectionHtml from "!raw-loader!./expirationSection.html";
 import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
 
 import { ResizeObserver } from "resize-observer";
+
+import { detect as detectBrowser } from "detect-browser";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -84,7 +85,10 @@ const percentFormat = {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-const isEdge = isBrowserEdge();
+const isEdge = (function() {
+    const browserInfo = detectBrowser();
+    return browserInfo != null && browserInfo.name === "edge";
+})();
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
