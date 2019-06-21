@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import ToggleButton from "react-bootstrap/ToggleButton";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import uuid from "uuid/v4";
 
 import { PermissionLevel } from "@activfinancial/cg-api";
@@ -14,45 +14,66 @@ import { PermissionLevel } from "@activfinancial/cg-api";
 namespace PermissionLevelControl {
     // State to be lifted up elsewhere.
     export interface LiftedState {
-        permissionLevel: PermissionLevel;
+        permissionLevel?: PermissionLevel;
     }
 
     interface Props {
         size?: "sm" | "lg";
         variant?: string;
-        permissionLevel: PermissionLevel;
+        permissionLevel?: PermissionLevel;
         disableBest?: boolean;
-        onChange: (permissionLevel: PermissionLevel) => void;
+        onChange: (permissionLevel?: PermissionLevel) => void;
     }
 
     export class Component extends React.PureComponent<Props> {
+        // NB I can't get <ToggleButtonGroup> working; it doesn't seem to accept undefined as a radio value.
+        // So using <ButtonGroup toggle> and "manual" checked management. Not much in it really.
         render() {
             return (
-                <ToggleButtonGroup
-                    toggle
-                    vertical
-                    type="radio"
-                    className="btn-block"
-                    name={this.id}
-                    value={this.props.permissionLevel}
-                    onChange={this.props.onChange}
-                >
+                <ButtonGroup toggle vertical className="btn-block" onChange={this.onChange}>
                     {!this.props.disableBest && (
-                        <ToggleButton variant={this.props.variant} size={this.props.size} value={PermissionLevel.default}>
+                        <ToggleButton
+                            type="radio"
+                            variant={this.props.variant}
+                            size={this.props.size}
+                            name={this.id}
+                            value={undefined}
+                            checked={this.props.permissionLevel == null}
+                        >
                             Best allowed
                         </ToggleButton>
                     )}
 
-                    <ToggleButton variant={this.props.variant} size={this.props.size} value={PermissionLevel.realtime}>
+                    <ToggleButton
+                        type="radio"
+                        variant={this.props.variant}
+                        size={this.props.size}
+                        name={this.id}
+                        value={PermissionLevel[PermissionLevel.realtime]}
+                        checked={this.props.permissionLevel === PermissionLevel.realtime}
+                    >
                         Realtime
                     </ToggleButton>
 
-                    <ToggleButton variant={this.props.variant} size={this.props.size} value={PermissionLevel.delayed}>
+                    <ToggleButton
+                        type="radio"
+                        variant={this.props.variant}
+                        size={this.props.size}
+                        name={this.id}
+                        value={PermissionLevel[PermissionLevel.delayed]}
+                        checked={this.props.permissionLevel === PermissionLevel.delayed}
+                    >
                         Delayed
                     </ToggleButton>
-                </ToggleButtonGroup>
+                </ButtonGroup>
             );
         }
+
+        private readonly onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const permissionLevel = PermissionLevel[e.target.value as keyof typeof PermissionLevel];
+
+            this.props.onChange(permissionLevel);
+        };
 
         private readonly id = uuid();
     }

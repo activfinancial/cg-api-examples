@@ -179,11 +179,7 @@ namespace NewsSection {
                                             <PermissionLevelControl.Component
                                                 size="sm"
                                                 variant="outline-primary"
-                                                permissionLevel={
-                                                    this.props.permissionLevel != null
-                                                        ? this.props.permissionLevel
-                                                        : PermissionLevel.default
-                                                }
+                                                permissionLevel={this.props.permissionLevel}
                                                 onChange={this.onPermissionLevelChange}
                                             />
                                         </Col>
@@ -288,7 +284,7 @@ namespace NewsSection {
             this.props.dispatchUpdateNews(newState);
         };
 
-        private readonly onPermissionLevelChange = (permissionLevel: PermissionLevel) => {
+        private readonly onPermissionLevelChange = (permissionLevel?: PermissionLevel) => {
             const newState = {
                 permissionLevel
             };

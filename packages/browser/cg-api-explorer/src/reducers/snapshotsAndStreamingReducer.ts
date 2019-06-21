@@ -35,7 +35,7 @@ export interface State extends RequestState {
     conflationInterval: number;
     shouldEnableDynamicConflation: boolean;
     relationships: RelationshipInfo[];
-    permissionLevel: PermissionLevel;
+    permissionLevel?: PermissionLevel;
     aliasMode: Streaming.AliasMode;
 }
 
@@ -54,7 +54,6 @@ const initialState: State = {
     eventTypes: [],
     conflationInterval: 1000,
     shouldEnableDynamicConflation: false,
-    permissionLevel: PermissionLevel.default,
     relationships: [{ ...defaultRelationshipInfo, key: uuid() }],
     aliasMode: Streaming.AliasMode.normal,
 

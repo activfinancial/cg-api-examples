@@ -377,7 +377,7 @@ namespace SnapshotsAndStreamingSection {
             }
         };
 
-        private readonly onPermissionLevelChange = (permissionLevel: PermissionLevel) => {
+        private readonly onPermissionLevelChange = (permissionLevel?: PermissionLevel) => {
             this.onChange({ permissionLevel });
         };
 

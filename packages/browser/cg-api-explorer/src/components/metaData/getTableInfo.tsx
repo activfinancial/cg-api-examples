@@ -83,7 +83,7 @@ namespace GetTableInfo {
             );
         }
 
-        private readonly onPermissionLevelChange = (permissionLevel: PermissionLevel) => {
+        private readonly onPermissionLevelChange = (permissionLevel?: PermissionLevel) => {
             this.props.dispatchUpdateMetaData({ permissionLevel });
         };
 

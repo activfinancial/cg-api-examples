@@ -39,7 +39,7 @@ namespace ConflationTypeControl {
                         size={this.props.size}
                         name={this.id}
                         value={undefined}
-                        checked={!this.props.conflationType}
+                        checked={this.props.conflationType == null}
                     >
                         None
                     </ToggleButton>

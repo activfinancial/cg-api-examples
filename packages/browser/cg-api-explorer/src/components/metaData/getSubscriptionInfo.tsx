@@ -65,7 +65,7 @@ namespace GetSubscriptionInfo {
             );
         }
 
-        private readonly onPermissionLevelChange = (permissionLevel: PermissionLevel) => {
+        private readonly onPermissionLevelChange = (permissionLevel?: PermissionLevel) => {
             this.props.dispatchUpdateMetaData({ permissionLevel });
         };
 
@@ -76,7 +76,11 @@ namespace GetSubscriptionInfo {
                 "client.metaData.getSubscriptionInfo",
                 `${this.props.permissionLevel}`,
                 "MetaData.SubscriptionInfo",
-                () => this.props.client!.metaData.getSubscriptionInfo(this.props.permissionLevel)
+                () => {
+                    if (this.props.permissionLevel != null) {
+                        this.props.client!.metaData.getSubscriptionInfo(this.props.permissionLevel);
+                    }
+                }
             );
         };
     }
