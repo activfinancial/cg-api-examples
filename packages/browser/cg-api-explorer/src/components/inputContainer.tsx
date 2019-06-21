@@ -65,7 +65,7 @@ namespace InputContainer {
                                 <Alert.Heading>
                                     This is beta software! Please report issues{" "}
                                     <Alert.Link
-                                        href="https://scm1-cam.activfinancial.com/gitea/ACTIV/cg-api/issues"
+                                        href="https://scm1-cam.activfinancial.com/gitea/ACTIV/cg-api-examples/issues"
                                         target="_blank"
                                     >
                                         here

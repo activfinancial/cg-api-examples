@@ -3,7 +3,7 @@
     "description": "A simple record viewer using cg-api.",
     "repository": {
         "type": "git",
-        "url": "https://github.com/activfinancial/cg-api"
+        "url": "https://github.com/activfinancial/cg-api-examples"
     },
     "version": "0.5.18",
     "private": false,

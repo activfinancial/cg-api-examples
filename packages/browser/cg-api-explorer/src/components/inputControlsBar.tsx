@@ -12,6 +12,7 @@ import uuid from "uuid/v4";
 
 import ConnectionStatus from "./connectionStatus";
 import SimpleTooltip from "./simpleTooltip";
+import { repository } from "../../package.json";
 
 import { AppState, saveStateToClipboard } from "../store";
 import { dispatchToggleGlobalCollapse } from "../actions/rootActions";
@@ -82,14 +83,12 @@ namespace InputControlsBar {
                                     </SimpleTooltip>
 
                                     <Dropdown.Menu>
-                                        {this.props.isInternalNetwork && (
-                                            <Dropdown.Item
-                                                href="https://scm1-cam.activfinancial.com/gitea/ACTIV/cg-api/issues"
-                                                target="_blank"
-                                            >
-                                                Report issue
-                                            </Dropdown.Item>
-                                        )}
+                                        <Dropdown.Item href={repository.url} target="_blank">
+                                            Source code
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href={`${repository.url}/issues`} target="_blank">
+                                            Report issue
+                                        </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </div>

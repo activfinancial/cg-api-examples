@@ -3,7 +3,7 @@
     "description": "ACTIV ContentGateway API Explorer.",
     "repository": {
         "type": "git",
-        "url": "https://github.com/activfinancial/cg-api"
+        "url": "https://github.com/activfinancial/cg-api-examples"
     },
     "version": "0.5.7",
     "private": false,
