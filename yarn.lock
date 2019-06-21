@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@activfinancial/cg-api@^0.9.3":
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api/-/cg-api-0.9.3.tgz#244a8a314d63c992b7477d0f2aea5234c93d1d8e"
-  integrity sha512-ge1BkuI8A16sPwOtBeA9iLTaoWVMiz5Cq/oK9DcIbGDETYDnb3/qoAo0SWtJiHoU6HQCHTsQAg8JQdpqQLp3FQ==
+"@activfinancial/cg-api@^0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api/-/cg-api-0.9.5.tgz#556bd776d0164e257af8aea18d087a238bff3188"
+  integrity sha512-jDH4vokXViPJGwRXnPou3zr8MHaQVJnlnKNG03OUhinTJUUuolT3//XSoRHGaNI4GKoVs5LFoHIFOzwiZZD3wg==
   dependencies:
     base64-js "^1.3.0"
     crypto-js "^3.1.9-1"
@@ -16,28 +16,6 @@
   optionalDependencies:
     bufferutil "^4.0.1"
     utf-8-validate "^5.0.2"
-
-"@activfinancial/cg-api@^0.9.4":
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api/-/cg-api-0.9.4.tgz#ab6b9af3722a1acef567fa5c8f6bfe097586912c"
-  integrity sha512-nAwl5CXR6dXSRIZKMJWYVfmLXlpux3NyOtGJlgIjtHB2DslWmINqSIznTdoNJ6sMjJgk5PBn6orGwPR8OYVxbw==
-  dependencies:
-    base64-js "^1.3.0"
-    crypto-js "^3.1.9-1"
-    promise.prototype.finally "^3.1.0"
-    text-encoding "^0.7.0"
-    ts-enum-util "^4.0.1"
-    ws "^7.0.1"
-  optionalDependencies:
-    bufferutil "^4.0.1"
-    utf-8-validate "^5.0.2"
-
-"@activfinancial/chartiq-adapter@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@activfinancial/chartiq-adapter/-/chartiq-adapter-0.0.14.tgz#6b7153cdb190898f22d9a3fb0afe95e2d379d4e7"
-  integrity sha512-JTmfRORc4eXPqIFaTUAclD3+4RX6mGvLjWsnMMSuaaQ3yfKG6oeC6J0pY4+sqpxaWEOVPn5/vTCeGxKI7Y/+0w==
-  dependencies:
-    "@activfinancial/cg-api" "^0.9.3"
 
 "@babel/code-frame@^7.0.0":
   version "7.0.0"
@@ -10192,10 +10170,10 @@ ts-jest@^24.0.2:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-loader@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-6.0.3.tgz#6ef6f086d7080b9cf02ed1945377aeb5ed1b5cf6"
-  integrity sha512-iICBD4PryhnGNdtaDva49UGODHFVcuK7p4+G8CP1TVcUhTC4hkcy4MC2dzWwALSnpOzfUfA/4u8B2F64wsMgjQ==
+ts-loader@^6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-6.0.4.tgz#bc331ad91a887a60632d94c9f79448666f2c4b63"
+  integrity sha512-p2zJYe7OtwR+49kv4gs7v4dMrfYD1IPpOtqiSPCbe8oR+4zEBtdHwzM7A7M91F+suReqgzZrlClk4LRSSp882g==
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"
