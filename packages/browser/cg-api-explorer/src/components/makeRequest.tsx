@@ -6,8 +6,8 @@ import * as React from "react";
 import { connect } from "react-redux";
 import Button from "react-bootstrap/Button";
 
-import { store, AppState } from "../store";
-import { dispatchAdjustPendingRequestCounter, dispatchAppendOutput, OutputType } from "../actions/outputContainerActions";
+import { store, AppState } from "../state/store";
+import { dispatchAdjustPendingRequestCounter, dispatchAppendOutput, OutputType } from "../state/actions/outputContainerActions";
 import { createHeaderTimestamp, renderAsyncIterableResponse, renderResponse, renderError } from "../outputFormatters";
 
 import { ConnectionState } from "../connectionInfo";

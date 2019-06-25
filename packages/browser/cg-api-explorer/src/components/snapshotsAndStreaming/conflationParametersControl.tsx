@@ -11,7 +11,7 @@ import Col from "react-bootstrap/Col";
 
 import ConflationTypeControl from "./conflationType";
 
-import { AppState } from "../../store";
+import { AppState } from "../../state/store";
 import { ConnectionInfo } from "../../connectionInfo";
 import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 

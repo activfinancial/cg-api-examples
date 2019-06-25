@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import Collapse from "react-bootstrap/Collapse";
 import uuid from "uuid/v4";
 
-import { AppState } from "../../store";
+import { AppState } from "../../state/store";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

@@ -17,9 +17,9 @@ import MatchType from "../symbolDirectory/matchType";
 import FilterTypeControl from "../symbolDirectory/filterType";
 import EntityTypesControl from "../controls/entityTypesControl";
 
-import { AppState } from "../../store";
-import { State as SymbolDirectoryState } from "../../reducers/symbolDirectoryReducer";
-import { dispatchUpdateSymbolDirectory } from "../../actions/symbolDirectoryActions";
+import { AppState } from "../../state/store";
+import { State as SymbolDirectoryState } from "../../state/reducers/symbolDirectoryReducer";
+import { dispatchUpdateSymbolDirectory } from "../../state/actions/symbolDirectoryActions";
 
 import { Client, SymbolDirectory } from "@activfinancial/cg-api";
 

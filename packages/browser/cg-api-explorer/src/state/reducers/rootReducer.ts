@@ -4,8 +4,8 @@
 
 import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
-import { ConnectionInfo, ConnectionState } from "../connectionInfo";
-import ConnectionManagementSection, { makeContentGatewayUrl } from "../components/sections/connectionManagementSection";
+import { ConnectionInfo, ConnectionState } from "../../connectionInfo";
+import ConnectionManagementSection, { makeContentGatewayUrl } from "../../components/sections/connectionManagementSection";
 import uuid from "uuid/v4";
 
 import { Client } from "@activfinancial/cg-api";

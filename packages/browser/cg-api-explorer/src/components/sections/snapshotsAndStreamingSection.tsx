@@ -32,8 +32,8 @@ import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import { ConnectionInfo, ConnectionState } from "../../connectionInfo";
 import { formatDate, renderUpdate, renderDynamicConflationInfo } from "../../outputFormatters";
 
-import { AppState } from "../../store";
-import { State as SnapshotsAndStreamingState } from "../../reducers/snapshotsAndStreamingReducer";
+import { AppState } from "../../state/store";
+import { State as SnapshotsAndStreamingState } from "../../state/reducers/snapshotsAndStreamingReducer";
 import {
     dispatchSetSnapshotsAndStreamingTab,
     dispatchAddRelationship,
@@ -43,8 +43,8 @@ import {
     dispatchUpdateSymbolId,
     dispatchRemoveSymbolId,
     dispatchUpdateSnapshotsAndStreaming
-} from "../../actions/snapshotsAndStreamingActions";
-import { dispatchAddSubscriptionInfo, dispatchRemoveSubscriptionInfo } from "../../actions/subscriptionManagementActions";
+} from "../../state/actions/snapshotsAndStreamingActions";
+import { dispatchAddSubscriptionInfo, dispatchRemoveSubscriptionInfo } from "../../state/actions/subscriptionManagementActions";
 
 import { PermissionLevel, Streaming, RelationshipId, Client } from "@activfinancial/cg-api";
 

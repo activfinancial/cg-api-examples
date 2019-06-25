@@ -22,8 +22,8 @@ import GetRelationshipInfo from "../metaData/getRelationshipInfo";
 import GetFieldInfo from "../metaData/getFieldInfo";
 import GetExchangeInfo from "../metaData/getExchangeInfo";
 
-import { AppState } from "../../store";
-import { dispatchSetMetaDataTab } from "../../actions/metaDataActions";
+import { AppState } from "../../state/store";
+import { dispatchSetMetaDataTab } from "../../state/actions/metaDataActions";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

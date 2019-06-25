@@ -16,12 +16,12 @@ import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import SimpleTooltip from "../simpleTooltip";
 import { renderDynamicConflationInfo } from "../../outputFormatters";
 
-import { AppState } from "../../store";
+import { AppState } from "../../state/store";
 import {
     dispatchUpdateSubscriptionInfo,
     dispatchRemoveSubscriptionInfo,
     dispatchUnsubscribeAll
-} from "../../actions/subscriptionManagementActions";
+} from "../../state/actions/subscriptionManagementActions";
 
 import { Client, Unsubscribable, Streaming } from "@activfinancial/cg-api";
 

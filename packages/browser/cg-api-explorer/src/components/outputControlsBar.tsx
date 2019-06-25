@@ -11,13 +11,13 @@ import Row from "react-bootstrap/Row";
 import SimpleTooltip from "./simpleTooltip";
 import PlayPauseCountControl from "./controls/playPauseCountControl";
 
-import { AppState } from "../store";
+import { AppState } from "../state/store";
 import {
     dispatchToggleDisplayRequests,
     dispatchToggleDisplayResponses,
     dispatchToggleDisplayUpdates,
     dispatchClearOutput
-} from "../actions/outputContainerActions";
+} from "../state/actions/outputContainerActions";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

@@ -11,8 +11,8 @@ import MakeRequest from "../makeRequest";
 import { ConnectionState } from "../../connectionInfo";
 import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 
-import { AppState } from "../../store";
-import { dispatchUpdateMetaData } from "../../actions/metaDataActions";
+import { AppState } from "../../state/store";
+import { dispatchUpdateMetaData } from "../../state/actions/metaDataActions";
 
 import { Client } from "@activfinancial/cg-api";
 

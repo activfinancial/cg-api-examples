@@ -9,7 +9,7 @@ import Form from "react-bootstrap/Form";
 import MakeRequest from "../makeRequest";
 import { ConnectionState } from "../../connectionInfo";
 
-import { AppState } from "../../store";
+import { AppState } from "../../state/store";
 
 import { Client } from "@activfinancial/cg-api";
 

@@ -12,13 +12,13 @@ import { formatField } from "../../common/formatFieldValue";
 import EllipsisTooltip from "./components/ellipsisTooltip";
 import MakeRequest from "./components/makeRequest";
 
-import { store } from "./store";
+import { store } from "./state/store";
 import {
     dispatchAdjustResponseCounter,
     dispatchAdjustUpdateCounter,
     dispatchAppendOutput,
     OutputType
-} from "./actions/outputContainerActions";
+} from "./state/actions/outputContainerActions";
 
 import reactHtmlParse from "html-react-parser";
 

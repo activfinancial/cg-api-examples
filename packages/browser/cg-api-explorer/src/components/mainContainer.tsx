@@ -5,7 +5,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { AppState } from "../store";
+import { AppState } from "../state/store";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

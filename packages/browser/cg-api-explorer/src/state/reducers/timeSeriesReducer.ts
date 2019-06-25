@@ -7,10 +7,10 @@ import uuid from "uuid/v4";
 import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
 
-import GetTicks from "../components/timeSeries/getTicks";
-import GetIntraday from "../components/timeSeries/getIntraday";
-import GetHistory from "../components/timeSeries/getHistory";
-import Period from "../components/timeSeries/period";
+import GetTicks from "../../components/timeSeries/getTicks";
+import GetIntraday from "../../components/timeSeries/getIntraday";
+import GetHistory from "../../components/timeSeries/getHistory";
+import Period from "../../components/timeSeries/period";
 
 import { TimeSeries } from "@activfinancial/cg-api";
 

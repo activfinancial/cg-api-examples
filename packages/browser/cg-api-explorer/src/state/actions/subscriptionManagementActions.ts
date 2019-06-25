@@ -3,7 +3,7 @@
  */
 
 import { ActionBase, ActionType } from "./actionType";
-import SubscriptionManagementSection from "../components/sections/subscriptionManagementSection";
+import SubscriptionManagementSection from "../../components/sections/subscriptionManagementSection";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

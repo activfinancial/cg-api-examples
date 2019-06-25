@@ -25,15 +25,15 @@ import GetIntraday from "../timeSeries/getIntraday";
 import GetHistory from "../timeSeries/getHistory";
 import Period from "../timeSeries/period";
 
-import { AppState } from "../../store";
-import { State as TimeSeriesState } from "../../reducers/timeSeriesReducer";
+import { AppState } from "../../state/store";
+import { State as TimeSeriesState } from "../../state/reducers/timeSeriesReducer";
 import {
     dispatchSetTimeSeriesTab,
     dispatchUpdateTimeSeries,
     dispatchAddPeriod,
     dispatchUpdatePeriod,
     dispatchRemovePeriod
-} from "../../actions/timeSeriesActions";
+} from "../../state/actions/timeSeriesActions";
 
 import { Client, TimeSeries } from "@activfinancial/cg-api";
 

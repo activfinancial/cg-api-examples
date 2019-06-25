@@ -4,7 +4,7 @@
 
 import { ActionBase, ActionType } from "./actionType";
 import { State } from "../reducers/timeSeriesReducer";
-import Period from "../components/timeSeries/period";
+import Period from "../../components/timeSeries/period";
 
 import { TimeSeries } from "@activfinancial/cg-api";
 

@@ -19,10 +19,15 @@ import CollapsibleSection from "./collapsibleSection";
 import SimpleTooltip from "../simpleTooltip";
 import { createHeaderTimestamp, renderObject } from "../../outputFormatters";
 
-import { AppState } from "../../store";
-import { dispatchSetUrl, dispatchSetClient, dispatchSetConnectionInfo, dispatchAddServerMessage } from "../../actions/rootActions";
-import { dispatchResetPendingRequestCounter, dispatchAppendOutput, OutputType } from "../../actions/outputContainerActions";
-import { dispatchUnsubscribeAll } from "../../actions/subscriptionManagementActions";
+import { AppState } from "../../state/store";
+import {
+    dispatchSetUrl,
+    dispatchSetClient,
+    dispatchSetConnectionInfo,
+    dispatchAddServerMessage
+} from "../../state/actions/rootActions";
+import { dispatchResetPendingRequestCounter, dispatchAppendOutput, OutputType } from "../../state/actions/outputContainerActions";
+import { dispatchUnsubscribeAll } from "../../state/actions/subscriptionManagementActions";
 
 import contentGatewayList from "../../../../common/contentGateways.json";
 

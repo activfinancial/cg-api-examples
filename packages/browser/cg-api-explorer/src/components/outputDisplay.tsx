@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import ReactDOM from "react-dom";
 import Row from "react-bootstrap/Row";
 
-import { AppState } from "../store";
+import { AppState } from "../state/store";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@
 import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
 import { AppendOutputAction, OutputType } from "../actions/outputContainerActions";
-import OutputControlsBar from "../components/outputControlsBar";
+import OutputControlsBar from "../../components/outputControlsBar";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

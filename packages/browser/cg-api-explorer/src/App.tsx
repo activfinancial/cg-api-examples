@@ -12,8 +12,8 @@ import MainContainer from "./components/mainContainer";
 import InputContainer from "./components/inputContainer";
 import OutputContainer from "./components/outputContainer";
 
-import { store } from "./store";
-import { dispatchIsInternalNetworkAction } from "./actions/rootActions";
+import { store } from "./state/store";
+import { dispatchIsInternalNetworkAction } from "./state/actions/rootActions";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

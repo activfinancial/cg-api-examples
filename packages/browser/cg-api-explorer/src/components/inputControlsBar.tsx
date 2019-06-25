@@ -15,8 +15,8 @@ import ConnectionStatus from "./connectionStatus";
 import SimpleTooltip from "./simpleTooltip";
 import { repository } from "../../package.json";
 
-import { AppState, saveStateToClipboard } from "../store";
-import { dispatchToggleGlobalCollapse } from "../actions/rootActions";
+import { AppState, saveStateToClipboard } from "../state/store";
+import { dispatchToggleGlobalCollapse } from "../state/actions/rootActions";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

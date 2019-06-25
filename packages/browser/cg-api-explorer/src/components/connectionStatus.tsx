@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import Badge from "react-bootstrap/Badge";
 
 import { ConnectionInfo, ConnectionState } from "../connectionInfo";
-import { AppState } from "../store";
+import { AppState } from "../state/store";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

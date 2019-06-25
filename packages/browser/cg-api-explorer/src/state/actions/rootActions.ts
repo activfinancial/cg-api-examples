@@ -3,7 +3,7 @@
  */
 
 import { ActionBase, ActionType } from "./actionType";
-import { ConnectionInfo } from "../connectionInfo";
+import { ConnectionInfo } from "../../connectionInfo";
 
 import { Client } from "@activfinancial/cg-api";
 

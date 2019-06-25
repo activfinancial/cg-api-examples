@@ -12,8 +12,8 @@ import { ConnectionState } from "../../connectionInfo";
 import TableNumberControl from "../controls/tableNumberControl";
 import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 
-import { AppState } from "../../store";
-import { dispatchUpdateMetaData } from "../../actions/metaDataActions";
+import { AppState } from "../../state/store";
+import { dispatchUpdateMetaData } from "../../state/actions/metaDataActions";
 
 import { Client, TableNumber } from "@activfinancial/cg-api";
 

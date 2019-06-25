@@ -5,11 +5,11 @@
 import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
 
-import GetSubscriptionInfo from "../components/metaData/getSubscriptionInfo";
-import GetTableInfo from "../components/metaData/getTableInfo";
-import GetRelationshipInfo from "../components/metaData/getRelationshipInfo";
-import GetFieldInfo from "../components/metaData/getFieldInfo";
-import GetExchangeInfo from "../components/metaData/getExchangeInfo";
+import GetSubscriptionInfo from "../../components/metaData/getSubscriptionInfo";
+import GetTableInfo from "../../components/metaData/getTableInfo";
+import GetRelationshipInfo from "../../components/metaData/getRelationshipInfo";
+import GetFieldInfo from "../../components/metaData/getFieldInfo";
+import GetExchangeInfo from "../../components/metaData/getExchangeInfo";
 
 import { PermissionLevel } from "@activfinancial/cg-api";
 

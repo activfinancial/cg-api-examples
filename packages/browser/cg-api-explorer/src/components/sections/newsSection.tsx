@@ -20,10 +20,10 @@ import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import SimpleTooltip from "../simpleTooltip";
 import { formatDate, renderUpdate } from "../../outputFormatters";
 
-import { AppState } from "../../store";
-import { State as NewsState } from "../../reducers/newsReducer";
-import { dispatchUpdateNews } from "../../actions/newsActions";
-import { dispatchAddSubscriptionInfo, dispatchRemoveSubscriptionInfo } from "../../actions/subscriptionManagementActions";
+import { AppState } from "../../state/store";
+import { State as NewsState } from "../../state/reducers/newsReducer";
+import { dispatchUpdateNews } from "../../state/actions/newsActions";
+import { dispatchAddSubscriptionInfo, dispatchRemoveSubscriptionInfo } from "../../state/actions/subscriptionManagementActions";
 
 import { Client, News, PermissionLevel } from "@activfinancial/cg-api";
 

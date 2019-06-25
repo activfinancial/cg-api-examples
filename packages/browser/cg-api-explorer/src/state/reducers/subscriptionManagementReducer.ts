@@ -5,7 +5,7 @@
 import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
 
-import SubscriptionManagementSection from "../components/sections/subscriptionManagementSection";
+import SubscriptionManagementSection from "../../components/sections/subscriptionManagementSection";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

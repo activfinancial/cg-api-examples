@@ -15,9 +15,9 @@ import NewsSection from "./sections/newsSection";
 import SubscriptionManagementSection from "./sections/subscriptionManagementSection";
 import MetaDataSection from "./sections/metaDataSection";
 
-import { AppState } from "../store";
-import { ServerMessage } from "../reducers/rootReducer";
-import { dispatchRemoveServerMessage } from "../actions/rootActions";
+import { AppState } from "../state/store";
+import { ServerMessage } from "../state/reducers/rootReducer";
+import { dispatchRemoveServerMessage } from "../state/actions/rootActions";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

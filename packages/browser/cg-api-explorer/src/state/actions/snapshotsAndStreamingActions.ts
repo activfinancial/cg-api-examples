@@ -3,7 +3,7 @@
  */
 
 import { ActionBase, ActionType } from "./actionType";
-import { RelationshipInfo } from "../components/snapshotsAndStreaming/relationship";
+import { RelationshipInfo } from "../../components/snapshotsAndStreaming/relationship";
 import { State } from "../reducers/snapshotsAndStreamingReducer";
 
 import { Streaming } from "@activfinancial/cg-api";
