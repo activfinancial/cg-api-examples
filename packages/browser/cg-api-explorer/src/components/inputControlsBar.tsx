@@ -10,6 +10,7 @@ import Row from "react-bootstrap/Row";
 import Dropdown from "react-bootstrap/Dropdown";
 import uuid from "uuid/v4";
 
+import { ConnectionInfo } from "../connectionInfo";
 import ConnectionStatus from "./connectionStatus";
 import SimpleTooltip from "./simpleTooltip";
 import { repository } from "../../package.json";
@@ -27,6 +28,7 @@ namespace InputControlsBar {
     interface ReduxStateProps {
         isInternalNetwork: boolean;
         globalCollapseState: boolean;
+        connectionInfo: ConnectionInfo;
     }
 
     // Redux dispatch functions we use.
@@ -86,9 +88,22 @@ namespace InputControlsBar {
                                         <Dropdown.Item href={repository.url} target="_blank">
                                             Source code
                                         </Dropdown.Item>
+
                                         <Dropdown.Item href={`${repository.url}/issues`} target="_blank">
                                             Report issue
                                         </Dropdown.Item>
+
+                                        {this.props.isInternalNetwork && this.props.connectionInfo.hostname !== "" && (
+                                            <>
+                                                <Dropdown.Item
+                                                    href={`https://web1-tlx.activfinancial.com/live/clientinfo/quick-search?s=${this.props.connectionInfo.hostname}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    {this.props.connectionInfo.hostname} on CIDB
+                                                </Dropdown.Item>
+                                            </>
+                                        )}
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </div>
@@ -104,7 +119,8 @@ namespace InputControlsBar {
     function mapStateToProps(state: AppState): ReduxStateProps {
         return {
             isInternalNetwork: state.root.isInternalNetwork,
-            globalCollapseState: state.root.globalCollapseState
+            globalCollapseState: state.root.globalCollapseState,
+            connectionInfo: state.root.connectionInfo
         };
     }
 

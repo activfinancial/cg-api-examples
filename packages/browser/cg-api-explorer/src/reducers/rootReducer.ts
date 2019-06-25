@@ -50,6 +50,7 @@ const initialState: State = {
 
     connectionInfo: {
         connectionState: ConnectionState.disconnected,
+        hostname: "",
 
         // Don't hide anything initially; might as well as allow browsing what might be available.
         isHistoryServiceAvailable: true,

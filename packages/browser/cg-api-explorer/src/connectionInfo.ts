@@ -15,6 +15,7 @@ export enum ConnectionState {
 /** State and optional string for error conditions. */
 export interface ConnectionInfo {
     connectionState: ConnectionState;
+    hostname: string;
     statusText?: string;
     isHistoryServiceAvailable: boolean;
     isNewsServerServiceAvailable: boolean;

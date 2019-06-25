@@ -369,32 +369,30 @@ namespace ConnectionManagementSection {
                         let isInitialResponse = true;
                         for await (const contentGatewayInfo of client.metaData.getContentGatewayInfo()) {
                             if (this.props.connectionInfo.connectionState === ConnectionState.connected) {
-                                this.props.dispatchSetConnectionInfo({
-                                    ...this.props.connectionInfo,
-                                    statusText: `Connected to ${contentGatewayInfo.systemInfo.hostname}`
-                                });
-
                                 document.title = `(${contentGatewayInfo.systemInfo.hostname}) ${initialTitle}`;
 
-                                const state: Partial<ConnectionInfo> = {};
+                                const connectionInfo: Partial<ConnectionInfo> = {
+                                    hostname: contentGatewayInfo.systemInfo.hostname,
+                                    isDynamicConflationAvailable: contentGatewayInfo.isDynamicConflationAvailable
+                                };
 
                                 if (isInitialResponse || contentGatewayInfo.hasHistoryServiceChanged) {
-                                    state.isHistoryServiceAvailable = contentGatewayInfo.isHistoryServiceAvailable;
+                                    connectionInfo.isHistoryServiceAvailable = contentGatewayInfo.isHistoryServiceAvailable;
                                 }
 
                                 if (isInitialResponse || contentGatewayInfo.hasNewsServerServiceChanged) {
-                                    state.isNewsServerServiceAvailable = contentGatewayInfo.isNewsServerServiceAvailable;
+                                    connectionInfo.isNewsServerServiceAvailable = contentGatewayInfo.isNewsServerServiceAvailable;
                                 }
 
                                 if (isInitialResponse || contentGatewayInfo.hasSymbolDirectoryServiceChanged) {
-                                    state.isSymbolDirectoryServiceAvailable = contentGatewayInfo.isSymbolDirectoryServiceAvailable;
+                                    connectionInfo.isSymbolDirectoryServiceAvailable =
+                                        contentGatewayInfo.isSymbolDirectoryServiceAvailable;
                                 }
-
-                                state.isDynamicConflationAvailable = contentGatewayInfo.isDynamicConflationAvailable;
 
                                 this.props.dispatchSetConnectionInfo({
                                     ...this.props.connectionInfo,
-                                    ...state
+                                    ...connectionInfo,
+                                    statusText: `Connected to ${connectionInfo.hostname}`
                                 });
 
                                 isInitialResponse = false;
@@ -438,6 +436,7 @@ namespace ConnectionManagementSection {
 
             this.props.dispatchSetConnectionInfo({
                 connectionState: ConnectionState.disconnected,
+                hostname: "",
                 statusText,
                 // Don't hide anything when disconnect; might as well as allow browsing what might be available.
                 isHistoryServiceAvailable: true,
