@@ -5,13 +5,13 @@
 import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
 
-import SubscriptionManagementSection from "../../components/sections/subscriptionManagementSection";
+import { SubscriptionInfo } from "../../components/sections/subscriptionManagementSection";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // State to store in redux store.
 export interface State {
-    subscriptionInfoList: SubscriptionManagementSection.SubscriptionInfo[];
+    subscriptionInfoList: SubscriptionInfo[];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ function findSubscriptionInfo(state: State, key: string) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function addSubscriptionInfo(state: State, subscriptionInfo: SubscriptionManagementSection.SubscriptionInfo) {
+function addSubscriptionInfo(state: State, subscriptionInfo: SubscriptionInfo) {
     const subscriptionInfoList = [...state.subscriptionInfoList, subscriptionInfo];
 
     return {
@@ -40,11 +40,7 @@ function addSubscriptionInfo(state: State, subscriptionInfo: SubscriptionManagem
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function updateSubscriptionInfo(
-    state: State,
-    key: string,
-    subscriptionInfo: Partial<SubscriptionManagementSection.SubscriptionInfo>
-) {
+function updateSubscriptionInfo(state: State, key: string, subscriptionInfo: Partial<SubscriptionInfo>) {
     const index = findSubscriptionInfo(state, key);
     if (index === -1) {
         return state;

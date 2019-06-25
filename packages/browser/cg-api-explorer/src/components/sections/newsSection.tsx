@@ -11,10 +11,10 @@ import Form from "react-bootstrap/Form";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import uuid from "uuid/v4";
 
-import MakeRequest from "../makeRequest";
-import CollapsibleSection from "./collapsibleSection";
-import PermissionLevelControl from "../controls/permissionLevelControl";
-import FieldIdsControl from "../controls/fieldIdsControl";
+import * as MakeRequest from "../makeRequest";
+import { Component as CollapsibleSection } from "./collapsibleSection";
+import { Component as PermissionLevelControl } from "../controls/permissionLevelControl";
+import { Component as FieldIdsControl } from "../controls/fieldIdsControl";
 import { ConnectionInfo } from "../../connectionInfo";
 import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import SimpleTooltip from "../simpleTooltip";
@@ -62,320 +62,316 @@ function dateToISOString(date: Date) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-namespace NewsSection {
-    // Own props.
-    interface OwnProps {}
+// Own props.
+interface OwnProps {}
 
-    // Redux state we'll see as props.
-    interface ReduxStateProps extends NewsState {
-        client: Client | null;
-        connectionInfo: ConnectionInfo;
-    }
+// Redux state we'll see as props.
+interface ReduxStateProps extends NewsState {
+    client: Client | null;
+    connectionInfo: ConnectionInfo;
+}
 
-    // Redux dispatch functions we use.
-    const mapDispatchToProps = {
-        dispatchUpdateNews,
-        dispatchAddSubscriptionInfo,
-        dispatchRemoveSubscriptionInfo
-    };
+// Redux dispatch functions we use.
+const mapDispatchToProps = {
+    dispatchUpdateNews,
+    dispatchAddSubscriptionInfo,
+    dispatchRemoveSubscriptionInfo
+};
 
-    // All props.
-    type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
+// All props.
+type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
 
-    class ComponentImpl extends React.PureComponent<Props> {
-        render() {
-            return (
-                <Col>
-                    <CollapsibleSection.Component title="News" initialCollapseState={true}>
-                        {this.props.connectionInfo.isNewsServerServiceAvailable ? (
-                            <Card body bg="light">
-                                <Form onSubmit={this.processSubmit}>
-                                    {/* Query string. */}
-                                    <SimpleTooltip text={newsQueryTooltip}>
-                                        <Form.Group as={Form.Row} className="form-group-margin">
-                                            <Form.Label column className={`${labelColumnClass} text-right`}>
-                                                Query:
-                                            </Form.Label>
-                                            <Col sm={inputColumnWidth}>
-                                                <Form.Control
-                                                    type="text"
-                                                    size="sm"
-                                                    value={this.props.query}
-                                                    placeholder="Hover for tooltip with format description"
-                                                    onChange={this.onQueryChange}
-                                                    required
-                                                />
-                                            </Col>
-                                        </Form.Group>
-                                    </SimpleTooltip>
-
-                                    {/* Start date. */}
+class Component extends React.PureComponent<Props> {
+    render() {
+        return (
+            <Col>
+                <CollapsibleSection title="News" initialCollapseState={true}>
+                    {this.props.connectionInfo.isNewsServerServiceAvailable ? (
+                        <Card body bg="light">
+                            <Form onSubmit={this.processSubmit}>
+                                {/* Query string. */}
+                                <SimpleTooltip text={newsQueryTooltip}>
                                     <Form.Group as={Form.Row} className="form-group-margin">
                                         <Form.Label column className={`${labelColumnClass} text-right`}>
-                                            Start date:
-                                        </Form.Label>
-                                        <Col sm={inputColumnWidth}>
-                                            <Form.Control
-                                                type="date"
-                                                size="sm"
-                                                value={this.props.startDate ? dateToISOString(this.props.startDate) : ""}
-                                                onChange={this.onStartDateChange}
-                                            />
-                                        </Col>
-                                    </Form.Group>
-
-                                    {/* End date. */}
-                                    <Form.Group as={Form.Row} className="form-group-margin">
-                                        <Form.Label column className={`${labelColumnClass} text-right`}>
-                                            End date:
-                                        </Form.Label>
-                                        <Col sm={inputColumnWidth}>
-                                            <Form.Control
-                                                type="date"
-                                                size="sm"
-                                                value={this.props.endDate ? dateToISOString(this.props.endDate) : ""}
-                                                onChange={this.onEndDateChange}
-                                            />
-                                        </Col>
-                                    </Form.Group>
-
-                                    {/* Start symbol. */}
-                                    <Form.Group as={Form.Row} className="form-group-margin">
-                                        <Form.Label column className={`${labelColumnClass} text-right`}>
-                                            Start symbol:
+                                            Query:
                                         </Form.Label>
                                         <Col sm={inputColumnWidth}>
                                             <Form.Control
                                                 type="text"
                                                 size="sm"
-                                                value={this.props.startSymbol ? this.props.startSymbol : ""}
-                                                onChange={this.onStartSymbolChange}
+                                                value={this.props.query}
+                                                placeholder="Hover for tooltip with format description"
+                                                onChange={this.onQueryChange}
+                                                required
                                             />
                                         </Col>
                                     </Form.Group>
+                                </SimpleTooltip>
 
-                                    {/* Number of records. */}
-                                    <Form.Group as={Form.Row} className="form-group-margin">
-                                        <Form.Label column className={`${labelColumnClass} text-right`}>
-                                            Number of records:
-                                        </Form.Label>
-                                        <Col sm={inputColumnWidth}>
-                                            <Form.Control
-                                                type="number"
-                                                size="sm"
-                                                min="1"
-                                                value={`${this.props.numberOfRecords}`}
-                                                onChange={this.onNumberOfRecordsChange}
-                                            />
-                                        </Col>
-                                    </Form.Group>
+                                {/* Start date. */}
+                                <Form.Group as={Form.Row} className="form-group-margin">
+                                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                                        Start date:
+                                    </Form.Label>
+                                    <Col sm={inputColumnWidth}>
+                                        <Form.Control
+                                            type="date"
+                                            size="sm"
+                                            value={this.props.startDate ? dateToISOString(this.props.startDate) : ""}
+                                            onChange={this.onStartDateChange}
+                                        />
+                                    </Col>
+                                </Form.Group>
 
-                                    {/* Permission level. */}
-                                    <Form.Group as={Form.Row} className="form-group-margin">
-                                        <Form.Label column className={`${labelColumnClass} text-right`}>
-                                            Permission level:
-                                        </Form.Label>
-                                        <Col sm={inputColumnWidth}>
-                                            <PermissionLevelControl.Component
-                                                size="sm"
+                                {/* End date. */}
+                                <Form.Group as={Form.Row} className="form-group-margin">
+                                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                                        End date:
+                                    </Form.Label>
+                                    <Col sm={inputColumnWidth}>
+                                        <Form.Control
+                                            type="date"
+                                            size="sm"
+                                            value={this.props.endDate ? dateToISOString(this.props.endDate) : ""}
+                                            onChange={this.onEndDateChange}
+                                        />
+                                    </Col>
+                                </Form.Group>
+
+                                {/* Start symbol. */}
+                                <Form.Group as={Form.Row} className="form-group-margin">
+                                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                                        Start symbol:
+                                    </Form.Label>
+                                    <Col sm={inputColumnWidth}>
+                                        <Form.Control
+                                            type="text"
+                                            size="sm"
+                                            value={this.props.startSymbol ? this.props.startSymbol : ""}
+                                            onChange={this.onStartSymbolChange}
+                                        />
+                                    </Col>
+                                </Form.Group>
+
+                                {/* Number of records. */}
+                                <Form.Group as={Form.Row} className="form-group-margin">
+                                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                                        Number of records:
+                                    </Form.Label>
+                                    <Col sm={inputColumnWidth}>
+                                        <Form.Control
+                                            type="number"
+                                            size="sm"
+                                            min="1"
+                                            value={`${this.props.numberOfRecords}`}
+                                            onChange={this.onNumberOfRecordsChange}
+                                        />
+                                    </Col>
+                                </Form.Group>
+
+                                {/* Permission level. */}
+                                <Form.Group as={Form.Row} className="form-group-margin">
+                                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                                        Permission level:
+                                    </Form.Label>
+                                    <Col sm={inputColumnWidth}>
+                                        <PermissionLevelControl
+                                            size="sm"
+                                            variant="outline-primary"
+                                            permissionLevel={this.props.permissionLevel}
+                                            onChange={this.onPermissionLevelChange}
+                                        />
+                                    </Col>
+                                </Form.Group>
+
+                                {/* Options. */}
+                                <Form.Group as={Form.Row} className="form-group-margin">
+                                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                                        Options:
+                                    </Form.Label>
+
+                                    <Col sm={inputColumnWidth}>
+                                        <ButtonGroup vertical toggle className="btn-block">
+                                            <ToggleButton
+                                                type="checkbox"
+                                                value="disconnectExisting"
                                                 variant="outline-primary"
-                                                permissionLevel={this.props.permissionLevel}
-                                                onChange={this.onPermissionLevelChange}
-                                            />
-                                        </Col>
-                                    </Form.Group>
+                                                size="sm"
+                                                checked={this.props.updateHandler != null}
+                                                onChange={this.onSubscribeChange}
+                                            >
+                                                Subscribe to query?
+                                            </ToggleButton>
 
-                                    {/* Options. */}
-                                    <Form.Group as={Form.Row} className="form-group-margin">
-                                        <Form.Label column className={`${labelColumnClass} text-right`}>
-                                            Options:
-                                        </Form.Label>
+                                            <ToggleButton
+                                                type="checkbox"
+                                                value="disconnectOnFeedFailure"
+                                                variant="outline-primary"
+                                                size="sm"
+                                                checked={this.props.includeExpired}
+                                                onChange={this.onIncludeExpiredChange}
+                                            >
+                                                Include expired stories?
+                                            </ToggleButton>
+                                        </ButtonGroup>
+                                    </Col>
+                                </Form.Group>
 
-                                        <Col sm={inputColumnWidth}>
-                                            <ButtonGroup vertical toggle className="btn-block">
-                                                <ToggleButton
-                                                    type="checkbox"
-                                                    value="disconnectExisting"
-                                                    variant="outline-primary"
-                                                    size="sm"
-                                                    checked={this.props.updateHandler != null}
-                                                    onChange={this.onSubscribeChange}
-                                                >
-                                                    Subscribe to query?
-                                                </ToggleButton>
+                                {/* Fields. */}
+                                <Form.Group as={Form.Row} className="form-group-margin">
+                                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                                        Fields:
+                                    </Form.Label>
 
-                                                <ToggleButton
-                                                    type="checkbox"
-                                                    value="disconnectOnFeedFailure"
-                                                    variant="outline-primary"
-                                                    size="sm"
-                                                    checked={this.props.includeExpired}
-                                                    onChange={this.onIncludeExpiredChange}
-                                                >
-                                                    Include expired stories?
-                                                </ToggleButton>
-                                            </ButtonGroup>
-                                        </Col>
-                                    </Form.Group>
+                                    <Col sm={inputColumnWidth}>
+                                        <FieldIdsControl
+                                            fieldIds={this.props.fieldIds == null ? [] : this.props.fieldIds}
+                                            onChange={this.props.dispatchUpdateNews}
+                                        />
+                                    </Col>
+                                </Form.Group>
 
-                                    {/* Fields. */}
-                                    <Form.Group as={Form.Row} className="form-group-margin">
-                                        <Form.Label column className={`${labelColumnClass} text-right`}>
-                                            Fields:
-                                        </Form.Label>
+                                <hr />
+                                <MakeRequest.Component />
+                            </Form>
+                        </Card>
+                    ) : (
+                        "News not available."
+                    )}
+                </CollapsibleSection>
+            </Col>
+        );
+    }
 
-                                        <Col sm={inputColumnWidth}>
-                                            <FieldIdsControl.Component
-                                                fieldIds={this.props.fieldIds == null ? [] : this.props.fieldIds}
-                                                onChange={this.props.dispatchUpdateNews}
-                                            />
-                                        </Col>
-                                    </Form.Group>
-
-                                    <hr />
-                                    <MakeRequest.Component />
-                                </Form>
-                            </Card>
-                        ) : (
-                            "News not available."
-                        )}
-                    </CollapsibleSection.Component>
-                </Col>
-            );
-        }
-
-        private readonly onQueryChange = (e: any /* TODO real type */) => {
-            const newState = {
-                query: e.target.value
-            };
-
-            this.props.dispatchUpdateNews(newState);
+    private readonly onQueryChange = (e: any /* TODO real type */) => {
+        const newState = {
+            query: e.target.value
         };
 
-        private readonly onStartDateChange = (e: any /* TODO proper type */) => {
-            const newState = {
-                startDate: e.target.valueAsDate || undefined
-            };
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.props.dispatchUpdateNews(newState);
+    private readonly onStartDateChange = (e: any /* TODO proper type */) => {
+        const newState = {
+            startDate: e.target.valueAsDate || undefined
         };
 
-        private readonly onEndDateChange = (e: any /* TODO proper type */) => {
-            const newState = {
-                endDate: e.target.valueAsDate || undefined
-            };
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.props.dispatchUpdateNews(newState);
+    private readonly onEndDateChange = (e: any /* TODO proper type */) => {
+        const newState = {
+            endDate: e.target.valueAsDate || undefined
         };
 
-        private readonly onStartSymbolChange = (e: any /* TODO proper type */) => {
-            const newState = {
-                startSymbol: e.target.value !== "" ? e.target.value : undefined
-            };
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.props.dispatchUpdateNews(newState);
+    private readonly onStartSymbolChange = (e: any /* TODO proper type */) => {
+        const newState = {
+            startSymbol: e.target.value !== "" ? e.target.value : undefined
         };
 
-        private readonly onNumberOfRecordsChange = (e: any /* TODO proper type */) => {
-            const newState = {
-                numberOfRecords: e.target.valueAsNumber
-            };
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.props.dispatchUpdateNews(newState);
+    private readonly onNumberOfRecordsChange = (e: any /* TODO proper type */) => {
+        const newState = {
+            numberOfRecords: e.target.valueAsNumber
         };
 
-        private readonly onPermissionLevelChange = (permissionLevel?: PermissionLevel) => {
-            const newState = {
-                permissionLevel
-            };
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.props.dispatchUpdateNews(newState);
+    private readonly onPermissionLevelChange = (permissionLevel?: PermissionLevel) => {
+        const newState = {
+            permissionLevel
         };
 
-        private readonly onSubscribeChange = (e: any /* TODO proper type */) => {
-            const newState = {
-                updateHandler: e.target.checked ? this.updateHandler : undefined
-            };
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.props.dispatchUpdateNews(newState);
+    private readonly onSubscribeChange = (e: any /* TODO proper type */) => {
+        const newState = {
+            updateHandler: e.target.checked ? this.updateHandler : undefined
         };
 
-        private readonly onIncludeExpiredChange = (e: any /* TODO proper type */) => {
-            const newState = {
-                includeExpired: e.target.checked
-            };
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.props.dispatchUpdateNews(newState);
+    private readonly onIncludeExpiredChange = (e: any /* TODO proper type */) => {
+        const newState = {
+            includeExpired: e.target.checked
         };
 
-        private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
+        this.props.dispatchUpdateNews(newState);
+    };
 
-            this.makeRequest();
+    private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        this.makeRequest();
+    };
+
+    // TODO same code as SD pretty much. Factor out?
+    private async makeRequest() {
+        // TODO surely can do a runtime pick of properties based on the RequestParameters type.
+        const requestParameters: News.RequestParameters = {
+            query: this.props.query,
+            startDate: this.props.startDate,
+            endDate: this.props.endDate,
+            startSymbol: this.props.startSymbol,
+            numberOfRecords: this.props.numberOfRecords,
+            fieldIds: this.props.fieldIds,
+            includeExpired: this.props.includeExpired,
+            permissionLevel: this.props.permissionLevel,
+            updateHandler: this.props.updateHandler
         };
+        let key: string | null = null;
 
-        // TODO same code as SD pretty much. Factor out?
-        private async makeRequest() {
-            // TODO surely can do a runtime pick of properties based on the RequestParameters type.
-            const requestParameters: News.RequestParameters = {
-                query: this.props.query,
-                startDate: this.props.startDate,
-                endDate: this.props.endDate,
-                startSymbol: this.props.startSymbol,
-                numberOfRecords: this.props.numberOfRecords,
-                fieldIds: this.props.fieldIds,
-                includeExpired: this.props.includeExpired,
-                permissionLevel: this.props.permissionLevel,
-                updateHandler: this.props.updateHandler
-            };
-            let key: string | null = null;
+        MakeRequest.initiateAsyncIterable(
+            "client.news.getStories",
+            JSON.stringify(requestParameters, null, 2),
+            "News.Record",
+            () => {
+                const requestHandle = this.props.client!.news.getStories(requestParameters);
 
-            MakeRequest.initiateAsyncIterable(
-                "client.news.getStories",
-                JSON.stringify(requestParameters, null, 2),
-                "News.Record",
-                () => {
-                    const requestHandle = this.props.client!.news.getStories(requestParameters);
+                if (requestHandle.isSubscription) {
+                    key = uuid();
 
-                    if (requestHandle.isSubscription) {
-                        key = uuid();
-
-                        this.props.dispatchAddSubscriptionInfo({
-                            key,
-                            requestHandle,
-                            name: `getStories made on ${formatDate(new Date())}`,
-                            tooltip: JSON.stringify(requestParameters)
-                        });
-                    }
-
-                    return requestHandle;
-                },
-                () => {
-                    // Error in request somewhere. Cleanup unsubscription section.
-                    if (key != null) {
-                        this.props.dispatchRemoveSubscriptionInfo(key);
-                    }
+                    this.props.dispatchAddSubscriptionInfo({
+                        key,
+                        requestHandle,
+                        name: `getStories made on ${formatDate(new Date())}`,
+                        tooltip: JSON.stringify(requestParameters)
+                    });
                 }
-            );
-        }
 
-        private readonly updateHandler = (update: News.Update) =>
-            renderUpdate(this.props.client!, "News.Update", update.newsSymbol, update);
+                return requestHandle;
+            },
+            () => {
+                // Error in request somewhere. Cleanup unsubscription section.
+                if (key != null) {
+                    this.props.dispatchRemoveSubscriptionInfo(key);
+                }
+            }
+        );
     }
 
-    function mapStateToProps(state: AppState): ReduxStateProps {
-        return {
-            client: state.root.client,
-            connectionInfo: state.root.connectionInfo,
-            ...state.news
-        };
-    }
+    private readonly updateHandler = (update: News.Update) =>
+        renderUpdate(this.props.client!, "News.Update", update.newsSymbol, update);
+}
 
-    // Generate redux connected component.
-    export const Component = connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(ComponentImpl);
-} // namespace NewsSection
+function mapStateToProps(state: AppState): ReduxStateProps {
+    return {
+        client: state.root.client,
+        connectionInfo: state.root.connectionInfo,
+        ...state.news
+    };
+}
 
-export default NewsSection;
+// Generate redux connected component.
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Component);

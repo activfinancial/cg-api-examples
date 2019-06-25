@@ -60,16 +60,16 @@ class App extends Component<Props> {
     render() {
         return (
             <Provider store={store}>
-                <MainContainer.Component style={App.mainDivStyle} className="App container-fluid pt-1">
+                <MainContainer style={App.mainDivStyle} className="App container-fluid pt-1">
                     <Row style={App.mainRowStyle}>
                         <Col style={App.inputColumnStyle} sm={6}>
-                            <InputContainer.Component />
+                            <InputContainer />
                         </Col>
                         <Col style={App.outputColumnStyle} sm={6}>
-                            <OutputContainer.Component />
+                            <OutputContainer />
                         </Col>
                     </Row>
-                </MainContainer.Component>
+                </MainContainer>
             </Provider>
         );
     }

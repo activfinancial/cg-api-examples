@@ -8,11 +8,11 @@ import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
 
 import { RelationshipInfo } from "../../components/snapshotsAndStreaming/relationship";
-import GetEqual from "../../components/snapshotsAndStreaming/getEqual";
-import GetMatch from "../../components/snapshotsAndStreaming/getMatch";
-import GetPattern from "../../components/snapshotsAndStreaming/getPattern";
-import GetFirstLast from "../../components/snapshotsAndStreaming/getFirstLast";
-import GetNextPrevious from "../../components/snapshotsAndStreaming/getNextPrevious";
+import * as GetEqual from "../../components/snapshotsAndStreaming/getEqual";
+import * as GetMatch from "../../components/snapshotsAndStreaming/getMatch";
+import * as GetPattern from "../../components/snapshotsAndStreaming/getPattern";
+import * as GetFirstLast from "../../components/snapshotsAndStreaming/getFirstLast";
+import * as GetNextPrevious from "../../components/snapshotsAndStreaming/getNextPrevious";
 
 import { EventType, PermissionLevel, Streaming, TableNumber } from "@activfinancial/cg-api";
 

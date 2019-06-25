@@ -3,19 +3,17 @@
  */
 
 import { ActionBase, ActionType } from "./actionType";
-import SubscriptionManagementSection from "../../components/sections/subscriptionManagementSection";
+import { SubscriptionInfo } from "../../components/sections/subscriptionManagementSection";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** Add a subscription action. */
 export interface AddSubscriptionInfoAction extends ActionBase<ActionType.addSubscriptionInfo> {
-    subscriptionInfo: SubscriptionManagementSection.SubscriptionInfo;
+    subscriptionInfo: SubscriptionInfo;
 }
 
 /** Dispatch function to add subscription. */
-export function dispatchAddSubscriptionInfo(
-    subscriptionInfo: SubscriptionManagementSection.SubscriptionInfo
-): AddSubscriptionInfoAction {
+export function dispatchAddSubscriptionInfo(subscriptionInfo: SubscriptionInfo): AddSubscriptionInfoAction {
     return {
         type: ActionType.addSubscriptionInfo,
         subscriptionInfo
@@ -27,13 +25,13 @@ export function dispatchAddSubscriptionInfo(
 /** Update a subscription action. */
 export interface UpdateSubscriptionInfoAction extends ActionBase<ActionType.updateSubscriptionInfo> {
     key: string;
-    subscriptionInfo: Partial<SubscriptionManagementSection.SubscriptionInfo>;
+    subscriptionInfo: Partial<SubscriptionInfo>;
 }
 
 /** Dispatch function to update subscription. */
 export function dispatchUpdateSubscriptionInfo(
     key: string,
-    subscriptionInfo: Partial<SubscriptionManagementSection.SubscriptionInfo>
+    subscriptionInfo: Partial<SubscriptionInfo>
 ): UpdateSubscriptionInfoAction {
     return {
         type: ActionType.updateSubscriptionInfo,

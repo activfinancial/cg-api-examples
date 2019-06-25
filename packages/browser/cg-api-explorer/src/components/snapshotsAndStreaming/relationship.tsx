@@ -13,7 +13,7 @@ import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 
 import RelationshipIdControl from "../controls/relationshipIdControl";
-import FieldIdsControl from "../controls/fieldIdsControl";
+import { Component as FieldIdsControl } from "../controls/fieldIdsControl";
 import SimpleTooltip from "../simpleTooltip";
 
 import { Streaming, FieldId, RelationshipId } from "@activfinancial/cg-api";
@@ -47,7 +47,7 @@ class Relationship extends Component<Props> {
             <Card body bg="light" className={this.props.className}>
                 <Form.Group as={Form.Row} className="form-group-margin">
                     <Col md={5}>
-                        <RelationshipIdControl.Component
+                        <RelationshipIdControl
                             relationshipId={this.props.relationshipInfo.id}
                             onChange={this.onRelationshipIdChange}
                         />
@@ -84,7 +84,7 @@ class Relationship extends Component<Props> {
                     <Form.Group as={Form.Row} className="form-group-margin">
                         <Col sm={12}>
                             <InputGroup>
-                                <FieldIdsControl.Component
+                                <FieldIdsControl
                                     fieldIds={
                                         this.props.relationshipInfo.fieldIds == null ? [] : this.props.relationshipInfo.fieldIds
                                     }

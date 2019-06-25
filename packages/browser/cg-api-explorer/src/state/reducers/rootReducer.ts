@@ -5,7 +5,7 @@
 import { ActionType } from "../actions/actionType";
 import Action from "../actions/actions";
 import { ConnectionInfo, ConnectionState } from "../../connectionInfo";
-import ConnectionManagementSection, { makeContentGatewayUrl } from "../../components/sections/connectionManagementSection";
+import * as ConnectionManagementSection from "../../components/sections/connectionManagementSection";
 import uuid from "uuid/v4";
 
 import { Client } from "@activfinancial/cg-api";
@@ -41,7 +41,7 @@ export interface State extends ConnectionManagementSection.LiftedState {
 
 // Initial root state.
 const initialState: State = {
-    url: makeContentGatewayUrl(""),
+    url: ConnectionManagementSection.makeContentGatewayUrl(""),
 
     // Assume not until we know better.
     isInternalNetwork: false,

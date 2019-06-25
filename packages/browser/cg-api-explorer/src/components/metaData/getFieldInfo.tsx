@@ -7,9 +7,9 @@ import { connect } from "react-redux";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-import MakeRequest from "../makeRequest";
+import * as MakeRequest from "../makeRequest";
 import { ConnectionState } from "../../connectionInfo";
-import FieldIdsControl from "../controls/fieldIdsControl";
+import * as FieldIdsControl from "../controls/fieldIdsControl";
 import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 
 import { AppState } from "../../state/store";
@@ -19,89 +19,85 @@ import { Client } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-namespace GetFieldInfo {
-    // State to be lifted up elsewhere (redux in our case).
-    export interface LiftedState extends FieldIdsControl.LiftedState {}
+// State to be lifted up elsewhere (redux in our case).
+export interface LiftedState extends FieldIdsControl.LiftedState {}
 
-    // Own props.
-    interface OwnProps {}
+// Own props.
+interface OwnProps {}
 
-    // Redux state we'll see as props.
-    interface ReduxStateProps extends LiftedState {
-        client: Client | null;
-        connectionState: ConnectionState;
+// Redux state we'll see as props.
+interface ReduxStateProps extends LiftedState {
+    client: Client | null;
+    connectionState: ConnectionState;
+}
+
+// Redux dispatch functions we use.
+const mapDispatchToProps = {
+    dispatchUpdateMetaData
+};
+
+// All props.
+type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
+
+class ComponentImpl extends React.PureComponent<Props> {
+    render() {
+        return (
+            <Form onSubmit={this.processSubmit}>
+                {/* Field ids. */}
+                <Form.Group as={Form.Row} className="form-group-margin">
+                    <Form.Label column className={`${labelColumnClass} text-right`}>
+                        Field id(s):
+                    </Form.Label>
+                    <Col sm={inputColumnWidth}>
+                        <FieldIdsControl.Component
+                            fieldIds={this.props.fieldIds}
+                            placeholder="Field id per line; leave empty for info about all fields"
+                            onChange={this.props.dispatchUpdateMetaData}
+                        />
+                    </Col>
+                </Form.Group>
+
+                <hr />
+                <MakeRequest.Component />
+            </Form>
+        );
     }
 
-    // Redux dispatch functions we use.
-    const mapDispatchToProps = {
-        dispatchUpdateMetaData
+    private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (this.props.fieldIds.length === 0) {
+            this.makeGetUniversalFieldHelperListRequest();
+        } else {
+            this.makeGetUniversalFieldHelperRequest();
+        }
     };
 
-    // All props.
-    type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
-
-    class ComponentImpl extends React.PureComponent<Props> {
-        render() {
-            return (
-                <Form onSubmit={this.processSubmit}>
-                    {/* Field ids. */}
-                    <Form.Group as={Form.Row} className="form-group-margin">
-                        <Form.Label column className={`${labelColumnClass} text-right`}>
-                            Field id(s):
-                        </Form.Label>
-                        <Col sm={inputColumnWidth}>
-                            <FieldIdsControl.Component
-                                fieldIds={this.props.fieldIds}
-                                placeholder="Field id per line; leave empty for info about all fields"
-                                onChange={this.props.dispatchUpdateMetaData}
-                            />
-                        </Col>
-                    </Form.Group>
-
-                    <hr />
-                    <MakeRequest.Component />
-                </Form>
-            );
-        }
-
-        private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-
-            if (this.props.fieldIds.length === 0) {
-                this.makeGetUniversalFieldHelperListRequest();
-            } else {
-                this.makeGetUniversalFieldHelperRequest();
-            }
-        };
-
-        private async makeGetUniversalFieldHelperListRequest() {
-            MakeRequest.initiate("client.metaData.getUniversalFieldHelperList", "", "MetaData.UniversalFieldHelperList", () =>
-                this.props.client!.metaData.getUniversalFieldHelperList()
-            );
-        }
-
-        private async makeGetUniversalFieldHelperRequest() {
-            for (const fieldId of this.props.fieldIds) {
-                MakeRequest.initiate("client.metaData.getUniversalFieldHelper", `${fieldId}`, "MetaData.UniversalFieldHelper", () =>
-                    this.props.client!.metaData.getUniversalFieldHelper(fieldId)
-                );
-            }
-        }
+    private async makeGetUniversalFieldHelperListRequest() {
+        MakeRequest.initiate("client.metaData.getUniversalFieldHelperList", "", "MetaData.UniversalFieldHelperList", () =>
+            this.props.client!.metaData.getUniversalFieldHelperList()
+        );
     }
 
-    function mapStateToProps(state: AppState): ReduxStateProps {
-        return {
-            client: state.root.client,
-            connectionState: state.root.connectionInfo.connectionState,
-            fieldIds: state.metaData.fieldIds
-        };
+    private async makeGetUniversalFieldHelperRequest() {
+        for (const fieldId of this.props.fieldIds) {
+            MakeRequest.initiate("client.metaData.getUniversalFieldHelper", `${fieldId}`, "MetaData.UniversalFieldHelper", () =>
+                this.props.client!.metaData.getUniversalFieldHelper(fieldId)
+            );
+        }
     }
+}
 
-    // Generate redux connected component.
-    export const Component = connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(ComponentImpl);
-} // namespace GetFieldInfo
+function mapStateToProps(state: AppState): ReduxStateProps {
+    return {
+        client: state.root.client,
+        connectionState: state.root.connectionInfo.connectionState,
+        fieldIds: state.metaData.fieldIds
+    };
+}
 
-export default GetFieldInfo;
+// Generate redux connected component.
+export const Component = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ComponentImpl);

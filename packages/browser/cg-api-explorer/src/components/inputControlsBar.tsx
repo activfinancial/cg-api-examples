@@ -20,115 +20,104 @@ import { dispatchToggleGlobalCollapse } from "../state/actions/rootActions";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-namespace InputControlsBar {
-    // Own props.
-    interface OwnProps {}
+// Own props.
+interface OwnProps {}
 
-    // Redux state we'll see as props.
-    interface ReduxStateProps {
-        isInternalNetwork: boolean;
-        globalCollapseState: boolean;
-        connectionInfo: ConnectionInfo;
-    }
+// Redux state we'll see as props.
+interface ReduxStateProps {
+    isInternalNetwork: boolean;
+    globalCollapseState: boolean;
+    connectionInfo: ConnectionInfo;
+}
 
-    // Redux dispatch functions we use.
-    const mapDispatchToProps = {
-        dispatchToggleGlobalCollapse
-    };
+// Redux dispatch functions we use.
+const mapDispatchToProps = {
+    dispatchToggleGlobalCollapse
+};
 
-    // All props.
-    type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
+// All props.
+type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
 
-    class ComponentImpl extends React.Component<Props> {
-        render() {
-            // Note top-level div is to avoid parent Row's flex values messing up ours.
-            return (
-                <div>
-                    <Row id="inputControlsBar" className="pl-1">
-                        <Col>
-                            <ConnectionStatus.Component />
+class Component extends React.Component<Props> {
+    render() {
+        // Note top-level div is to avoid parent Row's flex values messing up ours.
+        return (
+            <div>
+                <Row id="inputControlsBar" className="pl-1">
+                    <Col>
+                        <ConnectionStatus />
 
-                            <div style={{ display: "contents" }}>
-                                <SimpleTooltip
-                                    text={this.props.globalCollapseState ? "Expand all sections" : "Collapse all sections"}
+                        <div style={{ display: "contents" }}>
+                            <SimpleTooltip text={this.props.globalCollapseState ? "Expand all sections" : "Collapse all sections"}>
+                                <Button
+                                    className="float-right"
+                                    variant="outline-primary"
+                                    size="sm"
+                                    onClick={this.props.dispatchToggleGlobalCollapse}
                                 >
-                                    <Button
-                                        className="float-right"
-                                        variant="outline-primary"
-                                        size="sm"
-                                        onClick={this.props.dispatchToggleGlobalCollapse}
-                                    >
-                                        <span
-                                            className={`fas ${
-                                                this.props.globalCollapseState ? "fa-angle-double-down" : "fa-angle-double-up"
-                                            }`}
-                                        />
-                                    </Button>
+                                    <span
+                                        className={`fas ${
+                                            this.props.globalCollapseState ? "fa-angle-double-down" : "fa-angle-double-up"
+                                        }`}
+                                    />
+                                </Button>
+                            </SimpleTooltip>
+
+                            <SimpleTooltip text="Copy a URL encoded with current application state to the clipboard">
+                                <Button className="float-right" variant="outline-primary" size="sm" onClick={saveStateToClipboard}>
+                                    <span className="fas fa-share-alt" />
+                                </Button>
+                            </SimpleTooltip>
+
+                            <Dropdown className="float-right">
+                                <SimpleTooltip text="Menu">
+                                    <Dropdown.Toggle id={this.dropdownId} variant="outline-primary" size="sm">
+                                        <span className="fas fa-bars" aria-hidden="true" />
+                                    </Dropdown.Toggle>
                                 </SimpleTooltip>
 
-                                <SimpleTooltip text="Copy a URL encoded with current application state to the clipboard">
-                                    <Button
-                                        className="float-right"
-                                        variant="outline-primary"
-                                        size="sm"
-                                        onClick={saveStateToClipboard}
-                                    >
-                                        <span className="fas fa-share-alt" />
-                                    </Button>
-                                </SimpleTooltip>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item href={repository.url} target="_blank">
+                                        Source code
+                                    </Dropdown.Item>
 
-                                <Dropdown className="float-right">
-                                    <SimpleTooltip text="Menu">
-                                        <Dropdown.Toggle id={this.dropdownId} variant="outline-primary" size="sm">
-                                            <span className="fas fa-bars" aria-hidden="true" />
-                                        </Dropdown.Toggle>
-                                    </SimpleTooltip>
+                                    <Dropdown.Item href={`${repository.url}/issues`} target="_blank">
+                                        Report issue
+                                    </Dropdown.Item>
 
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item href={repository.url} target="_blank">
-                                            Source code
-                                        </Dropdown.Item>
-
-                                        <Dropdown.Item href={`${repository.url}/issues`} target="_blank">
-                                            Report issue
-                                        </Dropdown.Item>
-
-                                        {this.props.isInternalNetwork && this.props.connectionInfo.hostname !== "" && (
-                                            <>
-                                                <Dropdown.Item
-                                                    href={`https://web1-tlx.activfinancial.com/live/clientinfo/quick-search?s=${this.props.connectionInfo.hostname}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    {this.props.connectionInfo.hostname} on CIDB
-                                                </Dropdown.Item>
-                                            </>
-                                        )}
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-            );
-        }
-
-        private readonly dropdownId = uuid();
+                                    {this.props.isInternalNetwork && this.props.connectionInfo.hostname !== "" && (
+                                        <>
+                                            <Dropdown.Item
+                                                href={`https://web1-tlx.activfinancial.com/live/clientinfo/quick-search?s=${this.props.connectionInfo.hostname}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {this.props.connectionInfo.hostname} on CIDB
+                                            </Dropdown.Item>
+                                        </>
+                                    )}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        );
     }
 
-    function mapStateToProps(state: AppState): ReduxStateProps {
-        return {
-            isInternalNetwork: state.root.isInternalNetwork,
-            globalCollapseState: state.root.globalCollapseState,
-            connectionInfo: state.root.connectionInfo
-        };
-    }
+    private readonly dropdownId = uuid();
+}
 
-    // Generate redux connected component.
-    export const Component = connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(ComponentImpl);
-} // namespace InputControlsBar
+function mapStateToProps(state: AppState): ReduxStateProps {
+    return {
+        isInternalNetwork: state.root.isInternalNetwork,
+        globalCollapseState: state.root.globalCollapseState,
+        connectionInfo: state.root.connectionInfo
+    };
+}
 
-export default InputControlsBar;
+// Generate redux connected component.
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Component);

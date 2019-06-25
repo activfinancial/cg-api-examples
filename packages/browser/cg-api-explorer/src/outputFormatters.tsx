@@ -10,7 +10,7 @@ import { TextDecoder } from "text-encoding";
 import { padNumber } from "./utils";
 import { formatField } from "../../common/formatFieldValue";
 import EllipsisTooltip from "./components/ellipsisTooltip";
-import MakeRequest from "./components/makeRequest";
+import * as MakeRequest from "./components/makeRequest";
 
 import { store } from "./state/store";
 import {
@@ -31,6 +31,7 @@ import {
     FieldType,
     FieldValue,
     MetaData,
+    News,
     PermissionId,
     PermissionIdList,
     PermissionLevel,
@@ -659,7 +660,7 @@ export async function renderError(requestName: string, error: Error) {
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** Render an update. */
-export function renderUpdate(client: Client, updateTypeName: string, key: string, update: any) {
+export function renderUpdate(client: Client, updateTypeName: string, key: string, update: Streaming.Update | News.Update) {
     store.dispatch(
         dispatchAppendOutput(
             OutputType.update,
