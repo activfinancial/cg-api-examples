@@ -1,8 +1,18 @@
-/**
+/*
  * RecordViewer custom element.
  */
 
-import { Client, MetaData, Streaming, Field, FieldId, FieldType, TableNumber, StatusCode, TRational } from "@activfinancial/cg-api";
+import {
+    Client,
+    Streaming,
+    Field,
+    FieldId,
+    FieldType,
+    TableNumber,
+    StatusCode,
+    TRational,
+    StatusCodeError
+} from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
 import {
@@ -228,6 +238,10 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
                 if (0 === this.stats.responsesReturned) {
                     this.setStatus(null);
                     this.stats.initialResponseTimestamp = performance.now();
+                }
+
+                if (StatusCode.success !== record.statusCode) {
+                    throw new StatusCodeError(record.statusCode);
                 }
 
                 this.processRecord(record);
