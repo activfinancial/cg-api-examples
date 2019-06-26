@@ -13,7 +13,7 @@ import uuid from "uuid/v4";
 import { ConnectionInfo } from "../connectionInfo";
 import ConnectionStatus from "./connectionStatus";
 import SimpleTooltip from "./simpleTooltip";
-import { repository } from "../../package.json";
+import { repository, name as packageName, version as packageVersion } from "../../package.json";
 
 import { AppState, saveStateToClipboard } from "../state/store";
 import { dispatchToggleGlobalCollapse } from "../state/actions/rootActions";
@@ -77,6 +77,12 @@ class Component extends React.Component<Props> {
                                 </SimpleTooltip>
 
                                 <Dropdown.Menu>
+                                    <Dropdown.Header>
+                                        {/* Strip off any package scope. */}
+                                        {packageName.replace(/\S+\//, "")} {packageVersion}
+                                    </Dropdown.Header>
+                                    <Dropdown.Divider />
+
                                     <Dropdown.Item href={repository.url} target="_blank">
                                         Source code
                                     </Dropdown.Item>
