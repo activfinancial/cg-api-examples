@@ -75,11 +75,7 @@ class ComponentImpl extends React.PureComponent<Props> {
             "client.metaData.getSubscriptionInfo",
             `${this.props.permissionLevel}`,
             "MetaData.SubscriptionInfo",
-            () => {
-                if (this.props.permissionLevel != null) {
-                    this.props.client!.metaData.getSubscriptionInfo(this.props.permissionLevel);
-                }
-            }
+            () => this.props.client!.metaData.getSubscriptionInfo(this.props.permissionLevel!)
         );
     };
 }
