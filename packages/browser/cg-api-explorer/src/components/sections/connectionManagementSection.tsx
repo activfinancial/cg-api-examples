@@ -29,7 +29,7 @@ import {
 import { dispatchResetPendingRequestCounter, dispatchAppendOutput, OutputType } from "../../state/actions/outputContainerActions";
 import { dispatchUnsubscribeAll } from "../../state/actions/subscriptionManagementActions";
 
-import contentGatewayList from "../../../../common/contentGateways.json";
+import contentGatewayList from "../../../../common/contentGateways";
 
 import { connect, ConnectParameters, Client, windowLoaded, asyncSleep, Streaming } from "@activfinancial/cg-api";
 
@@ -55,6 +55,13 @@ export function makeContentGatewayUrl(host: string | null): string {
     }
 
     return "ams://cg-ny4-web.activfinancial.com/ContentGateway:Service";
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+
+/** Generate <option> child elements for the urlList <datalist> element from the static list of CGs. */
+function renderUrlList() {
+    return Object.keys(contentGatewayList).map((key) => <option key={key} value={contentGatewayList[key]} />);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -148,7 +155,7 @@ class ComponentImpl extends React.Component<Props, State> {
                                         </InputGroup.Append>
                                     </InputGroup>
                                 </Col>
-                                <datalist id="urlList">{this.renderUrlList()}</datalist>
+                                <datalist id="urlList">{renderUrlList()}</datalist>
                             </Form.Group>
 
                             <Form.Group as={Form.Row} className="form-group-margin">
@@ -451,11 +458,6 @@ class ComponentImpl extends React.Component<Props, State> {
 
         this.props.dispatchSetClient(null);
         this.props.dispatchResetPendingRequestCounter();
-    }
-
-    /** Generate <option> child elements for the urlList <datalist> element from the static list of CGs. */
-    private renderUrlList() {
-        return Object.keys(contentGatewayList).map((key) => <option key={key} value={(contentGatewayList as any)[key]} />);
     }
 
     // Parse URL.
