@@ -49,10 +49,12 @@ class App extends Component<Props> {
         const xhr = new XMLHttpRequest();
 
         // Only resolve to true if the HEAD returns 200. Anything else or errors, assume false.
+        // Try to avoid any caching, as we're sensitive to the exact CORS header in a response.
         xhr.onload = () => store.dispatch(dispatchIsInternalNetworkAction(true));
 
         try {
             xhr.open("HEAD", `${location.protocol}//scm1-cam.activfinancial.com`);
+            xhr.setRequestHeader("cache-control", "no-cache, no-store, must-revalidate");
             xhr.send();
         } catch {}
     }
