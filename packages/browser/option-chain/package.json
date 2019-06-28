@@ -32,7 +32,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.9.5",
+        "@activfinancial/cg-api": "^0.9.6",
         "detect-browser": "^4.5.1",
         "resize-observer": "^1.0.0",
         "skatejs": "^5.2.4"

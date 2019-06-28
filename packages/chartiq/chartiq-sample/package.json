@@ -31,7 +31,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.9.5",
+        "@activfinancial/cg-api": "^0.9.6",
         "@activfinancial/chartiq-adapter": "^0.0.17"
     },
     "devDependencies": {
