@@ -58,7 +58,13 @@ const commandLineParser = commander
                 console.log(`\n${record.responseKey.symbol} fields:`);
 
                 for (const field of record.fieldData) {
-                    console.log(sprintf("%-50.50s %s", FieldId[field.id], field.value));
+                    console.log(
+                        sprintf(
+                            "%-50.50s %s",
+                            FieldId[field.id] || field.id,
+                            field.statusCode === StatusCode.success ? field.value : StatusCode[field.statusCode]
+                        )
+                    );
                 }
             }
         }
