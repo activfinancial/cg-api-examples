@@ -501,9 +501,7 @@ class ActivWorkstation {
         const requestHandle = this.contentGatewayClient!.streaming.getMatch({
             key: symbols,
             matchType: Streaming.GetMatchType.composite,
-            relationships: {
-                fieldIds: [FieldId.FID_NAME]
-            }
+            fieldIds: [FieldId.FID_NAME]
         });
 
         for await (const record of requestHandle) {

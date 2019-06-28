@@ -491,7 +491,7 @@ class ComponentImpl extends React.PureComponent<Props> {
         return requestParameters as Streaming.GetNextPreviousParameters;
     }
 
-    private setCommonParameters(requestParameters: Partial<Streaming.RequestParameters>) {
+    private setCommonParameters(requestParameters: Partial<Streaming.NavigationalRequestParameters>) {
         requestParameters.relationships = {};
 
         for (const relationshipInfo of this.props.relationships) {

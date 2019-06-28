@@ -301,15 +301,13 @@ export class ActivQuoteFeed implements QuoteFeed {
 
         subscriptionEntry.requestHandle = client.streaming.getEqual({
             key: subscriptionInfo.symbol,
-            relationships: {
-                fieldIds: [
-                    FieldId.FID_TRADE,
-                    FieldId.FID_TRADE_SIZE,
-                    FieldId.FID_TRADE_DATE,
-                    FieldId.FID_TRADE_TIME,
-                    FieldId.FID_CLOSE
-                ]
-            },
+            fieldIds: [
+                FieldId.FID_TRADE,
+                FieldId.FID_TRADE_SIZE,
+                FieldId.FID_TRADE_DATE,
+                FieldId.FID_TRADE_TIME,
+                FieldId.FID_CLOSE
+            ],
             subscription: {
                 type: Streaming.SubscriptionType.eventTypeFilterIncludeList,
                 eventTypes: [EventType.trade],

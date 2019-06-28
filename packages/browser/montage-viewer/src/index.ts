@@ -143,9 +143,7 @@ class MontageViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement)))
 
             const requestParameters: Streaming.GetPatternParameters = {
                 key: symbolIdList,
-                relationships: {
-                    fieldIds: this.fieldInfos.map((fieldInfo: FieldInfo) => fieldInfo.fieldId)
-                },
+                fieldIds: this.fieldInfos.map((fieldInfo: FieldInfo) => fieldInfo.fieldId),
                 subscription: {
                     // Note no update handler; record specific handler set on receipt of response.
                 }

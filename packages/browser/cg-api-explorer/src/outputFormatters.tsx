@@ -141,8 +141,7 @@ function getNewsStoryBody(client: Client, newsSymbol: string) {
 
 function getEqual(client: Client, symbol: string) {
     const requestParameters = {
-        key: symbol,
-        relationships: {}
+        key: symbol
     };
 
     MakeRequest.initiateAsyncIterable(

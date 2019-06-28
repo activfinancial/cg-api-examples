@@ -214,9 +214,6 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
             const requestParameters: Streaming.GetMatchParameters = {
                 key: this.symbol,
                 matchType: Streaming.GetMatchType.composite,
-                relationships: {
-                    /* Empty Relationship will get all fields. */
-                },
                 subscription: {
                     updateHandler: (update: Streaming.Update) => this.processUpdate(update)
                 }
