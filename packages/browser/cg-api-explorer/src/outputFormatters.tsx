@@ -230,7 +230,14 @@ const propertyFormatters = (function() {
     }
 
     function symbolIdNoLink(client: Client, symbolId: Streaming.SymbolId, depth: number) {
-        return { output: `${symbolId.symbol}${makeTableNumberSuffix(client, symbolId)}` };
+        return {
+            output: (
+                <>
+                    {symbolId.symbol}
+                    {makeTableNumberSuffix(client, symbolId)}
+                </>
+            )
+        };
     }
 
     propertyFormatters.statusCode = (client: Client, statusCode: StatusCode, depth: number) => ({
