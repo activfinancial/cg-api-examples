@@ -33,7 +33,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.9.6",
+        "@activfinancial/cg-api": "^0.9.7",
         "@activfinancial/montage-viewer": "^0.3.29",
         "@activfinancial/news-viewer": "^0.4.15",
         "@activfinancial/option-chain": "^0.4.26",
@@ -64,7 +64,7 @@
         "terser-webpack-plugin": "^1.3.0",
         "ts-loader": "^6.0.4",
         "typescript": "^3.5.2",
-        "webpack": "^4.35.0",
+        "webpack": "^4.35.2",
         "webpack-cli": "^3.3.5",
         "webpack-dev-server": "^3.7.2"
     },
