@@ -4,9 +4,10 @@
 
 import * as React from "react";
 import { Component } from "react";
-import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Provider } from "react-redux";
+import SplitPane from "react-split-pane";
+import uuid from "uuid/v4";
 
 import MainContainer from "./components/mainContainer";
 import InputContainer from "./components/inputContainer";
@@ -19,7 +20,11 @@ import { dispatchIsInternalNetworkAction } from "./state/actions/rootActions";
 
 interface Props {}
 
-class App extends Component<Props> {
+interface State {
+    splitPaneKey: string;
+}
+
+class App extends Component<Props, State> {
     // static whyDidYouRender = true;
 
     private static readonly mainDivStyle: React.CSSProperties = {
@@ -32,18 +37,12 @@ class App extends Component<Props> {
         flexWrap: "nowrap"
     };
 
-    private static readonly inputColumnStyle: React.CSSProperties = {
-        paddingLeft: 0,
-        paddingRight: 0,
-        display: "flex"
-    };
-
-    private static readonly outputColumnStyle: React.CSSProperties = {
-        display: "flex"
-    };
-
     constructor(props: Props) {
         super(props);
+
+        this.state = {
+            splitPaneKey: uuid()
+        };
 
         // Fire off a test for being on ACTIV internal network.
         const xhr = new XMLHttpRequest();
@@ -62,19 +61,45 @@ class App extends Component<Props> {
     render() {
         return (
             <Provider store={store}>
-                <MainContainer style={App.mainDivStyle} className="App container-fluid pt-1">
+                <MainContainer style={App.mainDivStyle} className="App container-fluid">
                     <Row style={App.mainRowStyle}>
-                        <Col style={App.inputColumnStyle} sm={6}>
+                        <SplitPane
+                            className="pt-1"
+                            resizerClassName="main-split-pane-resizer"
+                            split="vertical"
+                            defaultSize={this.getInitialSplitPaneWidth()}
+                            onChange={this.processSplitPaneChange}
+                            onResizerDoubleClick={this.processSplitPaneDoubleClick}
+                            key={this.state.splitPaneKey}
+                        >
                             <InputContainer />
-                        </Col>
-                        <Col style={App.outputColumnStyle} sm={6}>
                             <OutputContainer />
-                        </Col>
+                        </SplitPane>
                     </Row>
                 </MainContainer>
             </Provider>
         );
     }
+
+    private static readonly splitPaneKey = "cgApiExplorerMainSplitPane";
+
+    private getInitialSplitPaneWidth(): string | number {
+        const split = localStorage.getItem(App.splitPaneKey);
+        return split != null ? parseInt(split) : "50%";
+    }
+
+    private readonly processSplitPaneChange = (newSize: number) => {
+        localStorage.setItem(App.splitPaneKey, newSize.toString());
+    };
+
+    private readonly processSplitPaneDoubleClick = (event: MouseEvent) => {
+        // Remove any stored split position and force a re-render, which will reset to default value.
+        localStorage.removeItem(App.splitPaneKey);
+
+        this.setState({
+            splitPaneKey: uuid()
+        });
+    };
 }
 
 export default App;

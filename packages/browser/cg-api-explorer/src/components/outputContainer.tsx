@@ -3,6 +3,7 @@
  */
 
 import * as React from "react";
+import Col from "react-bootstrap/Col";
 
 import * as OutputControlsBar from "./outputControlsBar";
 import OutputDisplay from "./outputDisplay";
@@ -13,17 +14,15 @@ class Component extends React.Component<{}> {
     private static readonly style: React.CSSProperties = {
         display: "flex",
         flexDirection: "column",
-        flex: 1
+        height: "100%"
     };
-
-    // TODO redo this with Col/Row only?
 
     render() {
         return (
-            <div style={Component.style}>
+            <Col style={Component.style}>
                 <OutputControlsBar.Component />
                 <OutputDisplay className="mt-1" />
-            </div>
+            </Col>
         );
     }
 }

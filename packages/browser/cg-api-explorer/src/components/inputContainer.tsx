@@ -44,7 +44,8 @@ class Component extends React.PureComponent<Props> {
     private static readonly style: React.CSSProperties = {
         display: "flex",
         flexDirection: "column",
-        flex: 1
+        flex: 1,
+        height: "100%"
     };
 
     private static readonly collapsibleSectionsStyle: React.CSSProperties = {
