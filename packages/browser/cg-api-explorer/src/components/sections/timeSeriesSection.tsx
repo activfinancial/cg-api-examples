@@ -124,9 +124,8 @@ class ComponentImpl extends React.PureComponent<Props> {
                 <CollapsibleSection title="Time Series" initialCollapseState={true}>
                     {this.props.connectionInfo.isHistoryServiceAvailable ? (
                         /* Note we're not using the <Tabs> component for two reasons:
-                        1. To allow <SimpleTooltip> on the tab header itself.
-                        2. To allow a single common section, rather than rendering a different one per tab
-                        (and then having to pass its state up so each copy looks then same). */
+                           1. To allow <SimpleTooltip> on the tab header itself.
+                           2. To allow a single common section, rather than rendering a different one per tab. */
                         <Tab.Container id={`${this.id}-tabs`} defaultActiveKey={this.props.timeSeries.activeTab} transition={false}>
                             <Nav variant="tabs" onSelect={this.props.dispatchSetTimeSeriesTab}>
                                 <SimpleTooltip text="Tick series">
@@ -319,10 +318,7 @@ class ComponentImpl extends React.PureComponent<Props> {
                                         <Col sm={inputColumnWidth}>
                                             {this.props.timeSeries.periods.map((period, index) => (
                                                 <Period.Component
-                                                    key={period.key}
-                                                    type={period.type}
-                                                    date={period.date}
-                                                    count={period.count}
+                                                    {...period}
                                                     // Spacing between relationships.
                                                     className={index < this.props.timeSeries.periods.length - 1 ? "mb-1" : ""}
                                                     onChange={(newPeriod: Partial<Period.LiftedState>) =>

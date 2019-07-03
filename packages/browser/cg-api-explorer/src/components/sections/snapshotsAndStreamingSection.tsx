@@ -103,9 +103,8 @@ class ComponentImpl extends React.PureComponent<Props> {
             <Col>
                 <CollapsibleSection title="Snapshots and Streaming" initialCollapseState={false}>
                     {/* Note we're not using the <Tabs> component for two reasons:
-                    1. To allow <SimpleTooltip> on the tab header itself.
-                    2. To allow a single common section, rather than rendering a different one per tab
-                        (and then having to pass its state up so each copy looks then same). */}
+                        1. To allow <SimpleTooltip> on the tab header itself.
+                        2. To allow a single common section, rather than rendering a different one per tab. */}
                     <Tab.Container id={`${this.id}-tabs`} defaultActiveKey={this.props.activeTab} transition={false}>
                         <Nav variant="tabs" onSelect={this.props.dispatchSetSnapshotsAndStreamingTab}>
                             <SimpleTooltip text="Get record by exact symbol">

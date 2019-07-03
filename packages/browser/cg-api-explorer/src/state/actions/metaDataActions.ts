@@ -5,8 +5,6 @@
 import { ActionBase, ActionType } from "./actionType";
 import { State } from "../reducers/metaDataReducer";
 
-import { MetaData } from "@activfinancial/cg-api";
-
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** Set tab action. */

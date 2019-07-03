@@ -63,6 +63,6 @@ export enum ActionType {
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** Base action interface. */
-export interface ActionBase<T> {
+export interface ActionBase<T extends ActionType> {
     type: T;
 }

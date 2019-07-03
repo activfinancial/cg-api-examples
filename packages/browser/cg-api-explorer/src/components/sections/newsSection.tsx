@@ -39,7 +39,7 @@ const newsQueryTooltip =
     "<br />" +
     "Valid tags are: <samp><b>body cat head magazine newssymbol supplier symbol</samp></b><br />" +
     "  <samp><b>body</samp></b> used to query the news story body<br />" +
-    "  <samp><b>cat</samp></b> used to query the catagory code<br />" +
+    "  <samp><b>cat</samp></b> used to query the category code<br />" +
     "  <samp><b>head</samp></b> used to query headlines<br />" +
     "  <samp><b>magazine</samp></b> used to query magazine<br />" +
     "  <samp><b>newssymbol</samp></b> is the actual symbol of a story<br />" +
@@ -47,7 +47,7 @@ const newsQueryTooltip =
     "  <samp><b>symbol</samp></b> is a stock symbol referenced in a story<br />" +
     "<br />Examples:<br />" +
     "  <samp><b>cat=industrial AND symbol=IBM.</samp></b><br />" +
-    "  <samp><b>magazine=(DJDN or BIZ) AND symbol=MSFT. AND body=report</samp></b><br />" +
+    "  <samp><b>magazine=(DJDN OR BIZ) AND symbol=MSFT. AND body=report</samp></b><br />" +
     "  <samp><b>body=(apple AND intel)</samp></b><br />" +
     "  <samp><b>head=yahoo</samp></b><br />" +
     "  <samp><b>newssymbol=241b3044%%BIZ</samp></b><br />" +
