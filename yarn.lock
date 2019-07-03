@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@activfinancial/cg-api@^0.9.7":
-  version "0.9.7"
-  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api/-/cg-api-0.9.7.tgz#3aa805986f6ef40fa293928c0a6c5608d7ce1c15"
-  integrity sha512-WIdNp9Nrpin1HyxTp5fi4IxNBzxcsBiPIm7NDreJb08lfOC4Ls/oXXd5bAm1yy1CQHX0AgpitYfFfGycN3hRNQ==
+"@activfinancial/cg-api@^0.9.8":
+  version "0.9.8"
+  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api/-/cg-api-0.9.8.tgz#4eb463a6dbf72794a76618413266d46522a2739b"
+  integrity sha512-WQF8D62NwDWj9i395x2amhqR3tl+2KrzLuvPkrZilPrLGCv2jd+SyqX+5v9ovo0Vmvbaq35ysPdTvAv+MhCVcw==
   dependencies:
     base64-js "^1.3.0"
     crypto-js "^3.1.9-1"
@@ -5298,10 +5298,10 @@ html-minifier@^3.2.3, html-minifier@^3.5.8:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
-html-react-parser@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-0.8.0.tgz#691a9d31153a87a16eb5ed4d6a08da5b18e0c9de"
-  integrity sha512-R5tkVKQ5pZzPzYUG5GlSoGvrDi46/K04JDwK9iRYVSVkvcF/3fN5JDEwnMmcnh8d9o8moSV7WaU/49TJGghYWg==
+html-react-parser@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-0.8.1.tgz#f42197e910995bdc7979f0a04267e85e34f52834"
+  integrity sha512-XUU/7JZuXehhLwnw0Vtpr8dxDEKwTrCFSRDUFmfKPA786vb7gIimvYXyIcxhrtg0Z8ZGEaYRUwL+fYUB8AbAhQ==
   dependencies:
     "@types/domhandler" "2.4.1"
     html-dom-parser "0.2.2"
@@ -6654,10 +6654,10 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lint-staged@^9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-9.0.1.tgz#dc31e3808052cf65727d26a3568620e4f75a5aa5"
-  integrity sha512-LZ6n/uzOYJRxmjUrEE6v3wHcL/YOkIMphSwfsyQwmKyFB0l/bRe0AQSG4+QUXHk71C9d2H7Z5KvIZi+qslyrVQ==
+lint-staged@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-9.0.2.tgz#238e1ed7cba2d422faaf4499e6a5686f0f5c1331"
+  integrity sha512-2W9yBRADEzcGs6j/57JA0GVzSTByYgWbcU89/Xm0s/k+4qMp8032tZYPPmP422xZ79xtUaNisJ/0U5lbuYmaTA==
   dependencies:
     chalk "^2.4.2"
     commander "^2.20.0"

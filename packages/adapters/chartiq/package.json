@@ -22,7 +22,7 @@
         "lib/**"
     ],
     "dependencies": {
-        "@activfinancial/cg-api": "^0.9.7"
+        "@activfinancial/cg-api": "^0.9.8"
     },
     "devDependencies": {
         "rimraf": "^2.6.3",

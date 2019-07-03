@@ -31,12 +31,12 @@
         "lib/**"
     ],
     "dependencies": {
-        "@activfinancial/cg-api": "^0.9.7",
+        "@activfinancial/cg-api": "^0.9.8",
         "@fortawesome/fontawesome-free": "^5.9.0",
         "@welldone-software/why-did-you-render": "^2.6.0",
         "base64-url": "^2.2.2",
         "clipboard-copy": "^3.0.0",
-        "html-react-parser": "^0.8.0",
+        "html-react-parser": "^0.8.1",
         "jest": "^24.8.0",
         "react": "^16.8.6",
         "react-bootstrap": "^1.0.0-beta.9",
