@@ -83,6 +83,7 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
     private readonly status: HTMLDivElement;
     private readonly overlay: HTMLDivElement;
     private readonly headlineTable: HTMLTableElement;
+    private readonly articleContainerElement: HTMLDivElement;
     private readonly articleElement: HTMLElement;
     private readonly storyBodyHeadlineElement: HTMLElement;
     private readonly storySymbolElement: HTMLElement;
@@ -150,6 +151,7 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
 
         this.headlineTable = this.rootElement.querySelector(".news-viewer-headline-table>tbody") as HTMLTableElement;
 
+        this.articleContainerElement = this.rootElement.querySelector(".news-viewer-article-container") as HTMLDivElement;
         this.articleElement = this.rootElement.querySelector("article") as HTMLElement;
         this.storyBodyHeadlineElement = this.rootElement.querySelector(".news-story-body-headline") as HTMLElement;
         this.storySymbolElement = this.rootElement.querySelector(".news-story-symbol") as HTMLElement;
@@ -412,6 +414,7 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
             if (this.storyBodyElement.lastChild != null) {
                 this.storyBodyElement.removeChild(this.storyBodyElement.lastChild);
             }
+
             this.storyBodyElement.appendChild(doc.firstChild);
         }
 
@@ -431,11 +434,12 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
         this.previousStorySymbol = setNavigationButton(story.getField(FieldId.FID_PREVIOUS_NEWS_SYMBOL), this.previousStoryButton);
         this.nextStorySymbol = setNavigationButton(story.getField(FieldId.FID_NEXT_NEWS_SYMBOL), this.nextStoryButton);
 
-        this.articleElement.scrollTop = 0;
+        this.articleContainerElement.scrollTop = 0;
     }
 
     private resetDisplay() {
         this.headlineTable.innerHTML = "";
+        this.articleContainerElement.scrollTop = 0;
         this.articleElement.classList.remove(NewsViewer.comtextSuppliedClass);
         this.storyBodyHeadlineElement.innerHTML = "";
         this.storySymbolElement.innerHTML = "";

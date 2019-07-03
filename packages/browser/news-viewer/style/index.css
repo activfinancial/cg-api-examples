@@ -91,24 +91,24 @@ Similarly height: 100% causes issues in Edge as it propogates to all children (s
     padding-bottom: 3px;
     top: 0;
     position: sticky;
-    background-color: var(--shadow-background-color);
+    background-color: var(--shadow-table-header-background-color);
 }
 
 .news-story-body-headline {
     display: inline;
 }
 
-.news-viewer-article {
+.news-viewer-article-container {
     display: inline;
     overflow-y: scroll;
     flex: 5 1 0;
 }
 
-.news-viewer-article .news-viewer-comtex-only {
+.news-viewer-article-container .news-viewer-comtex-only {
     display: none;
 }
 
-.news-viewer-article.news-viewer-comtex-supplied .news-viewer-comtex-only {
+.news-viewer-article-container.news-viewer-comtex-supplied .news-viewer-comtex-only {
     display: block;
 }
 
