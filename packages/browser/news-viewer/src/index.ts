@@ -41,6 +41,43 @@ interface Attributes {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
+// Map of encoding -> TextDecoder.
+type TextDecoders = {
+    [key: string]: TextDecoder;
+};
+
+let textDecoders: TextDecoders = {};
+
+const fallbackEncoding = "utf-8";
+
+function getTextDecoder(encoding: string) {
+    const normalizedEncoding = encoding.toLowerCase();
+
+    if (textDecoders[normalizedEncoding] != null) {
+        return textDecoders[normalizedEncoding];
+    }
+
+    let textDecoder;
+
+    function makeTextDecoder(encoding: string) {
+        // TODO just using the polyfill isn't working in Openfin, so runtime check here.
+        return typeof TextDecoder === "undefined" ? new TextDecoderPF(encoding) : new TextDecoder(encoding);
+    }
+
+    try {
+        textDecoder = makeTextDecoder(normalizedEncoding);
+    } catch (e) {
+        // Fallback to utf-8 for anything that fails.
+        console.error(e);
+        textDecoder = makeTextDecoder(fallbackEncoding);
+    }
+
+    textDecoders[normalizedEncoding] = textDecoder;
+    return textDecoder;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+
 class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) implements IExample {
     private readonly rootElement: HTMLDivElement;
     private readonly status: HTMLDivElement;
@@ -58,8 +95,6 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
     private headlineRequestHandle: News.RequestHandle | null = null;
     private bodyRequestHandle: News.RequestHandle | null = null;
 
-    // TODO just using the polyfill isn't working in Openfin, so runtime check here.
-    private readonly storyBodyDecoder = typeof TextDecoder === "undefined" ? new TextDecoderPF("utf-8") : new TextDecoder("utf-8");
     private readonly storyBodyParser = new DOMParser();
 
     private nextStorySymbol: string | null = null;
@@ -320,7 +355,8 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
                     FieldId.FID_STORY_DATE_TIME,
                     FieldId.FID_STORY_BODY,
                     FieldId.FID_NEXT_NEWS_SYMBOL,
-                    FieldId.FID_PREVIOUS_NEWS_SYMBOL
+                    FieldId.FID_PREVIOUS_NEWS_SYMBOL,
+                    FieldId.FID_CHARACTER_SET
                 ],
                 updateHandler: (update: News.Update) => this.showStoryBody(update)
             };
@@ -355,6 +391,10 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
             return;
         }
 
+        // Encoding.
+        const encodingField = story.getField(FieldId.FID_CHARACTER_SET);
+        const encoding = encodingField.value != null ? (encodingField.value as string) : fallbackEncoding;
+
         // Display additional content if supplier is Comtex.
         const supplierField = story.getField(FieldId.FID_SUPPLIER);
         if (supplierField.value != null && (supplierField.value as string) === "Comtex") {
@@ -365,7 +405,7 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
 
         this.storyBodyHeadlineElement.textContent = formatField(story.getField(FieldId.FID_HEADLINE));
 
-        const fieldValue = this.storyBodyDecoder.decode(storyBodyField.value as Uint8Array);
+        const fieldValue = getTextDecoder(encoding).decode(storyBodyField.value as Uint8Array);
         const doc = this.storyBodyParser.parseFromString(fieldValue as string, "text/html");
 
         if (doc.firstChild != null) {
