@@ -121,7 +121,7 @@ class ComponentImpl extends React.PureComponent<Props> {
     render() {
         return (
             <Col>
-                <CollapsibleSection title="TimeSeries" initialCollapseState={true}>
+                <CollapsibleSection title="Time Series" initialCollapseState={true}>
                     {this.props.connectionInfo.isHistoryServiceAvailable ? (
                         /* Note we're not using the <Tabs> component for two reasons:
                         1. To allow <SimpleTooltip> on the tab header itself.

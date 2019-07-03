@@ -7,7 +7,6 @@ import { Component } from "react";
 import Row from "react-bootstrap/Row";
 import { Provider } from "react-redux";
 import SplitPane from "react-split-pane";
-import uuid from "uuid/v4";
 
 import MainContainer from "./components/mainContainer";
 import InputContainer from "./components/inputContainer";
@@ -21,7 +20,7 @@ import { dispatchIsInternalNetworkAction } from "./state/actions/rootActions";
 interface Props {}
 
 interface State {
-    splitPaneKey: string;
+    splitPaneSize?: string;
 }
 
 class App extends Component<Props, State> {
@@ -41,7 +40,7 @@ class App extends Component<Props, State> {
         super(props);
 
         this.state = {
-            splitPaneKey: uuid()
+            splitPaneSize: undefined
         };
 
         // Fire off a test for being on ACTIV internal network.
@@ -68,9 +67,9 @@ class App extends Component<Props, State> {
                             resizerClassName="main-split-pane-resizer"
                             split="vertical"
                             defaultSize={this.getInitialSplitPaneWidth()}
+                            size={this.state.splitPaneSize}
                             onChange={this.processSplitPaneChange}
                             onResizerDoubleClick={this.processSplitPaneDoubleClick}
-                            key={this.state.splitPaneKey}
                         >
                             <InputContainer />
                             <OutputContainer />
@@ -82,22 +81,29 @@ class App extends Component<Props, State> {
     }
 
     private static readonly splitPaneKey = "cgApiExplorerMainSplitPane";
+    private static readonly initialSplitPaneSize = "50%";
 
     private getInitialSplitPaneWidth(): string | number {
         const split = localStorage.getItem(App.splitPaneKey);
-        return split != null ? parseInt(split) : "50%";
+        return split != null ? parseInt(split) : App.initialSplitPaneSize;
     }
 
     private readonly processSplitPaneChange = (newSize: number) => {
         localStorage.setItem(App.splitPaneKey, newSize.toString());
+
+        if (this.state.splitPaneSize != null) {
+            this.setState({
+                splitPaneSize: undefined
+            });
+        }
     };
 
     private readonly processSplitPaneDoubleClick = (event: MouseEvent) => {
-        // Remove any stored split position and force a re-render, which will reset to default value.
+        // Remove any stored split position and force a re-render with a given size.
         localStorage.removeItem(App.splitPaneKey);
 
         this.setState({
-            splitPaneKey: uuid()
+            splitPaneSize: App.initialSplitPaneSize
         });
     };
 }
