@@ -49,7 +49,8 @@ const initialState: State = {
     periods: [
         {
             key: uuid(),
-            type: TimeSeries.PeriodType.dataPointCount
+            type: TimeSeries.PeriodType.dataPointCount,
+            count: 1
         },
         {
             key: uuid(),
@@ -66,7 +67,7 @@ function findPeriod(state: State, key: string) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function addPeriod(state: State) {
+function addPeriod(state: State): State {
     const newPeriod = {
         key: uuid(),
         type: TimeSeries.PeriodType.now
@@ -74,7 +75,7 @@ function addPeriod(state: State) {
 
     return {
         ...state,
-        periods: [...state.periods, newPeriod]
+        periods: [...state.periods, newPeriod as Period.LiftedState]
     };
 }
 
@@ -93,7 +94,7 @@ function updatePeriod(state: State, key: string, period: Partial<Period.LiftedSt
 
     const periods = state.periods
         .slice(0, index)
-        .concat(newPeriod)
+        .concat(newPeriod as Period.LiftedState)
         .concat(state.periods.slice(index + 1));
 
     return {

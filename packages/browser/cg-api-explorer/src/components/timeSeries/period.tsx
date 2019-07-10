@@ -26,9 +26,10 @@ function timeToISOString(date: Date) {
 }
 
 // State to be lifted up and managed elsewhere.
-export interface LiftedState extends TimeSeries.Period {
+// Note have to use type X & Y as interface can't extend a union (TimeSeries.Period).
+export type LiftedState = TimeSeries.Period & {
     key: string;
-}
+};
 
 // Own props.
 interface OwnProps {
@@ -42,11 +43,8 @@ type Props = OwnProps & LiftedState;
 
 export class Component extends React.PureComponent<Props> {
     render() {
-        const showCount =
-            this.props.type === TimeSeries.PeriodType.tradingDayCount || this.props.type === TimeSeries.PeriodType.dataPointCount;
-
-        const showDateTime =
-            this.props.type === TimeSeries.PeriodType.localDateTime || this.props.type === TimeSeries.PeriodType.utcDateTime;
+        const count = TimeSeries.isPeriodCount(this.props) ? this.props.count : null;
+        const date = TimeSeries.isPeriodDate(this.props) ? this.props.date : null;
 
         return (
             <Card body bg="light" className={this.props.className}>
@@ -59,7 +57,7 @@ export class Component extends React.PureComponent<Props> {
                             onChange={this.onTypeChange}
                         >
                             <option value="now">Present time</option>
-                            <option value="localDateTime">Local date-time</option>
+                            <option value="exchangeLocalDateTime">Local date-time</option>
                             <option value="utcDateTime">UTC date-time</option>
                             <option value="tradingDayCount">Trading days</option>
                             <option value="dataPointCount">Data points</option>
@@ -82,13 +80,13 @@ export class Component extends React.PureComponent<Props> {
                 </Form.Group>
 
                 {/* Count. */}
-                {showCount && (
+                {TimeSeries.isPeriodCount(this.props) && (
                     <Form.Group as={Form.Row} className="form-group-margin">
                         <Col md={10}>
                             <Form.Control
                                 type="number"
                                 size="sm"
-                                value={this.props.count != null ? this.props.count.toString() : ""}
+                                value={count != null ? count.toString() : ""}
                                 min={1}
                                 placeholder="Count"
                                 required
@@ -99,7 +97,7 @@ export class Component extends React.PureComponent<Props> {
                 )}
 
                 {/* Date & time. */}
-                {showDateTime && (
+                {TimeSeries.isPeriodDate(this.props) && (
                     <Form.Group as={Form.Row} className="form-group-margin">
                         <Col md={10}>
                             <Form.Label column className="text-right col-sm-5">
@@ -109,7 +107,7 @@ export class Component extends React.PureComponent<Props> {
                                 <Form.Control
                                     type="date"
                                     size="sm"
-                                    value={this.props.date != null ? dateToISOString(this.props.date) : ""}
+                                    value={date != null ? dateToISOString(date) : ""}
                                     required
                                     onChange={this.onDateChange}
                                 />
@@ -123,7 +121,7 @@ export class Component extends React.PureComponent<Props> {
                                     type="time"
                                     size="sm"
                                     step="1"
-                                    value={this.props.date != null ? timeToISOString(this.props.date) : ""}
+                                    value={date != null ? timeToISOString(date) : ""}
                                     required
                                     onChange={this.onTimeChange}
                                 />
@@ -155,8 +153,9 @@ export class Component extends React.PureComponent<Props> {
         }
 
         // If no time, assumes midnight.
+        const periodDate = TimeSeries.isPeriodDate(this.props) ? this.props.date : null;
         const dateStr = e.target.valueAsDate.toDateString();
-        const timeStr = this.props.date == null ? e.target.valueAsDate.toTimeString() : this.props.date.toTimeString();
+        const timeStr = periodDate == null ? e.target.valueAsDate.toTimeString() : periodDate.toTimeString();
         const date = new Date(`${dateStr} ${timeStr}`);
 
         this.props.onChange({ date });
@@ -170,7 +169,8 @@ export class Component extends React.PureComponent<Props> {
         }
 
         // If no date, assumes epoch.
-        const dateStr = this.props.date == null ? e.target.valueAsDate.toDateString() : this.props.date.toDateString();
+        const periodDate = TimeSeries.isPeriodDate(this.props) ? this.props.date : null;
+        const dateStr = periodDate == null ? e.target.valueAsDate.toDateString() : periodDate.toDateString();
         const timeStr = e.target.valueAsDate.toTimeString();
         const date = new Date(`${dateStr} ${timeStr}`);
 

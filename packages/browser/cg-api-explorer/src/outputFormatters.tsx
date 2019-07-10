@@ -38,9 +38,10 @@ import {
     PermissionLevelList,
     RelationshipId,
     StatusCode,
+    Streaming,
     TableNumber,
     TableType,
-    Streaming,
+    TimeSeries,
     Vector
 } from "@activfinancial/cg-api";
 
@@ -377,6 +378,10 @@ const propertyFormatters = (function() {
 
     propertyFormatters.tableType = (client: Client, tableType: TableType, depth: number) => ({
         output: formatEnum(TableType, tableType)
+    });
+
+    propertyFormatters.tickType = (client: Client, tickType: TimeSeries.TickType, depth: number) => ({
+        output: formatEnum(TimeSeries.TickType, tickType)
     });
 
     propertyFormatters.newsSymbol = (client: Client, newsSymbol: string, depth: number) => {
