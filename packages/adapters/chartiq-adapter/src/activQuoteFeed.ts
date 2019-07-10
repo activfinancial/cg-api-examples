@@ -35,7 +35,7 @@ interface MakeRequest {
     (
         requestType: string,
         symbol: string,
-        dateFormat: TimeSeries.PeriodType,
+        dateFormat: TimeSeries.DatePeriodTypes,
         startDate: Date,
         endDate: Date | null,
         params: any,
@@ -119,7 +119,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             makeRequest: (
                 requestType: string,
                 symbol: string,
-                dateFormat: TimeSeries.PeriodType,
+                dateFormat: TimeSeries.DatePeriodTypes,
                 startDate: Date,
                 endDate: Date | null,
                 params: any,
@@ -134,7 +134,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             makeRequest: (
                 requestType: string,
                 symbol: string,
-                dateFormat: TimeSeries.PeriodType,
+                dateFormat: TimeSeries.DatePeriodTypes,
                 startDate: Date,
                 endDate: Date | null,
                 params: any,
@@ -159,7 +159,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             makeRequest: (
                 requestType: string,
                 symbol: string,
-                dateFormat: TimeSeries.PeriodType,
+                dateFormat: TimeSeries.DatePeriodTypes,
                 startDate: Date,
                 endDate: Date | null,
                 params: any,
@@ -184,7 +184,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             makeRequest: (
                 requestType: string,
                 symbol: string,
-                dateFormat: TimeSeries.PeriodType,
+                dateFormat: TimeSeries.DatePeriodTypes,
                 startDate: Date,
                 endDate: Date | null,
                 params: any,
@@ -387,7 +387,7 @@ export class ActivQuoteFeed implements QuoteFeed {
         intervalInfo.makeRequest(
             "fetchPaginationData",
             symbol,
-            TimeSeries.PeriodType.localDateTime,
+            TimeSeries.PeriodType.exchangeLocalDateTime,
             startDate,
             intervalInfo.adjustEndDate(endDate, params),
             params,
@@ -409,19 +409,27 @@ export class ActivQuoteFeed implements QuoteFeed {
         // Update is called with the last time from a previous response, which will be local time
         // (in the TZ of the exchange). So we have to use local time in TSS requests, since we're not able to convert
         // received times in exchange timezone to our local timezone (currently).
-        intervalInfo.makeRequest("fetchUpdateData", symbol, TimeSeries.PeriodType.localDateTime, startDate, null, params, callback);
+        intervalInfo.makeRequest(
+            "fetchUpdateData",
+            symbol,
+            TimeSeries.PeriodType.exchangeLocalDateTime,
+            startDate,
+            null,
+            params,
+            callback
+        );
     }
 
     // End of ChartIQ interface.
 
-    private static makeEndPeriod(dateFormat: TimeSeries.PeriodType, endDate: Date | null): TimeSeries.Period {
+    private static makeEndPeriod(dateFormat: TimeSeries.DatePeriodTypes, endDate: Date | null): TimeSeries.Period {
         return endDate ? { type: dateFormat, date: endDate } : { type: TimeSeries.PeriodType.now };
     }
 
     private async makeIntradayRequest(
         requestType: string,
         symbol: string,
-        dateFormat: TimeSeries.PeriodType,
+        dateFormat: TimeSeries.DatePeriodTypes,
         startDate: Date,
         endDate: Date | null,
         params: any,
@@ -465,7 +473,7 @@ export class ActivQuoteFeed implements QuoteFeed {
     private async makeHistoryRequest(
         requestType: string,
         symbol: string,
-        dateFormat: TimeSeries.PeriodType,
+        dateFormat: TimeSeries.DatePeriodTypes,
         startDate: Date,
         endDate: Date | null,
         params: any,
