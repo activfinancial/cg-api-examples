@@ -42,9 +42,9 @@ interface Attributes {
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // Map of encoding -> TextDecoder.
-type TextDecoders = {
+interface TextDecoders {
     [key: string]: TextDecoder;
-};
+}
 
 let textDecoders: TextDecoders = {};
 
@@ -380,7 +380,20 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
 
     private static readonly comtextSuppliedClass = "news-viewer-comtex-supplied";
 
-    private resetNavigationButton(button: HTMLButtonElement) {
+    private static setNavigationButton(field: Field, button: HTMLButtonElement): string | null {
+        if (field.value == null) {
+            NewsViewer.resetNavigationButton(button);
+
+            return null;
+        } else {
+            button.hidden = false;
+            button.title = field.value as string;
+
+            return field.value as string;
+        }
+    }
+
+    private static resetNavigationButton(button: HTMLButtonElement) {
         button.hidden = true;
         button.title = "";
     }
@@ -418,21 +431,11 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
             this.storyBodyElement.appendChild(doc.firstChild);
         }
 
-        const setNavigationButton = (field: Field, button: HTMLButtonElement): string | null => {
-            if (field.value == null) {
-                this.resetNavigationButton(button);
-
-                return null;
-            } else {
-                button.hidden = false;
-                button.title = field.value as string;
-
-                return field.value as string;
-            }
-        };
-
-        this.previousStorySymbol = setNavigationButton(story.getField(FieldId.FID_PREVIOUS_NEWS_SYMBOL), this.previousStoryButton);
-        this.nextStorySymbol = setNavigationButton(story.getField(FieldId.FID_NEXT_NEWS_SYMBOL), this.nextStoryButton);
+        this.previousStorySymbol = NewsViewer.setNavigationButton(
+            story.getField(FieldId.FID_PREVIOUS_NEWS_SYMBOL),
+            this.previousStoryButton
+        );
+        this.nextStorySymbol = NewsViewer.setNavigationButton(story.getField(FieldId.FID_NEXT_NEWS_SYMBOL), this.nextStoryButton);
 
         this.articleContainerElement.scrollTop = 0;
     }
@@ -444,8 +447,8 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
         this.storyBodyHeadlineElement.innerHTML = "";
         this.storySymbolElement.innerHTML = "";
         this.storyBodyElement.innerHTML = "";
-        this.resetNavigationButton(this.previousStoryButton);
-        this.resetNavigationButton(this.nextStoryButton);
+        NewsViewer.resetNavigationButton(this.previousStoryButton);
+        NewsViewer.resetNavigationButton(this.nextStoryButton);
     }
 
     private setStatus(message: string | null) {
