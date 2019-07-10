@@ -38,12 +38,12 @@ export default class extends React.PureComponent<Props> {
                 value={this.props.matchType}
                 onChange={this.onChange}
             >
-                <ToggleButton variant={this.props.variant} size={this.props.size} value={SymbolDirectory.MatchType.any}>
-                    Any
-                </ToggleButton>
-
                 <ToggleButton variant={this.props.variant} size={this.props.size} value={SymbolDirectory.MatchType.exact}>
                     Exact
+                </ToggleButton>
+
+                <ToggleButton variant={this.props.variant} size={this.props.size} value={SymbolDirectory.MatchType.partial}>
+                    Partial
                 </ToggleButton>
             </ToggleButtonGroup>
         );

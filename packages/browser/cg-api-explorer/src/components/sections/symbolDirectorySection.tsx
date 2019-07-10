@@ -21,7 +21,7 @@ import { AppState } from "../../state/store";
 import { State as SymbolDirectoryState } from "../../state/reducers/symbolDirectoryReducer";
 import { dispatchUpdateSymbolDirectory } from "../../state/actions/symbolDirectoryActions";
 
-import { Client, SymbolDirectory } from "@activfinancial/cg-api";
+import { Client, SymbolDirectory, FieldId } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -79,19 +79,21 @@ class ComponentImpl extends React.PureComponent<Props> {
                                     </Col>
                                 </Form.Group>
 
-                                <Form.Group as={Form.Row} className="form-group-margin">
-                                    <Form.Label column className={`${labelColumnClass} text-right`}>
-                                        Match type:
-                                    </Form.Label>
-                                    <Col sm={inputColumnWidth}>
-                                        <MatchTypeControl
-                                            size="sm"
-                                            variant="outline-primary"
-                                            matchType={this.props.matchType!}
-                                            onChange={this.props.dispatchUpdateSymbolDirectory}
-                                        />
-                                    </Col>
-                                </Form.Group>
+                                {this.props.fieldId === FieldId.FID_NAME && (
+                                    <Form.Group as={Form.Row} className="form-group-margin">
+                                        <Form.Label column className={`${labelColumnClass} text-right`}>
+                                            Match type:
+                                        </Form.Label>
+                                        <Col sm={inputColumnWidth}>
+                                            <MatchTypeControl
+                                                size="sm"
+                                                variant="outline-primary"
+                                                matchType={this.props.matchType!}
+                                                onChange={this.props.dispatchUpdateSymbolDirectory}
+                                            />
+                                        </Col>
+                                    </Form.Group>
+                                )}
 
                                 <Form.Group as={Form.Row} className="form-group-margin">
                                     <Form.Label column className={`${labelColumnClass} text-right`}>

@@ -7,13 +7,13 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import uuid from "uuid/v4";
 
-import { FieldId } from "@activfinancial/cg-api";
+import { FieldId, SymbolDirectory } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // State to be lifted up and managed elsewhere.
 interface LiftedState {
-    fieldId: FieldId;
+    fieldId: SymbolDirectory.SearchFieldIds;
 }
 
 // Own props.
@@ -49,8 +49,8 @@ export default class extends React.PureComponent<Props> {
         );
     }
 
-    private readonly onChange = (fieldId: FieldId) => {
-        this.props.onChange({ fieldId });
+    private readonly onChange = (fieldId: number) => {
+        this.props.onChange({ fieldId: fieldId as SymbolDirectory.SearchFieldIds });
     };
 
     private readonly id = uuid();
