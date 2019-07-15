@@ -566,7 +566,7 @@ export class ActivLookupDriver implements LookupDriver {
 
         const thisMaxResults = Math.min(Number(maxResults), this.maxResults) || this.maxResults;
         let entityTypes: EntityType[] = [];
-        let filterType: SymbolDirectory.FilterType = SymbolDirectory.FilterType.includeEntityTypes;
+        let filterType: SymbolDirectory.FilterType | undefined = SymbolDirectory.FilterType.includeEntityTypes;
 
         // TODO fill out the entity types.
         switch (filter) {
@@ -591,7 +591,7 @@ export class ActivLookupDriver implements LookupDriver {
                 break;
 
             default:
-                filterType = SymbolDirectory.FilterType.full;
+                filterType = undefined;
                 break;
         }
 
