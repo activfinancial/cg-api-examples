@@ -19,7 +19,6 @@ const initialState: State = {
     fieldId: FieldId.FID_NAME,
     search: "",
     matchType: SymbolDirectory.MatchType.exact,
-    filterType: SymbolDirectory.FilterType.full,
     entityTypes: []
 };
 

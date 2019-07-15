@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import ToggleButton from "react-bootstrap/ToggleButton";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import uuid from "uuid/v4";
 
 import { SymbolDirectory } from "@activfinancial/cg-api";
@@ -26,41 +26,50 @@ interface OwnProps {
 type Props = OwnProps & LiftedState;
 
 export default class extends React.PureComponent<Props> {
+    // NB I can't get <ToggleButtonGroup> working; it doesn't seem to accept undefined as a radio value.
+    // So using <ButtonGroup toggle> and "manual" checked management. Not much in it really.
     render() {
         return (
-            <ToggleButtonGroup
-                toggle
-                vertical
-                type="radio"
-                className="btn-block"
-                name={this.id}
-                value={this.props.filterType}
-                onChange={this.onChange}
-            >
-                <ToggleButton variant={this.props.variant} size={this.props.size} value={SymbolDirectory.FilterType.full}>
-                    Any
+            <ButtonGroup toggle vertical className="btn-block" onChange={this.onChange}>
+                <ToggleButton
+                    type="radio"
+                    variant={this.props.variant}
+                    size={this.props.size}
+                    name={this.id}
+                    value={undefined}
+                    checked={this.props.filterType == null}
+                >
+                    None
                 </ToggleButton>
 
                 <ToggleButton
+                    type="radio"
                     variant={this.props.variant}
                     size={this.props.size}
-                    value={SymbolDirectory.FilterType.includeEntityTypes}
+                    name={this.id}
+                    value={SymbolDirectory.FilterType[SymbolDirectory.FilterType.includeEntityTypes]}
+                    checked={this.props.filterType === SymbolDirectory.FilterType.includeEntityTypes}
                 >
                     Include entity types
                 </ToggleButton>
 
                 <ToggleButton
+                    type="radio"
                     variant={this.props.variant}
                     size={this.props.size}
-                    value={SymbolDirectory.FilterType.excludeEntityTypes}
+                    name={this.id}
+                    value={SymbolDirectory.FilterType[SymbolDirectory.FilterType.excludeEntityTypes]}
+                    checked={this.props.filterType === SymbolDirectory.FilterType.excludeEntityTypes}
                 >
                     Exclude entity types
                 </ToggleButton>
-            </ToggleButtonGroup>
+            </ButtonGroup>
         );
     }
 
-    private readonly onChange = (filterType: SymbolDirectory.FilterType) => {
+    private readonly onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const filterType = SymbolDirectory.FilterType[e.target.value as keyof typeof SymbolDirectory.FilterType];
+
         this.props.onChange({ filterType });
     };
 
