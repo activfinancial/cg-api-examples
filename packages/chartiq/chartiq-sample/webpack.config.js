@@ -37,7 +37,7 @@ const config = {
             }
         ]
     },
-    plugins: [new CopyWebpackPlugin([{ from: "../common/chartiq", to: "chartiq" }])],
+    plugins: [new CopyWebpackPlugin([{ from: "../common", to: "chartiq" }])],
     devServer: {
         // Note webpack-dev-server won't watch non-generated files for changes,
         // so to reload if e.g. the top level html is updated we need this config section.
@@ -47,7 +47,7 @@ const config = {
         port: 8880,
         host: "0.0.0.0",
         disableHostCheck: true,
-        contentBase: [__dirname, path.join(__dirname, "../common/", "../../../node_modules")],
+        contentBase: [__dirname, path.join(__dirname, "../../../node_modules")],
         watchContentBase: true,
         publicPath: "/lib/"
     },
