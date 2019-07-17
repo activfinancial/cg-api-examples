@@ -32,7 +32,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.9.9",
+        "@activfinancial/cg-api": "^0.10.0",
         "detect-browser": "^4.6.0",
         "resize-observer": "^1.0.0",
         "skatejs": "^5.2.4"
@@ -41,14 +41,14 @@
         "@types/detect-browser": "^4.0.0",
         "@types/skatejs": "^5.0.1",
         "dts-generator": "^3.0.0",
-        "raw-loader": "^3.0.0",
+        "raw-loader": "^3.1.0",
         "rimraf": "^2.6.3",
         "source-map-loader": "^0.2.4",
         "terser-webpack-plugin": "^1.3.0",
         "ts-loader": "^6.0.4",
         "typescript": "^3.5.3",
-        "webpack": "^4.35.3",
-        "webpack-cli": "^3.3.5",
+        "webpack": "^4.36.1",
+        "webpack-cli": "^3.3.6",
         "webpack-dev-server": "^3.7.2"
     },
     "gitHead": "ea09844202ea6ee8dd6ca476f80f984af93d7d5a"
