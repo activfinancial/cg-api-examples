@@ -354,7 +354,8 @@ class ComponentImpl extends React.Component<Props, State> {
             onServerMessage: this.onServerMessage,
 
             streaming: {
-                onAliasUpdate: this.onAliasUpdate
+                onAliasUpdate: this.onAliasUpdate,
+                onFeedConflationUpdate: this.onFeedConflationUpdate
             }
         };
 
@@ -507,6 +508,16 @@ class ComponentImpl extends React.Component<Props, State> {
             <>
                 {createHeaderTimestamp()}Alias update:
                 <div>{renderObject(this.props.client!, "AliasUpdateInfo", aliasUpdateInfo)}</div>
+            </>
+        );
+    };
+
+    private readonly onFeedConflationUpdate = (feedConflationInfo: Streaming.FeedConflationInfo) => {
+        this.props.dispatchAppendOutput(
+            OutputType.always,
+            <>
+                {createHeaderTimestamp()}Alias update:
+                <div>{renderObject(this.props.client!, "FeedConflationInfo", feedConflationInfo)}</div>
             </>
         );
     };
