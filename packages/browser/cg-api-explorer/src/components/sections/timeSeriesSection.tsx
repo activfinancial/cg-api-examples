@@ -377,7 +377,34 @@ class ComponentImpl extends React.PureComponent<Props> {
 
     private setCommonParameters(requestParameters: Partial<TimeSeries.RequestParameters>) {
         requestParameters.key = this.props.timeSeries.key;
-        requestParameters.periods = this.props.timeSeries.periods;
+        requestParameters.periods = this.props.timeSeries.periods.map((period: TimeSeries.Period) => {
+            let newPeriod: TimeSeries.Period = { ...period };
+
+            // The date/time picker gives us UTC values for whatever was entered.
+            // For utcDateTime in the TSS API, we can just pass on as-is.
+            // For exchangeLocalDateTime, the API just reads the local time d/m/y h/m/s values to pass to the CG.
+            // So we create a local time using the UTC values.
+
+            if (TimeSeries.isPeriodDate(newPeriod)) {
+                switch (period.type) {
+                    case TimeSeries.PeriodType.exchangeLocalDateTime:
+                        newPeriod.date = new Date(
+                            period.date.getUTCFullYear(),
+                            period.date.getUTCMonth(),
+                            period.date.getUTCDate(),
+                            period.date.getUTCHours(),
+                            period.date.getUTCMinutes(),
+                            period.date.getUTCSeconds()
+                        );
+                        break;
+
+                    case TimeSeries.PeriodType.utcDateTime:
+                        break;
+                }
+            }
+
+            return newPeriod;
+        });
         requestParameters.youngestFirst = this.props.timeSeries.youngestFirst;
     }
 
