@@ -516,7 +516,7 @@ class ComponentImpl extends React.Component<Props, State> {
         this.props.dispatchAppendOutput(
             OutputType.always,
             <>
-                {createHeaderTimestamp()}Alias update:
+                {createHeaderTimestamp()}Feed conflation update:
                 <div>{renderObject(this.props.client!, "FeedConflationInfo", feedConflationInfo)}</div>
             </>
         );
