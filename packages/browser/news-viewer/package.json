@@ -32,7 +32,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.10.0",
+        "@activfinancial/cg-api": "^0.10.1",
         "@fortawesome/fontawesome-free": "^5.9.0",
         "detect-browser": "^4.6.0",
         "skatejs": "^5.2.4",
@@ -53,7 +53,7 @@
         "ts-loader": "^6.0.4",
         "typescript": "^3.5.3",
         "url-loader": "^2.1.0",
-        "webpack": "^4.36.1",
+        "webpack": "^4.37.0",
         "webpack-cli": "^3.3.6",
         "webpack-dev-server": "^3.7.2"
     }
