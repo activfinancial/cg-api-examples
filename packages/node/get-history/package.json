@@ -42,6 +42,5 @@
         "webpack": "^4.36.1",
         "webpack-cli": "^3.3.6",
         "webpack-permissions-plugin": "^1.0.3"
-    },
-    "gitHead": "ea09844202ea6ee8dd6ca476f80f984af93d7d5a"
+    }
 }
