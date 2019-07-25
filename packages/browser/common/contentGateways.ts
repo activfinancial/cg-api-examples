@@ -2,9 +2,9 @@
  * ContentGateway list.
  */
 
-type ContentGateways = {
+interface ContentGateways {
     [key: string]: string;
-};
+}
 
 const contentGateways: ContentGateways = {
     ny4: "ams://cg-ny4-web.activfinancial.com/ContentGateway:Service",
