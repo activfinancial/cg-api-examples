@@ -16,10 +16,12 @@ export interface SetSnapshotsAndStreamingTabAction extends ActionBase<ActionType
 }
 
 /** Dispatch function to add a relationship. */
-export function dispatchSetSnapshotsAndStreamingTab(activeTab: Streaming.AllRequestNames): SetSnapshotsAndStreamingTabAction {
+export function dispatchSetSnapshotsAndStreamingTab(
+    activeTab: string /*Streaming.AllRequestNames*/
+): SetSnapshotsAndStreamingTabAction {
     return {
         type: ActionType.setSnapshotsAndStreamingTab,
-        activeTab
+        activeTab: activeTab as Streaming.AllRequestNames
     };
 }
 

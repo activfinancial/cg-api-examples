@@ -16,10 +16,10 @@ export interface SetTimeSeriesTabAction extends ActionBase<ActionType.setTimeSer
 }
 
 /** Dispatch function to add a relationship. */
-export function dispatchSetTimeSeriesTab(activeTab: TimeSeries.AllRequestNames): SetTimeSeriesTabAction {
+export function dispatchSetTimeSeriesTab(activeTab: string /*TimeSeries.AllRequestNames*/): SetTimeSeriesTabAction {
     return {
         type: ActionType.setTimeSeriesTab,
-        activeTab
+        activeTab: activeTab as TimeSeries.AllRequestNames
     };
 }
 
