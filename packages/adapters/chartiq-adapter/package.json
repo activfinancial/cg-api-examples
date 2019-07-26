@@ -11,22 +11,33 @@
         "access": "public"
     },
     "license": "CC-BY-ND-4.0",
-    "scripts": {
-        "clean": "rimraf lib/*",
-        "build": "tsc",
-        "develop": "tsc",
-        "test": "echo \"No test specified.\"",
-        "prepublishOnly": "yarn build"
+    "author": {
+        "name": "ACTIV Financial Systems, Inc.",
+        "email": "support@activfinancial.com",
+        "url": "http://www.activfinancial.com"
     },
     "files": [
         "lib/**"
     ],
+    "main": "lib/index.js",
+    "scripts": {
+        "clean": "rimraf lib/*",
+        "types": "dts-generator --prefix \"@activfinancial/chartiq-adapter\" --name \"@activfinancial/chartiq-adapter\" --main \"@activfinancial/chartiq-adapter/src/index\" --project . --out lib/index.d.ts",
+        "build": "yarn types && webpack --mode production",
+        "develop": "yarn types && webpack --mode development",
+        "test": "echo \"No test specified.\"",
+        "prepublishOnly": "yarn build"
+    },
     "dependencies": {
         "@activfinancial/cg-api": "^0.10.1"
     },
     "devDependencies": {
+        "dts-generator": "^3.0.0",
         "rimraf": "^2.6.3",
+        "source-map-loader": "^0.2.4",
         "terser-webpack-plugin": "^1.3.0",
-        "typescript": "^3.5.3"
+        "typescript": "^3.5.3",
+        "webpack": "^4.37.0",
+        "webpack-cli": "^3.3.6"
     }
 }
