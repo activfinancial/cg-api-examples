@@ -4,7 +4,7 @@
 
 import { connect, Client, asyncSleep } from "@activfinancial/cg-api";
 import { domReady } from "../../../common/utils";
-import { ActivQuoteFeed, ActivLookupDriver, UpdateType } from "@activfinancial/chartiq-adapter/lib/activQuoteFeed";
+import { ActivQuoteFeed, ActivLookupDriver, UpdateType } from "@activfinancial/chartiq-adapter";
 
 // Import the pretty much vanilla ChartIQ example JS code.
 // It has a few mods to allow passing in our quote feed and symbol lookup objects.
