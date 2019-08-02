@@ -6,8 +6,17 @@ $h4-font-size: ceil(($font-size-base * 1.17));
 
 @import "~bootstrap/scss/bootstrap";
 
+.card {
+    z-index: -1;
+}
+
 .card-body {
     padding: 0.75rem;
+}
+
+.collapse {
+    z-index: 0;
+    position: inherit;
 }
 
 .form-label {
@@ -16,10 +25,13 @@ $h4-font-size: ceil(($font-size-base * 1.17));
 
 .list-group-item {
     padding: 0.5rem 0.75rem;
+    background-color: $light;
 }
 
 .nav-tabs {
     border-bottom: 0px;
+    z-index: 0;
+    position: inherit;
 }
 
 .nav-tabs .nav-link {
@@ -32,6 +44,17 @@ $h4-font-size: ceil(($font-size-base * 1.17));
 
 .nav-tabs .nav-link.active {
     background-color: $light;
+
+    // Match the border-color from a card.
+    border-color: rgba(0, 0, 0, 0.125);
+
+    // To overwrite the top border of the card below the nav strip (z-index on .card is -1) with
+    // the background color, to get a nice border around the tab and card.
+    border-bottom-color: $light;
+}
+
+.nav-tabs .nav-link.active:focus {
+    outline: none !important;
 }
 
 // Buggy tooltips. https://github.com/react-bootstrap/react-bootstrap/issues/3393
