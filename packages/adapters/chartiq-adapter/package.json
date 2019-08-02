@@ -17,9 +17,10 @@
         "url": "http://www.activfinancial.com"
     },
     "files": [
-        "lib/**"
+        "/lib/**"
     ],
     "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "scripts": {
         "clean": "rimraf lib/*",
         "types": "dts-generator --prefix \"@activfinancial/chartiq-adapter\" --name \"@activfinancial/chartiq-adapter\" --main \"@activfinancial/chartiq-adapter/src/index\" --project . --out lib/index.d.ts",

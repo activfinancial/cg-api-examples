@@ -16,10 +16,10 @@
         "email": "support@activfinancial.com",
         "url": "http://www.activfinancial.com"
     },
-    "main": "lib/get-history.js",
     "files": [
-        "lib/**"
+        "/lib/**"
     ],
+    "main": "lib/get-history.js",
     "scripts": {
         "clean": "rimraf lib/*",
         "build": "webpack --mode production",

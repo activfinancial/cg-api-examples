@@ -16,6 +16,9 @@
         "email": "support@activfinancial.com",
         "url": "http://www.activfinancial.com"
     },
+    "files": [
+        "/lib/**"
+    ],
     "main": "lib/index.js",
     "scripts": {
         "clean": "rimraf lib/*",
@@ -27,9 +30,6 @@
         "serve:prod": "webpack-dev-server --mode production",
         "prepublishOnly": "yarn build"
     },
-    "files": [
-        "lib/**"
-    ],
     "dependencies": {
         "@activfinancial/cg-api": "^0.10.2",
         "@fortawesome/fontawesome-free": "^5.10.0",

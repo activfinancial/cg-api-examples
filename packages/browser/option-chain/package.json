@@ -16,11 +16,11 @@
         "email": "support@activfinancial.com",
         "url": "http://www.activfinancial.com"
     },
+    "files": [
+        "/lib/**"
+    ],
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
-    "files": [
-        "lib/**"
-    ],
     "scripts": {
         "clean": "rimraf lib/*",
         "types": "dts-generator --prefix \"@activfinancial/option-chain\" --name \"@activfinancial/option-chain\" --main \"@activfinancial/option-chain/src/index\" --project . --out lib/index.d.ts",
