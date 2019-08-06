@@ -76,8 +76,6 @@ export interface FormatFieldOptions {
 
 /** Format up a Field's value (that may be null) as a string. */
 export function formatField(field: Field, options: FormatFieldOptions = {}): string {
-    const thisRationalNumberFormat = options.rationalNumberFormat || rationalNumberFormat;
-
     switch (field.statusCode) {
         case StatusCode.success:
             break;
@@ -89,6 +87,8 @@ export function formatField(field: Field, options: FormatFieldOptions = {}): str
         default:
             return StatusCode[field.statusCode] || `unknown field status ${field.statusCode}`;
     }
+
+    const thisRationalNumberFormat = options.rationalNumberFormat || rationalNumberFormat;
 
     switch (field.type) {
         case FieldType.tRational:
@@ -163,6 +163,7 @@ export function applyTrendStyle(trend: Trend, element: HTMLElement) {
         default:
             element.style.backgroundImage = "";
             element.style.color = "";
+            break;
     }
 }
 
