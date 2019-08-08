@@ -14,11 +14,8 @@ import indexCss from "!raw-loader!../style/index.css";
 import indexHtml from "!raw-loader!./index.html";
 
 // HACK sort this out properly. Can't get a WebComponent importing fontawesome like cg-api-explorer.
-import angleLeft from "!raw-loader!@fortawesome/fontawesome-free/svgs/solid/angle-left.svg";
-import angleRight from "!raw-loader!@fortawesome/fontawesome-free/svgs/solid/angle-right.svg";
-
-const uriEncodedAngleLeft = encodeURIComponent(angleLeft);
-const uriEncodedAngleRight = encodeURIComponent(angleRight);
+import angleLeft from "!url-loader!@fortawesome/fontawesome-free/svgs/solid/angle-left.svg";
+import angleRight from "!url-loader!@fortawesome/fontawesome-free/svgs/solid/angle-right.svg";
 
 import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
 
@@ -79,11 +76,11 @@ class TpiViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) {
         this.overlay = this.rootElement.querySelector(".tpi-viewer-overlay") as HTMLDivElement;
 
         let button = this.rootElement.querySelector(".tpi-viewer-previous") as HTMLButtonElement;
-        button.style.backgroundImage = `url('data:image/svg+xml,${uriEncodedAngleLeft}')`;
+        button.style.backgroundImage = `url('${angleLeft}')`;
         button.addEventListener("click", () => this.getNextPrevious(false));
 
         button = this.rootElement.querySelector(".tpi-viewer-next") as HTMLButtonElement;
-        button.style.backgroundImage = `url('data:image/svg+xml,${uriEncodedAngleRight}')`;
+        button.style.backgroundImage = `url('${angleRight}')`;
         button.addEventListener("click", () => this.getNextPrevious(true));
 
         // Pre-create fields.

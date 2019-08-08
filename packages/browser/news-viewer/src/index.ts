@@ -12,15 +12,12 @@ import { addUnloadHandler } from "../../../common/utils";
 import commonCss from "!raw-loader!../../common/common.css";
 import indexCss from "!raw-loader!../style/index.css";
 
-// HACK sort this out properly. Can't get a WebComponent importing fontawesome like cg-api-explorer.
 import indexHtml from "!html-loader!./index.html";
 import headlineHtml from "!html-loader!./headlineRow.html";
 
-import angleLeft from "!raw-loader!@fortawesome/fontawesome-free/svgs/solid/angle-left.svg";
-import angleRight from "!raw-loader!@fortawesome/fontawesome-free/svgs/solid/angle-right.svg";
-
-const uriEncodedAngleLeft = encodeURIComponent(angleLeft);
-const uriEncodedAngleRight = encodeURIComponent(angleRight);
+// HACK sort this out properly. Can't get a WebComponent importing fontawesome like cg-api-explorer.
+import angleLeft from "!url-loader!@fortawesome/fontawesome-free/svgs/solid/angle-left.svg";
+import angleRight from "!url-loader!@fortawesome/fontawesome-free/svgs/solid/angle-right.svg";
 
 import comtexLogo from "!url-loader!../img/comtex-logo.png";
 
@@ -171,8 +168,8 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
             }
         });
 
-        this.previousStoryButton.style.backgroundImage = `url('data:image/svg+xml,${uriEncodedAngleLeft}')`;
-        this.nextStoryButton.style.backgroundImage = `url('data:image/svg+xml,${uriEncodedAngleRight}')`;
+        this.previousStoryButton.style.backgroundImage = `url('${angleLeft}')`;
+        this.nextStoryButton.style.backgroundImage = `url('${angleRight}')`;
 
         const comtexLogoElement = this.rootElement.querySelector("#comtexLogo") as HTMLImageElement;
         comtexLogoElement.src = comtexLogo;
