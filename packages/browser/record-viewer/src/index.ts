@@ -8,6 +8,7 @@ import {
     Field,
     FieldId,
     FieldType,
+    MetaData,
     TableNumber,
     StatusCode,
     TRational,
@@ -175,7 +176,8 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
         try {
             this.setStatus("Connected");
 
-            // Get cached field info from server. We won't await until we need it.
+            // Prime field info cache in the background. Note by the time we actually want the data,
+            // it might not have arrived - so we'll still potentially have to await.
             this.client.metaData.getUniversalFieldHelperList();
 
             this.subscribe();
@@ -230,7 +232,7 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
             this.requestHandle = this.client.streaming.getMatch(requestParameters);
 
             // Asynchronously iterate all records resulting from the request.
-            // Here we'll only ever have 1 record though.
+            // Here we'll only ever have 1 record, though.
             for await (const record of this.requestHandle) {
                 if (0 === this.stats.responsesReturned) {
                     this.setStatus(null);
@@ -283,11 +285,7 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
         })();
 
         for (const field of record.fieldData) {
-            let fieldHelper = this.client!.metaData.getUniversalFieldHelper(field.id);
-            if (fieldHelper instanceof Promise) {
-                fieldHelper = await fieldHelper;
-            }
-            const fieldData = this.createFieldData(field.id, fieldHelper.name, fieldHelper.description);
+            const fieldData = this.createFieldData(field.id);
 
             // Render the initial value, attach to document and cache.
             fieldData.render(field);
@@ -316,17 +314,12 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
         }
     }
 
-    private createFieldData(fieldId: FieldId, fieldName: string, fieldDescription: string) {
+    private createFieldData(fieldId: FieldId) {
         const element = document.createElement("div");
         element.className = "record-viewer-field";
         element.innerHTML = fieldHtml;
 
-        this.setFieldElementVisibility(element, fieldName);
-
         const nameElement = element.querySelector(".record-viewer-field-name") as HTMLDivElement;
-        nameElement.textContent = fieldName;
-        nameElement.title = `${FieldId[fieldId] || ""} (${fieldId})\n${fieldDescription}`;
-
         const valueElement = element.querySelector(".record-viewer-field-value") as HTMLDivElement;
         const getTrendHelper = getTrendHelperFromString(fieldId, fieldIdTrends[fieldId] || "tick");
 
@@ -340,7 +333,24 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
             }
         };
 
-        return { name: fieldName, element, render };
+        const fieldData = { name: "", element, render };
+
+        const processFieldHelper = (fieldHelper: MetaData.UniversalFieldHelper) => {
+            fieldData.name = fieldHelper.name;
+            this.setFieldElementVisibility(element, fieldHelper.name);
+            nameElement.textContent = fieldHelper.name;
+            nameElement.title = `${FieldId[fieldId] || ""} (${fieldId})\n${fieldHelper.description}`;
+        };
+
+        // Field metadata may or may not be in the cache by now. So cope either way.
+        const fieldHelper = this.client!.metaData.getUniversalFieldHelper(fieldId);
+        if (fieldHelper instanceof Promise) {
+            fieldHelper.then(processFieldHelper);
+        } else {
+            processFieldHelper(fieldHelper);
+        }
+
+        return fieldData;
     }
 
     private setFieldElementVisibility(element: HTMLElement, fieldName: string) {
