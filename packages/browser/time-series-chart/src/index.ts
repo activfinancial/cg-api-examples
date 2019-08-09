@@ -15,7 +15,7 @@ import indexHtml from "!raw-loader!./index.html";
 
 import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
 
-import c3 from "c3";
+import c3, { PrimitiveArray } from "c3";
 import c3Css from "raw-loader!c3/c3.css";
 
 import { ResizeObserver } from "resize-observer";
@@ -167,8 +167,8 @@ class Chart extends withLifecycle(withRenderer(withUpdate(HTMLElement))) impleme
         });
 
         try {
-            let times: any[] = [];
-            let closePrices: any[] = [];
+            let times: [string, ...PrimitiveArray];
+            let closePrices: [string, ...PrimitiveArray];
 
             const resetResultArrays = () => {
                 times = ["dateTime"];
@@ -244,8 +244,9 @@ class Chart extends withLifecycle(withRenderer(withUpdate(HTMLElement))) impleme
                 }
 
                 if (historyBar.close != null) {
-                    times.push(historyBar.dateTime);
-                    closePrices.push(historyBar.close!.valueOf());
+                    // HACK problem in c3 type definitions as of 0.7.2? Won't accept Date any longer.
+                    times!.push(historyBar.dateTime as any);
+                    closePrices!.push(historyBar.close!.valueOf());
                 }
 
                 // Draw the chart every now and then.
