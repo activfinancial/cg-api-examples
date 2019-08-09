@@ -100,7 +100,7 @@ class Component extends React.PureComponent<Props> {
                             </SimpleTooltip>
                         </Nav>
 
-                        <Card body bg="light">
+                        <Card className="tab-body-card" body bg="light">
                             <Tab.Content>
                                 {/* I'm not sure this is really cricket, but if we render the inactive tabs
                                 then any required fields on the inactive tabs will stop the active tab

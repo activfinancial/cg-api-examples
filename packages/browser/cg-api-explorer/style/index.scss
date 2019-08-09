@@ -6,10 +6,6 @@ $h4-font-size: ceil(($font-size-base * 1.17));
 
 @import "~bootstrap/scss/bootstrap";
 
-.card {
-    z-index: -1;
-}
-
 .card-body {
     padding: 0.75rem;
 }
@@ -71,6 +67,11 @@ $h4-font-size: ceil(($font-size-base * 1.17));
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // Our classes follow.
+
+.tab-body-card {
+    // Card below a set of tabs. Used to hide the top border of the card with the tab.
+    z-index: -1;
+}
 
 /* TODO don't like this. Must be a better way. Default spacer classes? */
 .form-group-margin {
