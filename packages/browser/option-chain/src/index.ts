@@ -57,7 +57,8 @@ interface OptionRow {
     exchangeCode: string; // For ordering.
     element: HTMLElement;
 
-    updateOption: (isCall: boolean, image: Streaming.Record) => void;
+    updateCallOption: (image: Streaming.Record) => void;
+    updatePutOption: (image: Streaming.Record) => void;
     updateInTheMoney: (previousUnderlyingPrice: number | null, underlyingPrice: number) => void;
 }
 
@@ -493,15 +494,16 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
 
         const expirationSection = this.createOrFindExpirySection(expirationDateField.value as Date);
         const optionRow = this.createOrFindOptionRow(record.responseKey.symbol, expirationSection, strikePriceField);
+        const updateOption = isCall ? optionRow.updateCallOption : optionRow.updatePutOption;
 
-        optionRow.updateOption(isCall, record);
+        updateOption(record);
         optionRow.updateInTheMoney(null, this.underlyingPrice);
 
         this.requestHandle!.setUpdateHandler(record.streamId, (update: Streaming.Update) => {
             ++this.stats.totalUpdates;
 
             if (!update.isDelete) {
-                optionRow.updateOption(isCall, update);
+                updateOption(update);
             } else {
                 this.deleteOption(expirationSection, optionRow);
             }
@@ -687,32 +689,30 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
         buildSide(true);
         buildSide(false);
 
-        function getFieldInfo(isCall: boolean, fieldId: FieldId) {
-            return isCall ? callFieldInfos[fieldId] : putFieldInfos[fieldId];
-        }
-
         // Initial sizing of row.
         this.processResize(rowElement);
 
-        function updateOption(isCall: boolean, image: Streaming.Record) {
-            for (const field of image.fieldData) {
-                if (!field.doesUpdateLastValue) {
-                    continue;
-                }
-
-                // TODO closing.
-                const fieldInfo = getFieldInfo(isCall, field.id);
-
-                if (fieldInfo != null) {
-                    if (field.type === FieldType.tRational) {
-                        applyTrendStyle(fieldInfo.getTrend(field.value as TRational), fieldInfo.element);
-                    } else if (field.value == null) {
-                        clearTrendStyle(fieldInfo.element);
+        function makeUpdateOption(fieldInfos: FieldInfo[]) {
+            return function(image: Streaming.Record) {
+                for (const field of image.fieldData) {
+                    if (!field.doesUpdateLastValue) {
+                        continue;
                     }
 
-                    fieldInfo.element.textContent = formatField(field, fieldInfo);
+                    // TODO closing.
+                    const fieldInfo = fieldInfos[field.id];
+
+                    if (fieldInfo != null) {
+                        if (field.type === FieldType.tRational) {
+                            applyTrendStyle(fieldInfo.getTrend(field.value as TRational), fieldInfo.element);
+                        } else if (field.value == null) {
+                            clearTrendStyle(fieldInfo.element);
+                        }
+
+                        fieldInfo.element.textContent = formatField(field, fieldInfo);
+                    }
                 }
-            }
+            };
         }
 
         function updateInTheMoney(previousUnderlyingPrice: number | null, underlyingPrice: number) {
@@ -728,7 +728,15 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
             }
         }
 
-        return { strikePrice, root, exchangeCode, element: rowElement, updateOption, updateInTheMoney };
+        return {
+            strikePrice,
+            root,
+            exchangeCode,
+            element: rowElement,
+            updateCallOption: makeUpdateOption(callFieldInfos),
+            updatePutOption: makeUpdateOption(putFieldInfos),
+            updateInTheMoney
+        };
     }
 
     private deleteOption(expirationSection: ExpirationSection, optionRow: OptionRow) {
