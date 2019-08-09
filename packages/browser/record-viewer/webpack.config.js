@@ -36,6 +36,11 @@ const config = {
                 test: /\.ts$/,
                 use: "ts-loader",
                 exclude: /node_modules/
+            },
+            {
+                // Required for url() in index.css.
+                test: /\.svg$/,
+                use: "url-loader"
             }
         ]
     },

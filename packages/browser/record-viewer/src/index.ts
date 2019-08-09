@@ -8,30 +8,22 @@ import {
     Field,
     FieldId,
     FieldType,
-    MetaData,
-    TableNumber,
     StatusCode,
     TRational,
-    StatusCodeError
+    Trend,
+    StatusCodeError,
+    TableNumber
 } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
-import {
-    formatField as formatFieldInternal,
-    applyTrendStyle,
-    clearTrendStyle,
-    getTrendHelperFromString
-} from "../../common/formatFieldValue";
+import { formatField as formatFieldInternal, getTrendHelperFromString } from "../../common/formatFieldValue";
 import { addUnloadHandler } from "../../../common/utils";
 
-// Note leading ! overrides webpack config matching css files.
-import commonCss from "!raw-loader!../../common/common.css";
-import indexCss from "!raw-loader!../style/index.css";
+// Note just using css-loader explicitly to get an object; not loading in to the page.
+import commonCss from "!css-loader!../../common/common.css";
+import indexCss from "!css-loader!../style/index.css";
 
-import indexHtml from "!raw-loader!./index.html";
-import fieldHtml from "!raw-loader!./field.html";
-
-import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
+import { LitElement, PropertyValues, html, customElement, property, css, unsafeCSS } from "lit-element";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -43,15 +35,24 @@ function formatField(field: Field): string {
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** State of each field. */
-interface FieldData {
+interface FieldInfo {
     /** Display name for field. */
     name: string;
 
-    /** Element in DOM. */
-    element: HTMLElement;
+    /** Tooltip for field. */
+    tooltip: string;
+
+    /** Is the field visible? */
+    isVisible: boolean;
+
+    /** Field data from cg-api. */
+    field: Field;
+
+    /** Textual value to render. */
+    textValue: string | null;
 
     /** Renderer. */
-    render: (field: Field) => void;
+    render(): void;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -67,7 +68,7 @@ const fieldIdTrends: FieldIdTrends = {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-// TODO surely we can automagically generate this (or vice-versa) from the props static below? Too much repetition.
+// TODO surely we can automagically generate this (or vice-versa) from the props below? Too much repetition.
 /** Attributes interface. */
 interface Attributes {
     symbol: string;
@@ -80,21 +81,13 @@ interface Attributes {
 /**
  * RecordViewer WebComponent.
  */
-class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements IExample {
-    private readonly rootElement: HTMLDivElement;
-    private readonly symbolLabel: HTMLHeadingElement;
-    private readonly exchangeLabel: HTMLHeadingElement;
-    private readonly tableLabel: HTMLHeadingElement;
-    private readonly filterValue: HTMLInputElement;
-    private readonly body: HTMLTableElement;
-    private readonly status: HTMLDivElement;
-    private readonly overlay: HTMLDivElement;
-
+@customElement("record-viewer")
+class RecordViewer extends LitElement implements IExample {
     private clientPromise: Promise<Client> | null = null;
     private client: Client | null = null;
     private requestHandle: Streaming.RequestHandle | null = null;
 
-    private fields: FieldData[] = [];
+    private fields: FieldInfo[] = [];
 
     private stats = new ExampleStats();
 
@@ -107,52 +100,45 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
         value: 0
     };
 
-    // props.
+    // Attributes.
+    @property()
     symbol: string = "";
-    conflationType: string = "none";
+
+    @property({ attribute: "conflation-type" })
+    conflationType: "none" | keyof typeof Streaming.ConflationType = "none";
+
+    @property({ attribute: "conflation-interval", type: Number })
     conflationInterval: number = 500;
 
-    static readonly props = {
-        symbol: props.string,
-        conflationType: props.string,
-        conflationInterval: props.number
-    };
+    // Internal state that causes re-render on change.
+    @property()
+    private tableName: string = "";
+
+    @property()
+    private tableNumber: TableNumber = TableNumber.undefined;
+
+    @property()
+    private symbolLabel: string = "";
+
+    @property()
+    private exchangeName: string = "";
+
+    @property()
+    private statusMessage: string | null = null;
+
+    @property()
+    private filterValue: string = "";
+
+    // Styling.
+    static get styles() {
+        return css`${unsafeCSS(commonCss.toString())}${unsafeCSS(indexCss.toString())}`;
+    }
 
     constructor() {
         super();
 
-        this.rootElement = document.createElement("div");
-        this.rootElement.className = "activ-cg-api-webcomponent record-viewer";
-        this.rootElement.innerHTML = `<style>${commonCss}${indexCss}</style>${indexHtml}`;
-        (this.renderRoot as HTMLElement).appendChild(this.rootElement);
-
-        this.tableLabel = this.rootElement.querySelector(".record-viewer-title-table") as HTMLHeadingElement;
-        this.exchangeLabel = this.rootElement.querySelector(".record-viewer-title-exchange") as HTMLHeadingElement;
-        this.symbolLabel = this.rootElement.querySelector(".record-viewer-title-symbol") as HTMLHeadingElement;
-
-        // Function for any activity in the filter input; just update visible state for all fields.
-        const handleFilterEvent = (e: Event) => {
-            e.preventDefault();
-
-            for (const fieldData of this.fields) {
-                if (fieldData != null) {
-                    this.setFieldElementVisibility(fieldData.element, fieldData.name);
-                }
-            }
-        };
-
-        const filterForm = this.rootElement.querySelector(".record-viewer-filter-form") as HTMLFormElement;
-        filterForm.addEventListener("submit", handleFilterEvent);
-
-        this.filterValue = this.rootElement.querySelector(".record-viewer-filter-value") as HTMLInputElement;
-        this.filterValue.addEventListener("keyup", handleFilterEvent);
-        this.filterValue.addEventListener("search", handleFilterEvent);
-        this.filterValue.addEventListener("change", handleFilterEvent);
-
-        this.body = this.rootElement.querySelector(".record-viewer-body") as HTMLTableElement;
-        this.status = this.rootElement.querySelector(".record-viewer-status") as HTMLDivElement;
-        this.overlay = this.rootElement.querySelector(".record-viewer-overlay") as HTMLDivElement;
-
+        // NB disconnectedCallback() doesn't fire when closing an Openfin window.
+        // So we have to add our own.
         addUnloadHandler(() => this.unsubscribe());
 
         this.setStatus("Waiting...");
@@ -193,22 +179,32 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
         }
     }
 
-    updated() {
-        this.subscribe();
+    shouldUpdate(changedProperties: PropertyValues) {
+        // Check for properties that require a resubscribe if they change.
+        // TODO automate this from the Attributes interface somehow...
+        if (
+            changedProperties.has("symbol") ||
+            changedProperties.has("conflationType") ||
+            changedProperties.has("conflationInterval")
+        ) {
+            this.subscribe();
+        }
+
+        return true;
     }
 
-    disconnected() {
+    disconnectedCallback() {
         this.unsubscribe();
     }
 
     async subscribe() {
         this.unsubscribe();
 
-        this.symbolLabel.textContent = this.symbol;
         if (this.client == null || this.symbol === "") {
             return;
         }
 
+        this.symbolLabel = this.symbol;
         this.stats = new ExampleStats();
         this.setStatus("Subscribing...");
 
@@ -217,7 +213,7 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
                 key: this.symbol,
                 matchType: Streaming.GetMatchType.composite,
                 subscription: {
-                    updateHandler: (update: Streaming.Update) => this.processUpdate(update)
+                    updateHandler: this.processUpdate
                 }
             };
 
@@ -256,8 +252,64 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
         return this.stats;
     }
 
+    render() {
+        if (this.statusMessage == null) {
+            return html`
+                <div class="activ-cg-api-webcomponent record-viewer">
+                    <div class="record-viewer-header">
+                        <div class="record-viewer-title">
+                            <h1 class="record-viewer-title-symbol">${this.symbolLabel}</h1>
+                            <h5 class="record-viewer-title-exchange">${this.exchangeName}</h5>
+                            <h5 class="record-viewer-title-table">${this.tableName} (${this.tableNumber})</h5>
+                        </div>
+                        <form class="record-viewer-filter-form" @submit=${(e: Event) => e.preventDefault()}>
+                            <input
+                                class="record-viewer-filter-value"
+                                type="search"
+                                placeholder="Filter fields"
+                                @keyup=${this.handleFilterEvent}
+                                @search=${this.handleFilterEvent}
+                                @change=${this.handleFilterEvent}
+                            />
+                        </form>
+                    </div>
+
+                    <div class="record-viewer-body">
+                        ${this.fields.map((fieldInfo) => RecordViewer.renderField(fieldInfo))}
+                    </div>
+                </div>
+            `;
+        } else {
+            // Status message fills whole display.
+            return html`
+                <div class="activ-cg-api-webcomponent record-viewer">
+                    <div class="record-viewer-overlay">
+                        <p class="record-viewer-status">${this.statusMessage}</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    private static renderField(fieldInfo: FieldInfo) {
+        if (fieldInfo.isVisible) {
+            return html`
+                <div class="record-viewer-field">
+                    <div class="record-viewer-field-name" title=${fieldInfo.tooltip}>${fieldInfo.name}</div>
+                    ${fieldInfo.render()}
+                </div>
+            `;
+        } else {
+            return html``;
+        }
+    }
+
     private unsubscribe() {
-        this.body.innerHTML = "";
+        this.fields = [];
+        this.tableName = "";
+        this.tableNumber = TableNumber.undefined;
+        this.symbolLabel = "";
+        this.exchangeName = "";
 
         if (this.requestHandle != null) {
             this.requestHandle.delete();
@@ -267,107 +319,140 @@ class RecordViewer extends withLifecycle(withRenderer(withUpdate())) implements 
 
     private async processRecord(record: Streaming.Image) {
         ++this.stats.responsesReturned;
-        this.fields = [];
 
-        this.symbolLabel.textContent = record.responseKey.symbol;
+        this.symbolLabel = record.responseKey.symbol;
 
-        {
-            // Might receive a new table number not in the enumeration.
-            const tableName = TableNumber[record.responseKey.tableNumber];
-            this.tableLabel.textContent =
-                tableName == null
-                    ? `Table number ${record.responseKey.tableNumber}`
-                    : `${tableName} (${record.responseKey.tableNumber})`;
-        }
+        this.client!.metaData.getExchangeInfo(record.responseKey.symbol).then((exchangeInfo) => {
+            this.exchangeName = exchangeInfo.name;
+        });
 
-        (async () => {
-            this.exchangeLabel.textContent = (await this.client!.metaData.getExchangeInfo(record.responseKey.symbol)).name;
-        })();
+        this.client!.metaData.getTableSpecification(record.permissionLevel, record.responseKey.tableNumber).then(
+            (tableSpecification) => {
+                this.tableName = tableSpecification.tableName;
+                this.tableNumber = tableSpecification.tableNumber;
+            }
+        );
 
         for (const field of record.fieldData) {
-            const fieldData = this.createFieldData(field.id);
-
-            // Render the initial value, attach to document and cache.
-            fieldData.render(field);
-            this.body.appendChild(fieldData.element);
-            this.fields[field.id] = fieldData;
+            this.createFieldInfo(field);
         }
+
+        // NB this.symbolLabel is registered as a property so we'll get a re-render scheduled automatically.
     }
 
-    private processUpdate(update: Streaming.Update) {
+    private readonly processUpdate = (update: Streaming.Update) => {
         ++this.stats.totalUpdates;
+
         for (const field of update.fieldData) {
             if (field.doesUpdateLastValue) {
                 this.updateField(field);
             }
         }
 
-        // Special case for updateId as it's not in FieldData.
+        // Special case for updateId as it's not in FieldData in an update (but was in the response).
         this.updateIdField.value = update.updateId;
         this.updateField(this.updateIdField);
-    }
+
+        // Schedule a render.
+        this.requestUpdate();
+    };
 
     private updateField(field: Field) {
-        const fieldData = this.fields[field.id];
-        if (fieldData != null) {
-            fieldData.render(field);
+        const fieldInfo = this.fields[field.id];
+        if (fieldInfo != null) {
+            fieldInfo.field = field;
+
+            // Clear down cached text value. We only calculate it on render in case this update is never
+            // actually rendered.
+            fieldInfo.textValue = null;
         }
     }
 
-    private createFieldData(fieldId: FieldId) {
-        const element = document.createElement("div");
-        element.className = "record-viewer-field";
-        element.innerHTML = fieldHtml;
+    private async createFieldInfo(field: Field) {
+        // Function to get trending this field (if any) from its value.
+        const getTrendHelper = getTrendHelperFromString(field.id, fieldIdTrends[field.id] || "tick");
 
-        const nameElement = element.querySelector(".record-viewer-field-name") as HTMLDivElement;
-        const valueElement = element.querySelector(".record-viewer-field-value") as HTMLDivElement;
-        const getTrendHelper = getTrendHelperFromString(fieldId, fieldIdTrends[fieldId] || "tick");
+        // Add field now before potentially waiting for additional metadata.
+        const fieldInfo: FieldInfo = {
+            name: "",
+            tooltip: "",
+            isVisible: false,
+            field,
+            textValue: null,
+            render: () => {
+                // Figure out trending for TRationals. Note not using lit-element's styleMap() as it's
+                // quite slow. Just set some additional classes as required.
+                let trendClass = "";
+                if (fieldInfo.field.type === FieldType.tRational) {
+                    switch (getTrendHelper(field.value as TRational)) {
+                        case Trend.up:
+                            trendClass = "record-viewer-trend record-viewer-trend-up";
+                            break;
 
-        const render = (field: Field) => {
-            valueElement.textContent = formatField(field);
+                        case Trend.down:
+                            trendClass = "record-viewer-trend record-viewer-trend-down";
+                            break;
 
-            if (field.type === FieldType.tRational) {
-                applyTrendStyle(getTrendHelper(field.value as TRational), valueElement);
-            } else if (field.value == null) {
-                clearTrendStyle(valueElement);
+                        default:
+                            // Just padding to keep alignment when arrows appear/disappear.
+                            trendClass = "record-viewer-trend";
+                            break;
+                    }
+                }
+
+                if (fieldInfo.textValue == null) {
+                    // Calculate text value to render once until we receive a new value for the field.
+                    fieldInfo.textValue = formatField(fieldInfo.field);
+                }
+
+                return html`
+                    <div class="record-viewer-field-value ${trendClass}">
+                        ${fieldInfo.textValue}
+                    </div>
+                `;
             }
         };
 
-        const fieldData = { name: "", element, render };
+        this.fields[field.id] = fieldInfo;
 
-        const processFieldHelper = (fieldHelper: MetaData.UniversalFieldHelper) => {
-            fieldData.name = fieldHelper.name;
-            this.setFieldElementVisibility(element, fieldHelper.name);
-            nameElement.textContent = fieldHelper.name;
-            nameElement.title = `${FieldId[fieldId] || ""} (${fieldId})\n${fieldHelper.description}`;
-        };
-
-        // Field metadata may or may not be in the cache by now. So cope either way.
-        const fieldHelper = this.client!.metaData.getUniversalFieldHelper(fieldId);
+        let fieldHelper = this.client!.metaData.getUniversalFieldHelper(field.id);
         if (fieldHelper instanceof Promise) {
-            fieldHelper.then(processFieldHelper);
-        } else {
-            processFieldHelper(fieldHelper);
+            fieldHelper = await fieldHelper;
+
+            // this.fields isn't monitored, so request a redraw in case it's a while before
+            // we receive something that would trigger one (e.g. out of hours; no updates).
+            this.requestUpdate();
         }
 
-        return fieldData;
+        fieldInfo.name = fieldHelper.name;
+        fieldInfo.tooltip = `${FieldId[field.id] || ""} (${field.id})\n${fieldHelper.description}`;
+        fieldInfo.isVisible = this.isFieldVisible(fieldHelper.name);
     }
 
-    private setFieldElementVisibility(element: HTMLElement, fieldName: string) {
-        const isVisible = fieldName.toLowerCase().includes(this.filterValue.value.toLowerCase());
-
-        element.style.display = isVisible ? "" : "none";
+    private isFieldVisible(fieldName: string) {
+        return fieldName.toLowerCase().includes(this.filterValue.toLowerCase());
     }
+
+    private readonly handleFilterEvent = (e: Event) => {
+        e.preventDefault();
+
+        this.filterValue = e.target != null ? (e.target as HTMLInputElement).value : "";
+
+        for (const fieldInfo of this.fields) {
+            if (fieldInfo != null) {
+                fieldInfo.isVisible = this.isFieldVisible(fieldInfo.name);
+            }
+        }
+
+        // NB this.filterValue is registered as a property so we'll get a re-render scheduled.
+    };
 
     private setStatus(message: string | null) {
-        this.status.textContent = message;
-        this.overlay.style.display = message == null ? "none" : "";
+        this.statusMessage = message;
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
-
-window.customElements.define("record-viewer", RecordViewer);
 
 export { Attributes };
 export default RecordViewer;

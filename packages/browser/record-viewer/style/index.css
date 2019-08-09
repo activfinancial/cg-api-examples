@@ -118,3 +118,17 @@
     background-position: center left;
     background-repeat: no-repeat;
 }
+
+.record-viewer-trend {
+    padding-left: 1rem;
+}
+
+.record-viewer-trend-up {
+    color: var(--shadow-trend-up-color);
+    background-image: url("../../common/trendUpArrow.svg");
+}
+
+.record-viewer-trend-down {
+    color: var(--shadow-trend-down-color);
+    background-image: url("../../common/trendDownArrow.svg");
+}
