@@ -13,7 +13,7 @@ import indexCss from "!raw-loader!../style/index.css";
 
 import indexHtml from "!raw-loader!./index.html";
 
-import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
+import { LitElement, customElement, property, PropertyValues } from "lit-element";
 
 import c3, { PrimitiveArray } from "c3";
 import c3Css from "raw-loader!c3/c3.css";
@@ -38,7 +38,11 @@ interface Attributes {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-class Chart extends withLifecycle(withRenderer(withUpdate(HTMLElement))) implements IExample {
+/**
+ *	Time series chart WebComponent.
+ */
+@customElement("time-series-chart")
+class Chart extends LitElement implements IExample {
     private readonly rootElement: HTMLDivElement;
     private readonly symbolLabel: HTMLHeadingElement;
     private readonly nameLabel: HTMLHeadingElement;
@@ -58,11 +62,8 @@ class Chart extends withLifecycle(withRenderer(withUpdate(HTMLElement))) impleme
 
     private stats = new ExampleStats();
     // props.
+    @property()
     symbol: string = "";
-
-    static readonly props = {
-        symbol: props.string
-    };
 
     constructor() {
         super();
@@ -117,11 +118,17 @@ class Chart extends withLifecycle(withRenderer(withUpdate(HTMLElement))) impleme
         }
     }
 
-    updated() {
-        this.createChart();
+    shouldUpdate(changedProperties: PropertyValues) {
+        // Check for properties that require a resubscribe if they change.
+        // TODO automate this from the Attributes interface somehow...
+        if (changedProperties.has("symbol")) {
+            this.createChart();
+        }
+
+        return true;
     }
 
-    disconnected() {
+    disconnectedCallback() {
         // TODO probably move requestHandle to a member so we can delete it in case this element
         // is removed mid way through the request.
     }
@@ -287,8 +294,6 @@ class Chart extends withLifecycle(withRenderer(withUpdate(HTMLElement))) impleme
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
-
-window.customElements.define("time-series-chart", Chart);
 
 export { Attributes };
 export default Chart;
