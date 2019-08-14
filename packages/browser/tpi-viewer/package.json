@@ -34,7 +34,7 @@
     "dependencies": {
         "@activfinancial/cg-api": "^0.10.2",
         "@fortawesome/fontawesome-free": "^5.10.1",
-        "skatejs": "^5.2.4"
+        "lit-element": "^2.2.1"
     },
     "devDependencies": {
         "@types/skatejs": "^5.0.1",

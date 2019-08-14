@@ -17,14 +17,25 @@ import indexHtml from "!raw-loader!./index.html";
 import angleLeft from "!url-loader!@fortawesome/fontawesome-free/svgs/solid/angle-left.svg";
 import angleRight from "!url-loader!@fortawesome/fontawesome-free/svgs/solid/angle-right.svg";
 
-import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
+import { LitElement, PropertyValues, customElement, property } from "lit-element";
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+
+// TODO surely we can automagically generate this (or vice-versa) from the props below? Too much repetition.
+/** Attributes interface. */
+interface Attributes {
+    symbol: string;
+    "conflation-type": "none" | keyof typeof Streaming.ConflationType;
+    "conflation-interval": number;
+}
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /**
  * TpiViewer WebComponent.
  */
-class TpiViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) {
+@customElement("tpi-viewer")
+class TpiViewer extends LitElement {
     private readonly rootElement: HTMLDivElement;
     private readonly symbolLabel: HTMLHeadingElement;
     private readonly body: HTMLTableElement;
@@ -51,15 +62,14 @@ class TpiViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) {
     totalUpdates: number = 0;
 
     // props.
+    @property()
     symbol: string = "";
-    conflationType: string = "none";
-    conflationInterval: number = 500;
 
-    static props = {
-        symbol: props.string,
-        conflationType: props.string,
-        conflationInterval: props.number
-    };
+    @property({ attribute: "conflation-type" })
+    conflationType: string = "none";
+
+    @property({ attribute: "conflation-interval", type: Number })
+    conflationInterval: number = 500;
 
     constructor() {
         super();
@@ -131,16 +141,24 @@ class TpiViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) {
         }
     }
 
-    updated() {
+    shouldUpdate(changedProperties: PropertyValues) {
+        // Check for properties that require a resubscribe if they change.
+        // TODO automate this from the Attributes interface somehow...
         // TODO what's the right thing to do here? We're setting this.symbol on hitting next/previous
         // button, which triggers an updated() call. But we don't want to do anything since we've
         // already subscribed to the new symbol.
-        if (this.symbol != this.symbolLabel.textContent) {
+        if (
+            (changedProperties.has("symbol") && this.symbol !== this.symbolLabel.textContent) ||
+            changedProperties.has("conflationType") ||
+            changedProperties.has("conflationInterval")
+        ) {
             this.subscribe();
         }
+
+        return true;
     }
 
-    disconnected() {
+    disconnectedCallback() {
         this.unsubscribe();
     }
 
@@ -313,6 +331,5 @@ class TpiViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-window.customElements.define("tpi-viewer", TpiViewer);
-
+export { Attributes };
 export default TpiViewer;
