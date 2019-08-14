@@ -496,6 +496,16 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
         const optionRow = this.createOrFindOptionRow(record.responseKey.symbol, expirationSection, strikePriceField);
         const updateOption = isCall ? optionRow.updateCallOption : optionRow.updatePutOption;
 
+        // Set tooltip to symbol.
+        for (const node of Array.from(
+            expirationSection.element.querySelectorAll(`.${OptionChain.getSideClass(isCall)}[data-activ-field-id]`)
+        )) {
+            const element = node as HTMLElement;
+
+            // Tooltip for the symbol.
+            element.title = record.responseKey.symbol;
+        }
+
         updateOption(record);
         optionRow.updateInTheMoney(null, this.underlyingPrice);
 
@@ -667,15 +677,13 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
         let putFieldInfos: FieldInfo[] = [];
 
         const buildSide = (isCall: boolean) => {
-            const sideClass = `option-chain-${isCall ? "call" : "put"}`;
             const fieldInfos = isCall ? callFieldInfos : putFieldInfos;
 
-            for (const node of Array.from(rowElement.querySelectorAll(`.${sideClass}[data-activ-field-id]`))) {
+            for (const node of Array.from(
+                rowElement.querySelectorAll(`.${OptionChain.getSideClass(isCall)}[data-activ-field-id]`)
+            )) {
                 const element = node as HTMLElement;
                 const fieldId = FieldId[node.getAttribute("data-activ-field-id") as keyof typeof FieldId];
-
-                // Tooltip for the symbol.
-                element.title = symbol;
 
                 fieldInfos[fieldId] = {
                     element,
@@ -832,6 +840,10 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
         } else {
             handleColumnCount(allColumnsCount);
         }
+    }
+
+    private static getSideClass(isCall: boolean) {
+        return `option-chain-${isCall ? "call" : "put"}`;
     }
 }
 
