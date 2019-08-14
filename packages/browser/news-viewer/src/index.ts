@@ -21,7 +21,7 @@ import angleRight from "!url-loader!@fortawesome/fontawesome-free/svgs/solid/ang
 
 import comtexLogo from "!url-loader!../img/comtex-logo.png";
 
-import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
+import { LitElement, customElement, property, PropertyValues } from "lit-element";
 
 // TODO just using the polyfill everywhere isn't working in Openfin.
 import { TextDecoder as TextDecoderPF } from "text-encoding";
@@ -75,7 +75,11 @@ function getTextDecoder(encoding: string) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) implements IExample {
+/**
+ * NewsViewer WebComponent.
+ */
+@customElement("news-viewer")
+class NewsViewer extends LitElement implements IExample {
     private readonly rootElement: HTMLDivElement;
     private readonly status: HTMLDivElement;
     private readonly overlay: HTMLDivElement;
@@ -114,11 +118,8 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
     private stats = new ExampleStats();
 
     // props.
+    @property()
     query: string = "";
-
-    static readonly props = {
-        query: props.string
-    };
 
     constructor() {
         super();
@@ -208,11 +209,17 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
         }
     }
 
-    updated() {
-        this.subscribe();
+    shouldUpdate(changedProperties: PropertyValues) {
+        // Check for properties that require a resubscribe if they change.
+        // TODO automate this from the Attributes interface somehow...
+        if (changedProperties.has("query")) {
+            this.subscribe();
+        }
+
+        return true;
     }
 
-    disconnected() {
+    disconnectedCallback() {
         this.unsubscribe();
     }
 
@@ -455,8 +462,6 @@ class NewsViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) im
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
-
-window.customElements.define("news-viewer", NewsViewer);
 
 export { Attributes };
 export default NewsViewer;

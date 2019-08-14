@@ -35,7 +35,7 @@
         "@activfinancial/cg-api": "^0.10.2",
         "@fortawesome/fontawesome-free": "^5.10.1",
         "detect-browser": "^4.6.0",
-        "skatejs": "^5.2.4",
+        "lit-element": "^2.2.1",
         "text-encoding": "^0.7.0"
     },
     "devDependencies": {

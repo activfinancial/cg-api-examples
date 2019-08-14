@@ -34,8 +34,8 @@
     "dependencies": {
         "@activfinancial/cg-api": "^0.10.2",
         "detect-browser": "^4.6.0",
-        "resize-observer": "^1.0.0",
-        "skatejs": "^5.2.4"
+        "lit-element": "^2.2.1",
+        "resize-observer": "^1.0.0"
     },
     "devDependencies": {
         "@types/detect-browser": "^4.0.0",

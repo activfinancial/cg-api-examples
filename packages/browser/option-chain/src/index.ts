@@ -36,7 +36,7 @@ import indexHtml from "!raw-loader!./index.html";
 import optionRowHtml from "!raw-loader!./optionRow.html";
 import expirationSectionHtml from "!raw-loader!./expirationSection.html";
 
-import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
+import { LitElement, customElement, property, PropertyValues } from "lit-element";
 
 import { ResizeObserver } from "resize-observer";
 
@@ -107,7 +107,8 @@ interface Attributes {
 /**
  * OptionChain class.
  */
-class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) implements IExample {
+@customElement("option-chain")
+class OptionChain extends LitElement implements IExample {
     private readonly rootElement: HTMLDivElement;
     private readonly options: HTMLDivElement;
     private readonly status: HTMLDivElement;
@@ -132,17 +133,16 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
     private stats = new ExampleStats();
 
     // props.
+    @property()
     symbol: string = "";
-    relationshipId: string = "nbboOption";
-    conflationType: string = "none";
-    conflationInterval: number = 500;
 
-    static readonly props = {
-        symbol: props.string,
-        relationshipId: props.string,
-        conflationType: props.string,
-        conflationInterval: props.number
-    };
+    @property({ attribute: "relationship-id" })
+    relationshipId: string = "nbboOption";
+
+    @property({ attribute: "conflation-type" })
+    conflationType: string = "none";
+    @property({ attribute: "conflation-interval", type: Number })
+    conflationInterval: number = 500;
 
     constructor() {
         super();
@@ -242,11 +242,22 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
         }
     }
 
-    updated() {
-        this.subscribe();
+    shouldUpdate(changedProperties: PropertyValues) {
+        // Check for properties that require a resubscribe if they change.
+        // TODO automate this from the Attributes interface somehow...
+        if (
+            changedProperties.has("symbol") ||
+            changedProperties.has("relationshipId") ||
+            changedProperties.has("conflationType") ||
+            changedProperties.has("conflationInterval")
+        ) {
+            this.subscribe();
+        }
+
+        return true;
     }
 
-    disconnected() {
+    disconnectedCallback() {
         this.unsubscribe();
     }
 
@@ -848,8 +859,6 @@ class OptionChain extends withLifecycle(withRenderer(withUpdate(HTMLElement))) i
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
-
-window.customElements.define("option-chain", OptionChain);
 
 export { Attributes };
 export default OptionChain;
