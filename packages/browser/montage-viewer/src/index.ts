@@ -16,11 +16,11 @@ import indexCss from "!raw-loader!../style/index.css";
 
 import indexHtml from "!raw-loader!./index.html";
 
-import { props, withLifecycle, withRenderer, withUpdate } from "skatejs";
+import { LitElement, customElement, property, PropertyValues } from "lit-element";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-// TODO surely we can automagically generate this (or vice-versa) from the props static below? Too much repetition.
+// TODO can we factor out the attribute names below? Too much repetition.
 /** Attributes interface. */
 interface Attributes {
     "symbol-list": string;
@@ -31,7 +31,8 @@ interface Attributes {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-class MontageViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement))) implements IExample {
+@customElement("montage-viewer")
+class MontageViewer extends LitElement implements IExample {
     private readonly rootElement: HTMLDivElement;
     private readonly header: HTMLTableElement;
     private readonly body: HTMLTableElement;
@@ -45,18 +46,17 @@ class MontageViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement)))
     private stats = new ExampleStats();
 
     // props.
+    @property({ attribute: "symbol-list" })
     symbolList: string = "";
-    tableNumber: string | null = null;
-    conflationType: "none" | keyof typeof Streaming.ConflationType = "none";
-    conflationInterval: number = 500;
 
-    static readonly props = {
-        /** Semi-colon delimited list of patterns or symbols. */
-        symbolList: props.string,
-        tableNumber: props.string,
-        conflationType: props.string,
-        conflationInterval: props.number
-    };
+    @property({ attribute: "table-number" })
+    tableNumber: string | null = null;
+
+    @property({ attribute: "conflation-type" })
+    conflationType: "none" | keyof typeof Streaming.ConflationType = "none";
+
+    @property({ attribute: "conflation-interval", type: Number })
+    conflationInterval: number = 500;
 
     constructor() {
         super();
@@ -109,11 +109,22 @@ class MontageViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement)))
         }
     }
 
-    updated(prevProps: any, prevState: any) {
-        this.subscribe();
+    shouldUpdate(changedProperties: PropertyValues) {
+        // Check for properties that require a resubscribe if they change.
+        // TODO automate this from the Attributes interface somehow...
+        if (
+            changedProperties.has("symbolList") ||
+            changedProperties.has("tableNumber") ||
+            changedProperties.has("conflationType") ||
+            changedProperties.has("conflationInterval")
+        ) {
+            this.subscribe();
+        }
+
+        return true;
     }
 
-    disconnected() {
+    disconnectedCallback() {
         this.unsubscribe();
     }
 
@@ -300,8 +311,6 @@ class MontageViewer extends withLifecycle(withRenderer(withUpdate(HTMLElement)))
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
-
-window.customElements.define("montage-viewer", MontageViewer);
 
 export { Attributes };
 export default MontageViewer;
