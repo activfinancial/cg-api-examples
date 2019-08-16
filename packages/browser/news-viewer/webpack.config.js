@@ -12,9 +12,6 @@ const config = {
     },
     devtool: "source-map",
     resolve: {
-        alias: {
-            skatejs: "skatejs/dist/esnext"
-        },
         extensions: [".ts", ".js"]
     },
     externals: {
