@@ -16,8 +16,7 @@
             "sourceMaps": true,
             "sourceMapPathOverrides": {
                 // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                // I assume this looks different to the other samples as they use cg-api as an external dependency.
-                "webpack://activ_cg_api_explorer/webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
+                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_cg_api_explorer/*": "${webRoot}/*"
             },
             "userDataDir": false

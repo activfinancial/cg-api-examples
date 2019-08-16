@@ -17,7 +17,6 @@ const config = {
         extensions: [".ts", ".tsx", ".js", ".jsx"]
     },
     // Bundling the API too, for now.
-    // If this changes, I think launch.json will need a change.
     //    externals: {
     //        "@activfinancial/cg-api": {
     //            root: "activ",
