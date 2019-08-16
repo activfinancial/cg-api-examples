@@ -12,11 +12,12 @@ import {
     TRational,
     Trend,
     StatusCodeError,
-    TableNumber
+    TableNumber,
+    formatField as formatFieldInternal
 } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
-import { formatField as formatFieldInternal, getTrendHelperFromString } from "../../common/formatFieldValue";
+import { getTrendHelperFromString } from "../../common/formatFieldValue";
 import { addUnloadHandler } from "../../../common/utils";
 
 // Note just using css-loader explicitly to get an object; not loading in to the page.

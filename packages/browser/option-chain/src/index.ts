@@ -9,23 +9,19 @@ import {
     FieldData,
     FieldId,
     FieldType,
+    formatField,
+    FormatFieldOptions,
     getExchangeCode,
-    StatusCode,
+    NumberFormat,
     RelationshipId,
+    StatusCode,
     Streaming,
     SymbolSeparator,
     Trend,
     TRational
 } from "@activfinancial/cg-api";
 
-import {
-    FormatFieldOptions,
-    NumberFormat,
-    formatField,
-    getTrendHelperFromElement,
-    applyTrendStyle,
-    clearTrendStyle
-} from "../../common/formatFieldValue";
+import { getTrendHelperFromElement, applyTrendStyle, clearTrendStyle } from "../../common/formatFieldValue";
 import { addUnloadHandler } from "../../../common/utils";
 
 // Note leading ! overrides webpack config matching css files.

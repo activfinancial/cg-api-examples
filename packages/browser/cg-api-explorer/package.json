@@ -45,7 +45,6 @@
         "react-split-pane": "^0.1.87",
         "react-textarea-autosize": "^7.1.0",
         "redux": "^4.0.4",
-        "sprintf-js": "^1.1.2",
         "ts-enum-util": "^4.0.1",
         "url-search-params-polyfill": "^7.0.0",
         "uuid": "^3.3.2"

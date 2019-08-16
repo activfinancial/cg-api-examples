@@ -2,12 +2,12 @@
  * MontageViewer custom element.
  */
 
-import { Client, Streaming, FieldType, StatusCode, TRational, TableNumber, TrendType } from "@activfinancial/cg-api";
+import { Client, Streaming, FieldType, StatusCode, TRational, TableNumber, TrendType, formatField } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
 import { FieldInfo, tableInfos } from "./tableFields";
 
-import { formatField, applyTrendStyle, clearTrendStyle, getTrendHelperFromString } from "../../common/formatFieldValue";
+import { applyTrendStyle, clearTrendStyle, getTrendHelperFromString } from "../../common/formatFieldValue";
 import { addUnloadHandler } from "../../../common/utils";
 
 // Note leading ! overrides webpack config matching css files.

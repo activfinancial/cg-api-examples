@@ -8,7 +8,6 @@ import Row from "react-bootstrap/Row";
 import { TextDecoder } from "text-encoding";
 
 import { padNumber } from "./utils";
-import { formatField } from "../../common/formatFieldValue";
 import EllipsisTooltip from "./components/ellipsisTooltip";
 import * as MakeRequest from "./components/makeRequest";
 
@@ -30,6 +29,7 @@ import {
     FieldId,
     FieldType,
     FieldValue,
+    formatField,
     MetaData,
     News,
     PermissionId,

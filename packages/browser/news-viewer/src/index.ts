@@ -2,10 +2,9 @@
  * News viewer custom element.
  */
 
-import { Client, Field, FieldId, News } from "@activfinancial/cg-api";
+import { Client, Field, FieldId, News, formatField } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
-import { formatField } from "../../common/formatFieldValue";
 import { addUnloadHandler } from "../../../common/utils";
 
 // Note leading ! overrides webpack config matching css files.
