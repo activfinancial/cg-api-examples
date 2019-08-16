@@ -128,7 +128,11 @@ class MontageViewer extends LitElement implements IExample {
         this.unsubscribe();
     }
 
-    async subscribe() {
+    getStats(): IExampleStats {
+        return this.stats;
+    }
+
+    private async subscribe() {
         this.unsubscribe();
 
         if (this.client == null || this.symbolList === "" || this.tableNumber == null) {
@@ -190,10 +194,6 @@ class MontageViewer extends LitElement implements IExample {
         } catch (e) {
             this.setStatus(`Error subscribing: ${e}`);
         }
-    }
-
-    getStats(): IExampleStats {
-        return this.stats;
     }
 
     private unsubscribe() {
