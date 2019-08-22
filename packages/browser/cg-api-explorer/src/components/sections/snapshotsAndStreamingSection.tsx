@@ -46,7 +46,7 @@ import {
 } from "../../state/actions/snapshotsAndStreamingActions";
 import { dispatchAddSubscriptionInfo, dispatchRemoveSubscriptionInfo } from "../../state/actions/subscriptionManagementActions";
 
-import { PermissionLevel, Streaming, RelationshipId, Client } from "@activfinancial/cg-api";
+import { Client, PermissionLevel, RelationshipId, Streaming } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -263,7 +263,7 @@ class ComponentImpl extends React.PureComponent<Props> {
                                 )}
 
                                 {/* Conflation. */}
-                                {this.props.subscriptionType && (
+                                {this.props.subscriptionType === Streaming.SubscriptionType.full && (
                                     <ConflationParametersControl
                                         conflationType={this.props.conflationType}
                                         conflationInterval={this.props.conflationInterval}
