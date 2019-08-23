@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.9](https://github.com/activfinancial/cg-api-examples/compare/@activfinancial/get-match@0.4.8...@activfinancial/get-match@0.4.9) (2019-08-23)
+
+
+### Bug Fixes
+
+* set npmjs default registry in package.json (since we have an internal private registry now for some packages). ([0d1b2ba](https://github.com/activfinancial/cg-api-examples/commit/0d1b2ba))
+
+
+
+
+
 ## [0.4.8](https://github.com/activfinancial/cg-api-examples/compare/@activfinancial/get-match@0.4.7...@activfinancial/get-match@0.4.8) (2019-08-16)
 
 **Note:** Version bump only for package @activfinancial/get-match

@@ -5,7 +5,7 @@
         "type": "git",
         "url": "https://github.com/activfinancial/cg-api-examples"
     },
-    "version": "0.4.8",
+    "version": "0.4.9",
     "private": false,
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",

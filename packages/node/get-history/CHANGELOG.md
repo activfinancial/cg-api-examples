@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.40](https://github.com/activfinancial/cg-api-examples/compare/@activfinancial/get-history@0.2.39...@activfinancial/get-history@0.2.40) (2019-08-23)
+
+
+### Bug Fixes
+
+* set npmjs default registry in package.json (since we have an internal private registry now for some packages). ([0d1b2ba](https://github.com/activfinancial/cg-api-examples/commit/0d1b2ba))
+
+
+
+
+
 ## [0.2.39](https://github.com/activfinancial/cg-api-examples/compare/@activfinancial/get-history@0.2.38...@activfinancial/get-history@0.2.39) (2019-08-16)
 
 **Note:** Version bump only for package @activfinancial/get-history

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.31](https://github.com/activfinancial/cg-api-examples/compare/@activfinancial/tpi-viewer@0.1.30...@activfinancial/tpi-viewer@0.1.31) (2019-08-23)
+
+
+### Bug Fixes
+
+* set npmjs default registry in package.json (since we have an internal private registry now for some packages). ([0d1b2ba](https://github.com/activfinancial/cg-api-examples/commit/0d1b2ba))
+
+
+
+
+
 ## [0.1.30](https://github.com/activfinancial/cg-api-examples/compare/@activfinancial/tpi-viewer@0.1.29...@activfinancial/tpi-viewer@0.1.30) (2019-08-16)
 
 **Note:** Version bump only for package @activfinancial/tpi-viewer
