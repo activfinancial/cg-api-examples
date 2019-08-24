@@ -8,7 +8,6 @@
     "version": "0.4.9",
     "private": false,
     "publishConfig": {
-        "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
     "license": "CC-BY-4.0",
