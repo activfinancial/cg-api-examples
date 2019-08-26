@@ -2,7 +2,7 @@
  * Time series chart custom element.
  */
 
-import { Client, FieldId, TimeSeries, RelationshipId } from "@activfinancial/cg-api";
+import { Client, FieldId, TimeSeries, RelationshipId, Streaming } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
 import { addUnloadHandler } from "../../../common/utils";
@@ -15,8 +15,8 @@ import indexHtml from "!raw-loader!./index.html";
 
 import { LitElement, customElement, property, PropertyValues } from "lit-element";
 
-import c3, { PrimitiveArray } from "c3";
-import c3Css from "raw-loader!c3/c3.css";
+import bb, { PrimitiveArray } from "billboard.js";
+import bbCss from "raw-loader!billboard.js/dist/billboard.min.css";
 
 import { ResizeObserver } from "resize-observer";
 
@@ -58,7 +58,9 @@ class Chart extends LitElement implements IExample {
 
     private clientPromise: Promise<Client> | null = null;
     private api: Client | null = null;
-    private chart: c3.ChartAPI | null = null;
+    private requestHandle: TimeSeries.RequestHandle<TimeSeries.HistoryBar> | null = null;
+    private symbolInfoRequestHandle: Streaming.RequestHandle | null = null;
+    private chart: bb.Chart | null = null;
 
     private stats = new ExampleStats();
     // props.
@@ -70,7 +72,7 @@ class Chart extends LitElement implements IExample {
 
         this.rootElement = document.createElement("div");
         this.rootElement.className = "activ-cg-api-webcomponent time-series-chart";
-        this.rootElement.innerHTML = `<style>${commonCss}${indexCss}${c3Css}</style>${indexHtml}`;
+        this.rootElement.innerHTML = `<style>${commonCss}${indexCss}${bbCss}</style>${indexHtml}`;
         (this.renderRoot as HTMLElement).appendChild(this.rootElement);
 
         this.symbolLabel = this.rootElement.querySelector(".time-series-chart-title-symbol") as HTMLHeadingElement;
@@ -83,8 +85,7 @@ class Chart extends LitElement implements IExample {
         // HACK see comment in getChartHeight().
         this.resizeObserver.observe(this.chartElementWrapper);
 
-        // TODO see note in disconnectedCallback.
-        // addUnloadHandler(() => this.unsubscribe());
+        addUnloadHandler(() => this.destroyChart());
 
         this.setStatus("Waiting...");
     }
@@ -129,8 +130,7 @@ class Chart extends LitElement implements IExample {
     }
 
     disconnectedCallback() {
-        // TODO probably move requestHandle to a member so we can delete it in case this element
-        // is removed mid way through the request.
+        this.destroyChart();
     }
 
     async createChart() {
@@ -148,7 +148,7 @@ class Chart extends LitElement implements IExample {
         // Some metadata. Fire off in the background and render when we get a response.
         // TODO should probably cache the request for cancellation when we do the tss request also.
         (async () => {
-            const infoRequest = this.api!.streaming.getEqual({
+            this.symbolInfoRequestHandle = this.api!.streaming.getEqual({
                 key: this.symbol,
                 relationships: {
                     [RelationshipId.company]: {
@@ -157,7 +157,7 @@ class Chart extends LitElement implements IExample {
                 }
             });
 
-            for await (const record of infoRequest) {
+            for await (const record of this.symbolInfoRequestHandle) {
                 const nameField = record.getField(FieldId.FID_NAME);
                 if (nameField.value != null) {
                     this.nameLabel.textContent = nameField.value as string;
@@ -166,7 +166,7 @@ class Chart extends LitElement implements IExample {
         })();
 
         // Daily bar request.
-        const historyRequestHandle = this.api.timeSeries.getHistory({
+        this.requestHandle = this.api.timeSeries.getHistory({
             key: this.symbol,
             seriesType: TimeSeries.HistorySeriesType.dailyBars,
             periods: [{ type: TimeSeries.PeriodType.tradingDayCount, count: 1500 }, { type: TimeSeries.PeriodType.now }],
@@ -174,8 +174,8 @@ class Chart extends LitElement implements IExample {
         });
 
         try {
-            let times: [string, ...PrimitiveArray];
-            let closePrices: [string, ...PrimitiveArray];
+            let times: [string, ...PrimitiveArray] = [""];
+            let closePrices: [string, ...PrimitiveArray] = [""];
 
             const resetResultArrays = () => {
                 times = ["dateTime"];
@@ -187,7 +187,7 @@ class Chart extends LitElement implements IExample {
                 if (this.chart == null) {
                     this.setStatus(null);
 
-                    this.chart = c3.generate({
+                    this.chart = bb.generate({
                         bindto: this.chartElement,
                         data: {
                             x: "dateTime",
@@ -207,7 +207,8 @@ class Chart extends LitElement implements IExample {
                                             return "";
                                         }
                                     },
-                                    rotate: -45,
+                                    // HACK -45 not rendering properly with billboard.js.
+                                    rotate: 45,
                                     fit: true,
                                     count: 100
                                 }
@@ -245,15 +246,14 @@ class Chart extends LitElement implements IExample {
                 resetResultArrays();
             };
 
-            for await (const historyBar of historyRequestHandle) {
+            for await (const historyBar of this.requestHandle) {
                 if (0 === this.stats.responsesReturned) {
                     this.stats.initialResponseTimestamp = performance.now();
                 }
 
                 if (historyBar.close != null) {
-                    // HACK problem in c3 type definitions as of 0.7.2? Won't accept Date any longer.
-                    times!.push(historyBar.dateTime as any);
-                    closePrices!.push(historyBar.close!.valueOf());
+                    times.push(historyBar.dateTime);
+                    closePrices.push(historyBar.close!.valueOf());
                 }
 
                 // Draw the chart every now and then.
@@ -275,6 +275,16 @@ class Chart extends LitElement implements IExample {
             this.chart.destroy();
             this.chart = null;
         }
+
+        if (this.requestHandle != null) {
+            this.requestHandle.delete();
+            this.requestHandle = null;
+        }
+
+        if (this.symbolInfoRequestHandle != null) {
+            this.symbolInfoRequestHandle.delete();
+            this.symbolInfoRequestHandle = null;
+        }
     }
 
     getStats(): IExampleStats {
@@ -287,7 +297,7 @@ class Chart extends LitElement implements IExample {
     }
 
     private getChartHeight() {
-        // HACK c3 API doesn't allow relative sizes (e.g. 100%) and will default to 320px if not specified.
+        // HACK bb API doesn't allow relative sizes (e.g. 100%) and will default to 320px if not specified.
         // So dig out size of parent to use as explicit height. Does mean height resizing won't be great.
         return this.chartElementWrapper.clientHeight;
     }

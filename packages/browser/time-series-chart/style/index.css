@@ -75,20 +75,20 @@
     flex: none;
 }
 
-.c3 .c3-axis path,
-.c3 .c3-axis line {
+.bb .bb-axis path,
+.bb .bb-axis line {
     stroke: var(--shadow-foreground-color);
 }
 
-.c3 .c3-axis text,
-.c3 .c3-legend-item text {
+.bb .bb-axis text,
+.bb .bb-legend-item text {
     fill: var(--shadow-foreground-color);
 }
 
-.c3 .c3-grid line {
+.bb .bb-grid line {
     stroke: var(--shadow-grid-color);
 }
 
-.c3 .c3-tooltip {
+.bb .bb-tooltip {
     color: black;
 }

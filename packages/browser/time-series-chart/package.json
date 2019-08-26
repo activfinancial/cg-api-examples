@@ -33,12 +33,11 @@
     },
     "dependencies": {
         "@activfinancial/cg-api": "^0.11.1",
-        "c3": "^0.7.6",
+        "billboard.js": "^1.10.2",
         "lit-element": "^2.2.1",
         "resize-observer": "^1.0.0"
     },
     "devDependencies": {
-        "@types/c3": "^0.7.2",
         "dts-generator": "^3.0.0",
         "raw-loader": "^3.1.0",
         "rimraf": "^3.0.0",
