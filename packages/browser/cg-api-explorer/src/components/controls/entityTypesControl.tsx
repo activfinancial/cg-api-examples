@@ -15,7 +15,7 @@ import { EntityType } from "@activfinancial/cg-api";
 
 // State to be lifted up and managed elsewhere.
 export interface LiftedState {
-    entityTypes: EntityType[];
+    entityTypes: EntityType | EntityType[];
 }
 
 // Own props.
@@ -67,7 +67,7 @@ export class Component extends React.PureComponent<Props, State> {
     private static getStateFromProps(props: Props) {
         return {
             str: Component.entityTypesToString(props.entityTypes),
-            entityTypes: props.entityTypes
+            entityTypes: props.entityTypes instanceof Array ? props.entityTypes : [props.entityTypes]
         };
     }
 
@@ -97,12 +97,16 @@ export class Component extends React.PureComponent<Props, State> {
         this.props.onChange({ entityTypes });
     }
 
-    private static entityTypesToString(entityTypes: EntityType[]) {
-        // NB we'll only do validation on user input; we should display whatever the prop we were passed is.
-        return entityTypes.reduce<string>(
-            (acc, entityType) => `${acc}${acc.length ? Component.delimiter : ""}${Component.entityTypeToString(entityType)}`,
-            ""
-        );
+    private static entityTypesToString(entityTypes: EntityType | EntityType[]) {
+        if (entityTypes instanceof Array) {
+            // NB we'll only do validation on user input; we should display whatever the prop we were passed is.
+            return entityTypes.reduce<string>(
+                (acc, entityType) => `${acc}${acc.length ? Component.delimiter : ""}${Component.entityTypeToString(entityType)}`,
+                ""
+            );
+        } else {
+            return Component.entityTypeToString(entityTypes);
+        }
     }
 
     private static entityTypeToString(entityType: EntityType): string {
