@@ -310,7 +310,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             ],
             subscription: {
                 type: Streaming.SubscriptionType.eventTypeFilterIncludeList,
-                eventTypes: [EventType.trade],
+                eventTypes: EventType.trade,
                 updateHandler: (update: Streaming.Update) => {
                     subscriptionEntry.processUpdate(update);
                 }
