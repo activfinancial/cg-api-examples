@@ -222,6 +222,10 @@ class NewsViewer extends LitElement implements IExample {
         this.unsubscribe();
     }
 
+    getStats(): IExampleStats {
+        return this.stats;
+    }
+
     private async subscribe() {
         this.unsubscribe();
 
@@ -266,10 +270,6 @@ class NewsViewer extends LitElement implements IExample {
         } catch (e) {
             this.setStatus(`Error subscribing: ${e}`);
         }
-    }
-
-    getStats(): IExampleStats {
-        return this.stats;
     }
 
     private unsubscribe() {

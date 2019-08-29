@@ -540,8 +540,9 @@ class ComponentImpl extends React.PureComponent<Props> {
         requestParameters.permissionLevel = this.props.permissionLevel;
     }
 
-    private readonly updateHandler = (update: Streaming.Update) =>
+    private readonly updateHandler = (update: Streaming.Update) => {
         renderUpdate(this.props.client!, "Streaming.Update", update.responseKey.symbol, update);
+    };
 
     private readonly id = uuid();
     private readonly requestParametersBuilder: RequestParametersBuilder;

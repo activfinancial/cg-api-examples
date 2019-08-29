@@ -198,57 +198,6 @@ class RecordViewer extends LitElement implements IExample {
         this.unsubscribe();
     }
 
-    async subscribe() {
-        this.unsubscribe();
-
-        if (this.client == null || this.symbol === "") {
-            return;
-        }
-
-        this.symbolLabel = this.symbol;
-        this.stats = new ExampleStats();
-        this.setStatus("Subscribing...");
-
-        try {
-            const requestParameters: Streaming.GetMatchParameters = {
-                key: this.symbol,
-                matchType: Streaming.GetMatchType.composite,
-                subscription: {
-                    updateHandler: this.processUpdate
-                }
-            };
-
-            if (this.conflationType !== "none") {
-                requestParameters.subscription!.conflation = {
-                    type: Streaming.ConflationType[this.conflationType as keyof typeof Streaming.ConflationType],
-                    interval: this.conflationInterval
-                };
-            }
-
-            // Initiate the async request.
-            this.requestHandle = this.client.streaming.getMatch(requestParameters);
-
-            // Asynchronously iterate all records resulting from the request.
-            // Here we'll only ever have 1 record, though.
-            for await (const record of this.requestHandle) {
-                if (0 === this.stats.responsesReturned) {
-                    this.setStatus(null);
-                    this.stats.initialResponseTimestamp = performance.now();
-                }
-
-                if (StatusCode.success !== record.statusCode) {
-                    throw new StatusCodeError(record.statusCode);
-                }
-
-                this.processRecord(record);
-            }
-
-            this.stats.renderingCompleteTimestamp = performance.now();
-        } catch (e) {
-            this.setStatus(`Error subscribing: ${e}`);
-        }
-    }
-
     getStats(): IExampleStats {
         return this.stats;
     }
@@ -302,6 +251,57 @@ class RecordViewer extends LitElement implements IExample {
             `;
         } else {
             return html``;
+        }
+    }
+
+    private async subscribe() {
+        this.unsubscribe();
+
+        if (this.client == null || this.symbol === "") {
+            return;
+        }
+
+        this.symbolLabel = this.symbol;
+        this.stats = new ExampleStats();
+        this.setStatus("Subscribing...");
+
+        try {
+            const requestParameters: Streaming.GetMatchParameters = {
+                key: this.symbol,
+                matchType: Streaming.GetMatchType.composite,
+                subscription: {
+                    updateHandler: this.processUpdate
+                }
+            };
+
+            if (this.conflationType !== "none") {
+                requestParameters.subscription!.conflation = {
+                    type: Streaming.ConflationType[this.conflationType as keyof typeof Streaming.ConflationType],
+                    interval: this.conflationInterval
+                };
+            }
+
+            // Initiate the async request.
+            this.requestHandle = this.client.streaming.getMatch(requestParameters);
+
+            // Asynchronously iterate all records resulting from the request.
+            // Here we'll only ever have 1 record, though.
+            for await (const record of this.requestHandle) {
+                if (0 === this.stats.responsesReturned) {
+                    this.setStatus(null);
+                    this.stats.initialResponseTimestamp = performance.now();
+                }
+
+                if (StatusCode.success !== record.statusCode) {
+                    throw new StatusCodeError(record.statusCode);
+                }
+
+                this.processRecord(record);
+            }
+
+            this.stats.renderingCompleteTimestamp = performance.now();
+        } catch (e) {
+            this.setStatus(`Error subscribing: ${e}`);
         }
     }
 

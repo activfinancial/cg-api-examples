@@ -172,15 +172,6 @@ class TpiViewer extends LitElement {
         }
     }
 
-    private setConflationParameters(requestParameters: Streaming.RequestParameters) {
-        if (this.conflationType !== "none") {
-            requestParameters.subscription!.conflation = {
-                type: Streaming.ConflationType[this.conflationType as keyof typeof Streaming.ConflationType],
-                interval: this.conflationInterval
-            };
-        }
-    }
-
     private unsubscribe() {
         for (const element of this.fields) {
             if (element != null) {
@@ -202,6 +193,15 @@ class TpiViewer extends LitElement {
         this.totalUpdates = 0;
     }
 
+    private setConflationParameters(requestParameters: Streaming.RequestParameters) {
+        if (this.conflationType !== "none") {
+            requestParameters.subscription!.conflation = {
+                type: Streaming.ConflationType[this.conflationType as keyof typeof Streaming.ConflationType],
+                interval: this.conflationInterval
+            };
+        }
+    }
+
     private getEqual() {
         if (this.client == null) {
             return;
@@ -210,11 +210,8 @@ class TpiViewer extends LitElement {
         try {
             const requestParameters: Streaming.GetEqualParameters = {
                 key: this.symbol,
-                relationships: {
-                    /* Empty Relationship will get all fields. */
-                },
                 subscription: {
-                    updateHandler: (update: Streaming.Update) => this.processUpdate(update)
+                    updateHandler: this.processUpdate
                 }
             };
 
@@ -235,11 +232,8 @@ class TpiViewer extends LitElement {
         try {
             const requestParameters: Streaming.GetFirstLastParameters = {
                 key: TpiViewer.tpiTable,
-                relationships: {
-                    /* Empty Relationship will get all fields. */
-                },
                 subscription: {
-                    updateHandler: (update: Streaming.Update) => this.processUpdate(update)
+                    updateHandler: this.processUpdate
                 }
             };
 
@@ -260,11 +254,8 @@ class TpiViewer extends LitElement {
         try {
             const requestParameters: Streaming.GetNextPreviousParameters = {
                 key: { tableNumber: TpiViewer.tpiTable, symbol: this.symbol },
-                relationships: {
-                    /* Empty Relationship will get all fields. */
-                },
                 subscription: {
-                    updateHandler: (update: Streaming.Update) => this.processUpdate(update)
+                    updateHandler: this.processUpdate
                 }
             };
 
@@ -306,10 +297,10 @@ class TpiViewer extends LitElement {
         this.processFieldData(record.fieldData);
     }
 
-    private processUpdate(update: Streaming.Update) {
+    private readonly processUpdate = (update: Streaming.Update) => {
         ++this.totalUpdates;
         this.processFieldData(update.fieldData);
-    }
+    };
 
     private processFieldData(fieldData: FieldData) {
         for (const field of fieldData) {

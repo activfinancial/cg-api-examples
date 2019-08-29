@@ -625,7 +625,7 @@ export async function renderAsyncIterableResponse<T extends AsyncIterable<any>>(
         )
     );
 
-    // Update the display with number of responses and drop the pending requset count.
+    // Update the display with number of responses and drop the pending request count.
     if (numberOfRecords > 0) {
         store.dispatch(dispatchAdjustResponseCounter(numberOfRecords));
     }

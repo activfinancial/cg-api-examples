@@ -133,7 +133,11 @@ class Chart extends LitElement implements IExample {
         this.destroyChart();
     }
 
-    async createChart() {
+    getStats(): IExampleStats {
+        return this.stats;
+    }
+
+    private async createChart() {
         this.destroyChart();
 
         this.symbolLabel.textContent = this.symbol;
@@ -146,7 +150,6 @@ class Chart extends LitElement implements IExample {
         this.setStatus("Getting data...");
 
         // Some metadata. Fire off in the background and render when we get a response.
-        // TODO should probably cache the request for cancellation when we do the tss request also.
         (async () => {
             this.symbolInfoRequestHandle = this.api!.streaming.getEqual({
                 key: this.symbol,
@@ -269,7 +272,7 @@ class Chart extends LitElement implements IExample {
         }
     }
 
-    destroyChart() {
+    private destroyChart() {
         this.chartElement.innerHTML = "";
         if (this.chart != null) {
             this.chart.destroy();
@@ -285,10 +288,6 @@ class Chart extends LitElement implements IExample {
             this.symbolInfoRequestHandle.delete();
             this.symbolInfoRequestHandle = null;
         }
-    }
-
-    getStats(): IExampleStats {
-        return this.stats;
     }
 
     private setStatus(message: string | null) {
