@@ -130,6 +130,7 @@ class Chart extends LitElement implements IExample {
     }
 
     disconnectedCallback() {
+        super.disconnectedCallback();
         this.destroyChart();
     }
 

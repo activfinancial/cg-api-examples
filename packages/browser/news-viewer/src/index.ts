@@ -219,6 +219,7 @@ class NewsViewer extends LitElement implements IExample {
     }
 
     disconnectedCallback() {
+        super.disconnectedCallback();
         this.unsubscribe();
     }
 

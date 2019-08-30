@@ -254,6 +254,7 @@ class OptionChain extends LitElement implements IExample {
     }
 
     disconnectedCallback() {
+        super.disconnectedCallback();
         this.unsubscribe();
     }
 

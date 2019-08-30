@@ -158,6 +158,7 @@ class TpiViewer extends LitElement {
     }
 
     disconnectedCallback() {
+        super.disconnectedCallback();
         this.unsubscribe();
     }
 
