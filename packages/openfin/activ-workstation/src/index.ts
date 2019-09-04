@@ -15,13 +15,10 @@ import {
     asyncSleep
 } from "@activfinancial/cg-api";
 
-// NB examples classes are exported from top level (e.g. @activfinancial/record-viewer)
-// but there seems to be some issue with lit-element and decorators; can't see it extends
-// HTMLElement for some reason (or maybe it's an issue with dts-generator). So use full path.
-import OptionChain from "@activfinancial/option-chain/src/index";
-import NewsViewer from "@activfinancial/news-viewer/src/index";
-import Chart from "@activfinancial/time-series-chart/src/index";
-import RecordViewer from "@activfinancial/record-viewer/src/index";
+import OptionChain from "@activfinancial/option-chain";
+import NewsViewer from "@activfinancial/news-viewer";
+import Chart from "@activfinancial/time-series-chart";
+import RecordViewer from "@activfinancial/record-viewer";
 
 import symbolTableRow from "!html-loader!./symbolTableRow.html";
 
