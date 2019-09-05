@@ -256,7 +256,10 @@ class Chart extends LitElement implements IExample {
                 }
 
                 if (historyBar.close != null) {
-                    times.push(historyBar.dateTime);
+                    // HACK getting a weird !(date instanceof Date) when hosting in openfin.
+                    // dateTime is a HighResDate but that derives from Date. And is still instanceof Date
+                    // outside openfin. Anyway, definitely create a Date to keep it quiet.
+                    times.push(new Date(historyBar.dateTime));
                     closePrices.push(historyBar.close!.valueOf());
                 }
 
