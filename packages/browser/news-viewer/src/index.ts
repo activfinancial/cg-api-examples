@@ -427,12 +427,18 @@ class NewsViewer extends LitElement implements IExample {
         const fieldValue = getTextDecoder(encoding).decode(storyBodyField.value as Uint8Array);
         const doc = this.storyBodyParser.parseFromString(fieldValue as string, "text/html");
 
-        if (doc.firstChild != null) {
-            if (this.storyBodyElement.lastChild != null) {
-                this.storyBodyElement.removeChild(this.storyBodyElement.lastChild);
-            }
-
+        // Most stories seem to be a complete HTML document, so just grab the body if there is one.
+        const docBody = doc.querySelector("body");
+        if (docBody != null) {
+            this.storyBodyElement.innerHTML = docBody.innerHTML;
+        } else if (doc.firstChild != null) {
+            // Otherwise just just the first chile of the parsed document.
+            // Remove previous story, if any.
+            this.storyBodyElement.innerHTML = "";
             this.storyBodyElement.appendChild(doc.firstChild);
+        } else {
+            // I don't think this can really happen. Parse failures create a document.
+            this.storyBodyElement.innerHTML = "Unknown parse failure";
         }
 
         this.previousStorySymbol = NewsViewer.setNavigationButton(
