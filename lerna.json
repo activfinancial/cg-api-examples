@@ -10,9 +10,7 @@
         },
         "publish": {
             "conventionalCommits": true,
-            "message": "chore: publish.",
-            "npmClient": "yarn",
-            "verifyAccess": false
+            "message": "chore: publish."
         }
     }
 }
