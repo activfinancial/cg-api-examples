@@ -408,7 +408,7 @@ class RecordViewer extends LitElement implements IExample {
                 }
 
                 return html`
-                    <div class="record-viewer-field-value ${trendClass}">
+                    <div class="record-viewer-field-value ${trendClass}" title=${fieldInfo.textValue}>
                         ${fieldInfo.textValue}
                     </div>
                 `;

@@ -94,6 +94,7 @@
     min-width: 27rem;
     flex: none;
     display: flex;
+    flex-basis: 0;
     justify-content: space-between;
 }
 
@@ -103,6 +104,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
+    word-wrap: break-word;
 }
 
 .record-viewer-field-name {
