@@ -22,10 +22,10 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "clean": "rimraf lib/*",
-        "types": "dts-generator --prefix \"@activfinancial/news-viewer\" --name \"@activfinancial/news-viewer\" --main \"@activfinancial/news-viewer/src/index\" --project . --out lib/index.d.ts",
-        "build": "yarn types && webpack --mode production",
-        "develop": "yarn types && webpack --mode development",
+        "clean": "rimraf lib .types",
+        "types": "api-extractor run",
+        "build": "webpack --mode production && yarn types",
+        "develop": "webpack --mode development && yarn types",
         "test": "echo \"No test specified\"",
         "watch": "webpack --mode development --watch -d",
         "serve": "webpack-dev-server --mode development -d",
@@ -39,10 +39,10 @@
         "text-encoding": "^0.7.0"
     },
     "devDependencies": {
+        "@microsoft/api-extractor": "^7.4.2",
         "@types/detect-browser": "^4.0.0",
         "@types/text-encoding": "^0.0.35",
         "css-loader": "^3.2.0",
-        "dts-generator": "^3.0.0",
         "html-loader": "^0.5.5",
         "raw-loader": "^3.1.0",
         "rimraf": "^3.0.0",

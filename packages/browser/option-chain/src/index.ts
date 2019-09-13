@@ -797,10 +797,10 @@ class OptionChain extends LitElement implements IExample {
     /**
      * Size the elements in the option display based on our container size.
      *
-     * Note we're not using @media max-width CSS rules as we want to be dependent on the size of the
+     * Note we're not using `@media` max-width CSS rules as we want to be dependent on the size of the
      * WebComponent rather than the display.
      *
-     * @param parentNode parent node of elements to size. this.rootElement for whole document (on resize) or
+     * @param parentNode - parent node of elements to size. this.rootElement for whole document (on resize) or
      *        an option row for initial draw of that row.
      */
     private processResize(parentNode: ParentNode) {
