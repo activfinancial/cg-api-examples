@@ -33,7 +33,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.12.0",
+        "@activfinancial/cg-api": "^0.13.0",
         "@activfinancial/montage-viewer": "^0.3.40",
         "@activfinancial/news-viewer": "^0.5.9",
         "@activfinancial/option-chain": "^0.4.37",
@@ -61,11 +61,11 @@
         "rimraf": "^3.0.0",
         "source-map-loader": "^0.2.4",
         "style-loader": "^1.0.0",
-        "terser-webpack-plugin": "^1.4.1",
-        "ts-loader": "^6.0.4",
-        "typescript": "^3.6.2",
-        "webpack": "^4.39.3",
-        "webpack-cli": "^3.3.7",
+        "terser-webpack-plugin": "^2.0.1",
+        "ts-loader": "^6.1.0",
+        "typescript": "^3.6.3",
+        "webpack": "^4.40.1",
+        "webpack-cli": "^3.3.8",
         "webpack-dev-server": "^3.8.0"
     }
 }

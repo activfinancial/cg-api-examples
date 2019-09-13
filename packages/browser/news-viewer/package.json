@@ -32,9 +32,9 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.12.0",
+        "@activfinancial/cg-api": "^0.13.0",
         "@fortawesome/fontawesome-free": "^5.10.2",
-        "detect-browser": "^4.6.0",
+        "detect-browser": "^4.7.0",
         "lit-element": "^2.2.1",
         "text-encoding": "^0.7.0"
     },
@@ -48,12 +48,12 @@
         "rimraf": "^3.0.0",
         "source-map-loader": "^0.2.4",
         "style-loader": "^1.0.0",
-        "terser-webpack-plugin": "^1.4.1",
-        "ts-loader": "^6.0.4",
-        "typescript": "^3.6.2",
+        "terser-webpack-plugin": "^2.0.1",
+        "ts-loader": "^6.1.0",
+        "typescript": "^3.6.3",
         "url-loader": "^2.1.0",
-        "webpack": "^4.39.3",
-        "webpack-cli": "^3.3.7",
+        "webpack": "^4.40.1",
+        "webpack-cli": "^3.3.8",
         "webpack-dev-server": "^3.8.0"
     }
 }
