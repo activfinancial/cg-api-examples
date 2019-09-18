@@ -52,7 +52,7 @@ class ComponentImpl extends React.PureComponent<Props> {
         if (this.ref.current) {
             const domElement = ReactDOM.findDOMNode(this.ref.current) as HTMLPreElement;
 
-            if (domElement) {
+            if (domElement != null) {
                 const wasScrolledToBottom = domElement.scrollTop >= domElement.scrollHeight - domElement.clientHeight;
 
                 // This gets passed in to componentDidUpdate() as last parameter.
@@ -66,7 +66,7 @@ class ComponentImpl extends React.PureComponent<Props> {
     }
 
     componentDidUpdate(prevProps: Props, prevState: {}, domElement: HTMLElement | null) {
-        if (this.ref.current && domElement) {
+        if (domElement) {
             // Keep the element scrolled to the bottom as it was previous to this update.
             domElement.scrollTop = domElement.scrollHeight;
         }
