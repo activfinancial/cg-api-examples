@@ -46,9 +46,9 @@
         "openfin-cli": "2.0.7"
     },
     "devDependencies": {
-        "@types/bootstrap": "^3.3.7",
+        "@types/bootstrap": "^4.3.1",
         "@types/jquery.contextmenu": "^1.7.34",
-        "@types/openfin": "^41.0.0",
+        "@types/openfin": "^43.0.1",
         "copy-webpack-plugin": "^5.0.4",
         "css-loader": "^3.2.0",
         "file-loader": "^4.2.0",
@@ -61,11 +61,11 @@
         "rimraf": "^3.0.0",
         "source-map-loader": "^0.2.4",
         "style-loader": "^1.0.0",
-        "terser-webpack-plugin": "^2.0.1",
+        "terser-webpack-plugin": "^2.1.0",
         "ts-loader": "^6.1.0",
         "typescript": "^3.6.3",
-        "webpack": "^4.40.1",
-        "webpack-cli": "^3.3.8",
-        "webpack-dev-server": "^3.8.0"
+        "webpack": "^4.40.2",
+        "webpack-cli": "^3.3.9",
+        "webpack-dev-server": "^3.8.1"
     }
 }

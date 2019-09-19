@@ -32,8 +32,8 @@
         "@webcomponents/webcomponentsjs": "^2.2.10"
     },
     "devDependencies": {
-        "@commitlint/cli": "^8.1.0",
-        "@commitlint/config-conventional": "^8.1.0",
+        "@commitlint/cli": "^8.2.0",
+        "@commitlint/config-conventional": "^8.2.0",
         "husky": "^3.0.5",
         "lerna": "^3.16.4",
         "prettier": "^1.18.2",
