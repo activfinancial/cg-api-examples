@@ -29,7 +29,7 @@ import {
 import { dispatchResetPendingRequestCounter, dispatchAppendOutput, OutputType } from "../../state/actions/outputContainerActions";
 import { dispatchUnsubscribeAll } from "../../state/actions/subscriptionManagementActions";
 
-import contentGatewayList from "../../../../common/contentGateways";
+import contentGatewayList from "../../../../../common/contentGateways";
 
 import { connect, ConnectParameters, Client, windowLoaded, asyncSleep, Streaming } from "@activfinancial/cg-api";
 
@@ -54,7 +54,7 @@ export function makeContentGatewayUrl(host: string | null): string {
         return (contentGatewayList as any)[location];
     }
 
-    return "ams://cg-ny4-web.activfinancial.com/ContentGateway:Service";
+    return Object.values(contentGatewayList)[0];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
