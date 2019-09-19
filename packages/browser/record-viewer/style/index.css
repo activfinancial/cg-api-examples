@@ -104,8 +104,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    min-width: 0;
-    word-wrap: break-word;
 }
 
 .record-viewer-field-name {
