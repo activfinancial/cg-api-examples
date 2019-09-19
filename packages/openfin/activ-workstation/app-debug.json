@@ -13,7 +13,7 @@
     },
     "licenseKey": "1a760a0d-4d88-41f3-93f5-a85152f110ab",
     "runtime": {
-        "arguments": "",
+        "arguments": "--remote-debugging-port=9090",
         "version": "stable"
     },
     "services": [

@@ -22,10 +22,10 @@
     ],
     "main": "lib/index.js",
     "scripts": {
-        "clean": "rimraf lib/*",
+        "clean": "rimraf lib",
         "build": "webpack --mode production",
         "develop": "webpack --mode development",
-        "test": "echo \"No test specified\"",
+        "test": "jest --passWithNoTests",
         "watch": "webpack --mode development --watch -d",
         "serve": "webpack-dev-server --mode development -d",
         "start": "openfin --launch --config ./app-debug.json",
@@ -34,38 +34,60 @@
     },
     "dependencies": {
         "@activfinancial/cg-api": "^0.13.0",
-        "@activfinancial/montage-viewer": "^0.3.41",
-        "@activfinancial/news-viewer": "^0.5.10",
-        "@activfinancial/option-chain": "^0.4.38",
-        "@activfinancial/record-viewer": "^0.6.16",
-        "@activfinancial/time-series-chart": "^0.3.41",
-        "bootstrap": "^3.3.7",
-        "html5-boilerplate": "^7.2.0",
-        "jquery": "^3.4.1",
-        "jquery-contextmenu": "^2.8.0",
-        "openfin-cli": "2.0.7"
+        "@activfinancial/montage-viewer": "^0.3.40",
+        "@activfinancial/news-viewer": "^0.5.9",
+        "@activfinancial/option-chain": "^0.4.37",
+        "@activfinancial/record-viewer": "^0.6.15",
+        "@fortawesome/fontawesome-free": "^5.10.2",
+        "openfin-cli": "2.0.9",
+        "react": "^16.9.0",
+        "react-bootstrap": "^1.0.0-beta.12",
+        "react-contextmenu": "^2.11.0",
+        "react-dom": "^16.9.0",
+        "uuid": "^3.3.3"
     },
     "devDependencies": {
-        "@types/bootstrap": "^4.3.1",
-        "@types/jquery.contextmenu": "^1.7.34",
+        "@types/jest": "^24.0.18",
         "@types/openfin": "^43.0.1",
-        "copy-webpack-plugin": "^5.0.4",
+        "@types/react-dom": "^16.9.0",
+        "@types/uuid": "^3.4.5",
+        "bootstrap": "^4.3.1",
         "css-loader": "^3.2.0",
+        "favicons-webpack-plugin": "^1.0.2",
         "file-loader": "^4.2.0",
-        "html-loader": "^0.5.5",
-        "html-webpack-exclude-assets-plugin": "^0.0.7",
-        "html-webpack-include-assets-plugin": "^2.0.0",
-        "html-webpack-plugin": "^3.2.0",
-        "less": "^3.10.3",
-        "less-loader": "^5.0.0",
+        "html-webpack-plugin": "^4.0.0-beta.8",
+        "jest": "^24.9.0",
+        "mini-css-extract-plugin": "^0.8.0",
+        "node-sass": "^4.12.0",
         "rimraf": "^3.0.0",
+        "sass-loader": "^8.0.0",
         "source-map-loader": "^0.2.4",
         "style-loader": "^1.0.0",
-        "terser-webpack-plugin": "^2.1.0",
+        "terser-webpack-plugin": "^2.0.1",
+        "ts-jest": "^24.1.0",
         "ts-loader": "^6.1.0",
         "typescript": "^3.6.3",
-        "webpack": "^4.40.2",
-        "webpack-cli": "^3.3.9",
-        "webpack-dev-server": "^3.8.1"
+        "webpack": "^4.40.1",
+        "webpack-cli": "^3.3.8",
+        "webpack-dev-server": "^3.8.0"
+    },
+    "jest": {
+        "roots": [
+            "src"
+        ],
+        "transform": {
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+        "moduleFileExtensions": [
+            "js",
+            "jsx",
+            "json",
+            "ts",
+            "tsx"
+        ],
+        "moduleNameMapper": {
+            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js"
+        }
     }
 }

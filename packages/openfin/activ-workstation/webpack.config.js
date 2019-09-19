@@ -1,23 +1,19 @@
-const webpack = require("webpack");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const HtmlWebpackIncludeAssetsPlugin = require("html-webpack-include-assets-plugin");
-const HtmlWebpackExcludeAssetsPlugin = require("html-webpack-exclude-assets-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 const path = require("path");
 const fs = require("fs");
 
-// Using yarn workspaces; all node_modules at root with no links in each package's local node_modules.
-// TODO I guess the plugins may get updated or can be convinced to walk up the filesystem...
-const repoRoot = "../../..";
-
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 const config = {
-    entry: "./src/index.ts",
+    entry: {
+        main: "./src/index.tsx"
+    },
     output: {
-        filename: "index.js",
+        filename: "[name].js",
         path: path.resolve(__dirname, "lib"),
         library: "activ_workstation",
         libraryTarget: "umd"
@@ -25,15 +21,9 @@ const config = {
     devtool: "source-map",
     resolve: {
         modules: [path.resolve(__dirname, "style"), "node_modules"],
-        extensions: [".ts", ".js"]
+        extensions: [".ts", ".tsx", ".js", ".jsx"]
     },
     externals: {
-        "@activfinancial/cg-api": {
-            root: "activ",
-            commonjs: "@activfinancial/cg-api",
-            commonjs2: "@activfinancial/cg-api",
-            amd: "@activfinancial/cg-api"
-        },
         // Openfin is provided by the openfin runtime.
         openfin: ""
     },
@@ -45,7 +35,7 @@ const config = {
                 enforce: "pre"
             },
             {
-                test: /\.ts$/,
+                test: /\.(ts|tsx)$/,
                 use: "ts-loader",
                 exclude: /node_modules/
             },
@@ -54,8 +44,17 @@ const config = {
                 use: ["style-loader", "css-loader"]
             },
             {
-                test: /\.less$/,
-                use: ["style-loader", "css-loader", "less-loader"]
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === "development"
+                        }
+                    },
+                    "css-loader",
+                    "sass-loader"
+                ]
             },
             {
                 test: /\.(woff|woff2|eot|ttf|svg|otf)$/,
@@ -63,7 +62,7 @@ const config = {
                     {
                         loader: "file-loader",
                         options: {
-                            outputPath: "img"
+                            outputPath: "assets"
                         }
                     }
                 ]
@@ -71,22 +70,21 @@ const config = {
         ]
     },
     plugins: [
-        // For bootstrap; make jQuery available.
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
-        }),
         new HtmlWebpackPlugin({
             filename: "index.html",
-            template: "src/index.html"
+            template: "src/index.html",
+            // HtmlWebpackPlugin v4 will also include shared chunks we need, not just the specified one.
+            chunks: ["main"]
         }),
-        new CopyWebpackPlugin(["static", "app.json", "style/common.css"]),
-        new CopyWebpackPlugin([
-            {
-                from: path.join(repoRoot, "node_modules/@activfinancial/cg-api/lib/index.js"),
-                to: `@activfinancial/cg-api/lib/index.js`
-            }
-        ])
+        // TODO ideally only one css for the main page, and one for the app pages.
+        // Currently getting one for each so there's probably not much point bothering with this plugin at all...
+        // Just use style-loader for scss.
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css",
+            ignoreOrder: false // Enable to remove warnings about conflicting order
+        }),
+        new FaviconsWebpackPlugin("./favicon.png")
     ],
     devServer: {
         // Note webpack-dev-server won't watch non-generated files for changes,
@@ -102,68 +100,39 @@ const config = {
             new TerserPlugin({
                 sourceMap: true
             })
-        ]
+        ],
+        splitChunks: {
+            // Need HtmlWebpackPlugin v4 to work nicely with this.
+            chunks: "all"
+        }
     }
 };
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-module.exports = function(env, argv) {
-    const srcDir = "src/pages";
-    const pages = (() => {
-        let pages = [];
+// Get list of windows.
+const windowTypesDir = "src/windowTypes";
 
-        for (const page of fs.readdirSync(srcDir)) {
-            const type = page.replace(/\.html$/, "");
-            if (type !== page) {
-                pages.push({ page, type });
-            }
-        }
-
-        return pages;
-    })();
-
-    // HtmlWebpackPlugin for each src/pages/*.html.
-    for (const { page, type } of pages) {
-        const plugin = new HtmlWebpackPlugin({
-            filename: page,
-            template: path.join(srcDir, page),
-            // Stop pages from including top level output filename. Only index.html needs it.
-            excludeAssets: /^index\.js$/
-        });
-
-        config.plugins.push(plugin);
+for (const htmlFile of fs.readdirSync(windowTypesDir)) {
+    const windowType = htmlFile.replace(/\.html$/, "");
+    if (windowType === htmlFile) {
+        continue;
     }
 
-    for (const { page, type } of pages) {
-        const plugin = new HtmlWebpackIncludeAssetsPlugin({
-            files: page,
-            assets: ["./common.css", `@activfinancial/${type}/lib/index.js`],
-            append: false
-        });
+    // HtmlWebpackPlugin for each window type.
+    const plugin = new HtmlWebpackPlugin({
+        filename: htmlFile,
+        template: path.join(windowTypesDir, htmlFile),
+        // Only include the page's own chunk.
+        // HtmlWebpackPlugin v4 will also include shared chunks we need, not just the specified one.
+        chunks: [windowType]
+    });
 
-        config.plugins.push(plugin);
+    config.plugins.push(plugin);
 
-        const copyJsPlugin = new CopyWebpackPlugin([
-            {
-                from: path.join(repoRoot, `node_modules/@activfinancial/${type}/lib/index.js`),
-                to: `@activfinancial/${type}/lib/index.js`
-            }
-        ]);
+    // Entry point for each page.
+    // NB won't work without "./" prefix, but path.join won't add one.
+    config.entry[windowType] = `./${path.join("./", windowTypesDir, `${windowType}.ts`)}`;
+}
 
-        config.plugins.push(copyJsPlugin);
-    }
-
-    // All pages need cg-api.
-    config.plugins.push(
-        new HtmlWebpackIncludeAssetsPlugin({
-            assets: "@activfinancial/cg-api/lib/index.js",
-            append: false
-        })
-    );
-
-    // Only seems to work at the end.
-    config.plugins.push(new HtmlWebpackExcludeAssetsPlugin());
-
-    return config;
-};
+module.exports = config;

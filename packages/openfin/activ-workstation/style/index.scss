@@ -1,0 +1,210 @@
+@import "./variables";
+@import "~bootstrap/scss/bootstrap";
+
+$footer-height: 1.3rem;
+
+.form-control:disabled {
+    cursor: not-allowed;
+}
+
+.footer {
+    background-color: var(--activ-table-row-background-hover-color);
+    bottom: 0;
+    height: $footer-height;
+    min-width: 360px;
+    padding-left: 0;
+    padding-right: 0;
+    position: fixed;
+    width: 100%;
+}
+
+.icon-button,
+.link-button {
+    background: transparent;
+    border: none;
+    color: inherit;
+    outline: none;
+    padding: 0;
+}
+
+.icon-button:hover,
+.icon-button:active {
+    background-color: inherit;
+}
+
+.icon-button:focus {
+    box-shadow: none;
+}
+
+.link-button {
+    color: var(--activ-link-color);
+}
+
+.status-indicator {
+    background-color: grey;
+    border-radius: 20px;
+    display: inline-block;
+    height: 0.75rem;
+    width: 0.75rem;
+}
+
+.status-indicator.active {
+    background-color: limegreen;
+}
+
+.status-indicator.error {
+    background-color: red;
+}
+
+.status-indicator.connecting {
+    animation: status-indicator-pulse 2s infinite;
+}
+
+@keyframes status-indicator-pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+#symbolsTable {
+    font-size: 0.7rem;
+    margin-bottom: $footer-height;
+}
+
+#symbolsTable td,
+#symbolsTable th {
+    white-space: nowrap;
+}
+
+#symbolsTable th {
+    background-color: var(--activ-table-header-background-color);
+}
+
+#symbolsTable tr {
+    background-color: var(--activ-table-row-background-color);
+}
+
+#symbolsTable tr:nth-child(even) {
+    background-color: var(--activ-table-row-background-alt-color);
+}
+
+#symbolsTable tr:hover {
+    background-color: var(--activ-table-row-background-hover-color);
+}
+
+#symbolsTable td.wrap-text {
+    white-space: normal;
+}
+
+#symbolsTable .form-control {
+    height: initial;
+    transition: none;
+    cursor: default;
+}
+
+#symbolsTable .form-control:focus {
+    background-color: initial;
+    box-shadow: none;
+}
+
+#connectionFormModal.modal-dialog {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    min-width: 600px;
+}
+
+#connectionFormModal .modal-header,
+#connectionFormModal .modal-body {
+    padding: 10px 15px;
+}
+
+#connectionFormModal input {
+    border-color: grey;
+}
+
+#connectionFormModal .form-control:focus {
+    box-shadow: inset 0 1px 1px rgba($input-bg, 0.075), 0 0 8px rgba($input-border-focus, 0.6);
+    border-color: $input-border-focus;
+}
+
+#connectionFormModal .form-control:disabled {
+    background-color: $input-bg-disabled;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+
+// react-contextmenu styling.
+.react-contextmenu {
+    background-color: white;
+    background-clip: padding-box;
+    border: 1px solid lightgray;
+    border-radius: 1px;
+    color: $body-bg;
+    font-size: 11px;
+    min-width: 160px;
+    outline: none;
+    opacity: 0;
+    pointer-events: none;
+    text-align: left;
+}
+
+.react-contextmenu.react-contextmenu--visible {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 9999;
+}
+
+.react-contextmenu-item {
+    background: 0 0;
+    border: 0;
+    padding: 3px 10px;
+    text-align: inherit;
+    white-space: nowrap;
+    cursor: default;
+}
+
+.react-contextmenu-item.react-contextmenu-item--active,
+.react-contextmenu-item.react-contextmenu-item--selected {
+    color: #fff;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+    text-decoration: none;
+}
+
+.react-contextmenu-item.react-contextmenu-item--disabled,
+.react-contextmenu-item.react-contextmenu-item--disabled:hover {
+    background-color: transparent;
+    border-color: rgba(black, 0.15);
+    color: #878a8c;
+}
+
+.react-contextmenu-item--divider {
+    border-bottom: 1px solid rgba(black, 0.15);
+    cursor: inherit;
+    margin-bottom: 3px;
+    padding: 2px 0;
+}
+.react-contextmenu-item--divider:hover {
+    background-color: transparent;
+    border-color: rgba(black, 0.15);
+}
+
+.react-contextmenu-item.react-contextmenu-submenu {
+    padding: 0;
+}
+
+.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item {
+}
+
+.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item:after {
+    content: "▶";
+    display: inline-block;
+    position: absolute;
+    right: 7px;
+}

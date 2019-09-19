@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Record Viewer</title>
+    <title>Time series chart</title>
     <style>
         html,
         body {
@@ -15,21 +15,19 @@
         body {
             margin: 0;
             display: flex;
+            flex-direction: column;
         }
 
-        record-viewer {
-			flex: 1 0;
-            overflow-y: scroll;
+        time-series-chart {
+            /* overflow-y: scroll; */
+            flex: 1 0;
 			user-select: none;
-
-			--activ-record-viewer-field-name-color: goldenrod;
-			--activ-record-viewer-field-value-color: cornflowerblue;
         }
     </style>
 </head>
 
 <body>
-    <record-viewer></record-viewer>
+    <time-series-chart id="cgApiComponent"></time-series-chart>
 </body>
 
 </html>
