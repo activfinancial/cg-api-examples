@@ -86,7 +86,7 @@ const config = {
             chunkFilename: "[id].css",
             ignoreOrder: false // Enable to remove warnings about conflicting order
         }),
-        new FaviconsWebpackPlugin("./favicon.png")
+        new FaviconsWebpackPlugin("./favicon-1500.png")
     ],
     devServer: {
         // Note webpack-dev-server won't watch non-generated files for changes,
