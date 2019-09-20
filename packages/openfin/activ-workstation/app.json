@@ -4,7 +4,7 @@
         "name": "ActivWorkstation",
         "uuid": "ActivWorkstation_Prod",
         "url": "https://webapi.activfinancial.com/examples/activ-workstation/",
-        "icon": "https://webapi.activfinancial.com/examples/activ-workstation/img/favicon.png",
+        "icon": "https://webapi.activfinancial.com/examples/activ-workstation/assets/favicon-32x32.png",
         "defaultCentered": true,
         "defaultHeight": 300,
         "defaultWidth": 631,
@@ -20,7 +20,7 @@
     "services": [{ "name": "layouts" }],
     "shortcut": {
         "company": "ACTIV Financial Systems, Inc.",
-        "icon": "https://webapi.activfinancial.com/examples/activ-workstation/img/favicon.ico",
+        "icon": "https://webapi.activfinancial.com/examples/activ-workstation/assets/favicon.ico",
         "name": "ActivWorkstation",
         "description": "An OpenFin container of the cg-api samples."
     }
