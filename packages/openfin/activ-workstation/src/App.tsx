@@ -117,15 +117,15 @@ interface State {
 
 /** Main app component. */
 class App extends React.Component<Props, State> {
-    // Default child window options.
-    private readonly childWindowOptions: fin.WindowOption;
-
     // Reference to the new symbol input so we can programmatically focus it.
     private readonly symbolInputRef = React.createRef<HTMLInputElement>();
 
     // cg-api client.
     private clientPromise: Promise<Client> | null = null;
     private client: Client | null = null;
+
+    // Child window manager.
+    private readonly windowManager: WindowManager;
 
     /** Constructor. */
     constructor(props: Props) {
@@ -165,14 +165,18 @@ class App extends React.Component<Props, State> {
             newSymbol: ""
         };
 
-        this.childWindowOptions = { contextMenu: props.mainWindowOptions.contextMenu };
+        // Default child window options.
+        // Just copy over context menu settings.
+        const childWindowOptions: fin.WindowOption = {
+            contextMenuSettings: this.props.mainWindowOptions.contextMenuSettings,
+            contextMenu: this.props.mainWindowOptions.contextMenu
+        };
+
+        this.windowManager = new WindowManager(childWindowOptions);
 
         // Select symbol input on focus.
         props.mainWindow.addEventListener("focused", this.focusSymbolInput);
     }
-
-    // Child window manager.
-    private readonly windowManager = new WindowManager(this.childWindowOptions);
 
     render() {
         return (
