@@ -52,6 +52,7 @@
         "@types/react-dom": "^16.9.0",
         "@types/uuid": "^3.4.5",
         "bootstrap": "^4.3.1",
+        "copy-webpack-plugin": "^5.0.4",
         "css-loader": "^3.2.0",
         "favicons-webpack-plugin": "^1.0.2",
         "file-loader": "^4.2.0",

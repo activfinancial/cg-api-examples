@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
@@ -76,6 +77,7 @@ const config = {
             // HtmlWebpackPlugin v4 will also include shared chunks we need, not just the specified one.
             chunks: ["main"]
         }),
+        new CopyWebpackPlugin(["app.json"]),
         // TODO ideally only one css for the main page, and one for the app pages.
         // Currently getting one for each so there's probably not much point bothering with this plugin at all...
         // Just use style-loader for scss.
