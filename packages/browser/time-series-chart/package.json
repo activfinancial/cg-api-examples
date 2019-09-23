@@ -38,15 +38,15 @@
         "resize-observer": "^1.0.0"
     },
     "devDependencies": {
-        "@microsoft/api-extractor": "^7.4.2",
+        "@microsoft/api-extractor": "^7.5.2",
         "raw-loader": "^3.1.0",
         "rimraf": "^3.0.0",
         "source-map-loader": "^0.2.4",
-        "terser-webpack-plugin": "^2.1.0",
-        "ts-loader": "^6.1.1",
-        "typescript": "^3.6.3",
-        "webpack": "^4.40.2",
+        "terser-webpack-plugin": "^2.2.1",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.6.4",
+        "webpack": "^4.41.2",
         "webpack-cli": "^3.3.9",
-        "webpack-dev-server": "^3.8.1"
+        "webpack-dev-server": "^3.9.0"
     }
 }
