@@ -11,7 +11,7 @@ import Table from "react-bootstrap/Table";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import uuid from "uuid/v4";
 
-import ConnectDialog from "./connectDialog";
+import { ConnectDialog, LiftedState as CgCredentials } from "./connectDialog";
 import CgState from "./cgState";
 import { WindowType, WindowInfo, WindowManager } from "./windowManager";
 
@@ -96,17 +96,13 @@ interface Props {
 }
 
 /** State. */
-interface State {
+interface State extends CgCredentials {
     /** Whether the connect dialog should be rendered. */
     showConnectDialog: boolean;
 
     /** State of connection to CG. */
     cgState: CgState;
     statusText: string;
-
-    url: string;
-    userId: string;
-    password: string;
 
     /** Symbols and their windows. */
     symbolInfos: SymbolInfo[];
@@ -232,9 +228,7 @@ class App extends React.Component<Props, State> {
                     onHide={() => this.setState({ showConnectDialog: false })}
                     onConnect={() => this.connect()}
                     onDisconnect={() => this.disconnect()}
-                    onUrlChange={(url: string) => this.setState({ url })}
-                    onUserIdChange={(userId: string) => this.setState({ userId })}
-                    onPasswordChange={(password: string) => this.setState({ password })}
+                    onChange={this.onCredentialChange}
                 ></ConnectDialog>
 
                 <footer className="footer container-fluid">
@@ -311,6 +305,10 @@ class App extends React.Component<Props, State> {
             localStorage.setItem("symbols", symbolList);
         }
     }
+
+    private readonly onCredentialChange = <K extends keyof CgCredentials>(key: keyof CgCredentials, value: string) => {
+        this.setState({ [key]: value } as Pick<State, K>);
+    };
 
     /** Focus the new symbol input. */
     private focusSymbolInput = () => {

@@ -86,7 +86,11 @@ const config = {
             chunkFilename: "[id].css",
             ignoreOrder: false // Enable to remove warnings about conflicting order
         }),
-        new FaviconsWebpackPlugin("./favicon-1500.png")
+        new FaviconsWebpackPlugin({
+            logo: "./favicon-1500.png",
+            // "light" by default in develop mode doesn't generate .ico, so use production "webappp" mode.
+            devMode: "webapp"
+        })
     ],
     devServer: {
         // Note webpack-dev-server won't watch non-generated files for changes,

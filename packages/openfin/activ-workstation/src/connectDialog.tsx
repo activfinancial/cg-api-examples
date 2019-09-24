@@ -13,24 +13,26 @@ import CgState from "./cgState";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-interface Props {
-    show: boolean;
-    cgState: CgState;
-
+export interface LiftedState {
     url: string;
     userId: string;
     password: string;
+}
+
+interface OwnProps {
+    show: boolean;
+    cgState: CgState;
 
     onHide: () => void;
     onConnect: () => void;
     onDisconnect: () => void;
 
-    onUrlChange: (url: string) => void;
-    onUserIdChange: (userId: string) => void;
-    onPasswordChange: (password: string) => void;
+    onChange: (key: keyof LiftedState, value: string) => void;
 }
 
-function ConnectDialog(props: Props) {
+type Props = OwnProps & LiftedState;
+
+export function ConnectDialog(props: Props) {
     return (
         <Modal id="connectionFormModal" show={props.show} onHide={props.onHide}>
             <Modal.Header closeButton>
@@ -59,7 +61,7 @@ function ConnectDialog(props: Props) {
                                     placeholder="Address"
                                     required
                                     disabled={props.cgState !== CgState.disconnected}
-                                    onChange={(e: any) => props.onUrlChange(e.target.value)}
+                                    onChange={(e: any) => props.onChange("url", e.target.value)}
                                 />
                             </Form.Group>
                         </Col>
@@ -78,7 +80,7 @@ function ConnectDialog(props: Props) {
                                     placeholder="User id"
                                     required
                                     disabled={props.cgState !== CgState.disconnected}
-                                    onChange={(e: any) => props.onUserIdChange(e.target.value)}
+                                    onChange={(e: any) => props.onChange("userId", e.target.value)}
                                 />
                             </Form.Group>
                         </Col>
@@ -93,7 +95,7 @@ function ConnectDialog(props: Props) {
                                     placeholder="Password"
                                     required
                                     disabled={props.cgState !== CgState.disconnected}
-                                    onChange={(e: any) => props.onPasswordChange(e.target.value)}
+                                    onChange={(e: any) => props.onChange("password", e.target.value)}
                                 />
                             </Form.Group>
                         </Col>
@@ -115,5 +117,3 @@ function ConnectDialog(props: Props) {
         </Modal>
     );
 }
-
-export default ConnectDialog;
