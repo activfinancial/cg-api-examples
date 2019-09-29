@@ -13,6 +13,7 @@ import { AppState } from "../state/store";
 interface OwnProps {
     style?: React.CSSProperties;
     className?: string;
+    children?: React.ReactNode;
 }
 
 // Props from Redux state.

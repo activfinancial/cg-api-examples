@@ -3,8 +3,9 @@
  */
 
 import * as React from "react";
-import ToggleButton from "react-bootstrap/ToggleButton";
+import { ButtonProps } from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 import uuid from "uuid/v4";
 
 import { PermissionLevel } from "@activfinancial/cg-api";
@@ -16,13 +17,13 @@ export interface LiftedState {
     permissionLevel?: PermissionLevel;
 }
 
-interface Props {
-    size?: "sm" | "lg";
-    variant?: string;
-    permissionLevel?: PermissionLevel;
+interface OwnProps extends Pick<ButtonProps, "size" | "variant"> {
     disableBest?: boolean;
     onChange: (permissionLevel?: PermissionLevel) => void;
 }
+
+// All props.
+type Props = OwnProps & LiftedState;
 
 export class Component extends React.PureComponent<Props> {
     // NB I can't get <ToggleButtonGroup> working; it doesn't seem to accept undefined as a radio value.

@@ -21,6 +21,9 @@ interface OwnProps {
 
     /** Initial collapse state. Default to open if not defined. */
     initialCollapseState?: boolean;
+
+    children?: React.ReactNode;
+    ref?: React.Ref<any>;
 }
 
 // Redux state we'll see as props.

@@ -3,8 +3,9 @@
  */
 
 import * as React from "react";
-import ToggleButton from "react-bootstrap/ToggleButton";
+import { ButtonProps } from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 import uuid from "uuid/v4";
 
 import { SymbolDirectory } from "@activfinancial/cg-api";
@@ -16,9 +17,7 @@ interface LiftedState {
     filterType: SymbolDirectory.FilterType;
 }
 
-interface OwnProps {
-    size?: "sm" | "lg";
-    variant?: string;
+interface OwnProps extends Pick<ButtonProps, "size" | "variant"> {
     onChange: (newState: Partial<LiftedState>) => void;
 }
 

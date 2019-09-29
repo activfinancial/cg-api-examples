@@ -3,6 +3,7 @@
  */
 
 import * as React from "react";
+import { ButtonProps } from "react-bootstrap/Button";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import uuid from "uuid/v4";
@@ -17,9 +18,7 @@ interface LiftedState {
 }
 
 // Own props.
-interface OwnProps {
-    size?: "sm" | "lg";
-    variant?: string;
+interface OwnProps extends Pick<ButtonProps, "size" | "variant"> {
     onChange: (newState: Partial<LiftedState>) => void;
 }
 

@@ -3,8 +3,9 @@
  */
 
 import * as React from "react";
-import ToggleButton from "react-bootstrap/ToggleButton";
+import { ButtonProps } from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 import uuid from "uuid/v4";
 
 import { Streaming } from "@activfinancial/cg-api";
@@ -17,9 +18,7 @@ export interface LiftedState {
 }
 
 // Own props.
-interface OwnProps {
-    size?: "sm" | "lg";
-    variant?: string;
+interface OwnProps extends Pick<ButtonProps, "size" | "variant"> {
     onChange: (newState: Partial<LiftedState>) => void;
 }
 

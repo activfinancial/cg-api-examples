@@ -3,6 +3,7 @@
  */
 
 import * as React from "react";
+import { ButtonProps } from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Col from "react-bootstrap/Col";
@@ -10,9 +11,8 @@ import Row from "react-bootstrap/Row";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-interface Props {
+interface Props extends Pick<ButtonProps, "variant"> {
     title: string;
-    variant?: string;
     shouldDisplay: boolean;
     count: number;
     onShouldDisplayChange: () => void;
