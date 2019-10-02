@@ -377,11 +377,9 @@ class OptionChain extends LitElement implements IExample {
 
         this.underlyingFieldInfo[FieldId.FID_SYMBOL]!.element.textContent = record.responseKey.symbol;
 
-        (async () => {
-            this.underlyingFieldInfo[FieldId.FID_EXCHANGE]!.element.textContent = (await this.client!.metaData.getExchangeInfo(
-                record.responseKey.symbol
-            )).name;
-        })();
+        this.client!.metaData.getExchangeInfo(record.responseKey.symbol).then((exchangeInfo) => {
+            this.underlyingFieldInfo[FieldId.FID_EXCHANGE]!.element.textContent = exchangeInfo.name;
+        });
 
         const currencyField = record.getField(FieldId.FID_CURRENCY);
         if (currencyField.value != null) {
@@ -677,9 +675,9 @@ class OptionChain extends LitElement implements IExample {
         const exchangeCodeCell = rowElement.querySelector(`[data-activ-field-id="FID_EXCHANGE"]`) as HTMLDivElement;
         exchangeCodeCell.textContent = exchangeCode;
         exchangeCodeCell.style.display = this.isNbbo ? "none" : "";
-        (async () => {
-            exchangeCodeCell.title = (await this.client!.metaData.getExchangeInfo(exchangeCode)).name;
-        })();
+        this.client!.metaData.getExchangeInfo(exchangeCode).then((exchangeInfo) => {
+            exchangeCodeCell.title = exchangeInfo.name;
+        });
 
         let callFieldInfos: FieldInfo[] = [];
         let putFieldInfos: FieldInfo[] = [];
