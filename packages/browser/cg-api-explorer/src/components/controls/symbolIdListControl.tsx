@@ -17,7 +17,7 @@ import { Streaming } from "@activfinancial/cg-api";
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // SymbolId with key field to keep react happy.
-interface KeyedSymbolId extends Streaming.SymbolId {
+interface KeyedSymbolId extends Streaming.ISymbolId {
     key: string;
 }
 
@@ -33,7 +33,7 @@ interface OwnProps {
     required?: boolean;
 
     addSymbolId: () => void;
-    updateSymbolId: (key: string, symbolId: Partial<Streaming.SymbolId>) => void;
+    updateSymbolId: (key: string, symbolId: Partial<Streaming.ISymbolId>) => void;
     removeSymbolId: (key: string) => void;
 }
 
@@ -71,7 +71,7 @@ export class Component extends React.Component<Props> {
                                 symbolId={symbolId}
                                 placeholder={this.props.placeholder}
                                 required={this.props.required}
-                                onChange={(newSymbolId: Partial<Streaming.SymbolId>) =>
+                                onChange={(newSymbolId: Partial<Streaming.ISymbolId>) =>
                                     this.props.updateSymbolId(symbolId.key, newSymbolId)
                                 }
                                 onRemove={

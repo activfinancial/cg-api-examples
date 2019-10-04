@@ -35,7 +35,7 @@ import {
     dispatchRemovePeriod
 } from "../../state/actions/timeSeriesActions";
 
-import { Client, TimeSeries } from "@activfinancial/cg-api";
+import { IClient, TimeSeries } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps {
-    client: Client | null;
+    client: IClient | null;
     connectionInfo: ConnectionInfo;
 
     // Note rather than ReduxStateProps extending TimeSeriesState, have it as a property.
@@ -65,7 +65,7 @@ const mapDispatchToProps = {
 type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
 
 interface MakeRequestParameters {
-    (): TimeSeries.AllRequestParameters;
+    (): TimeSeries.IAllRequestParameters;
 }
 
 /** Request parameter builders keyed by request name. */
@@ -82,37 +82,37 @@ class ComponentImpl extends React.PureComponent<Props> {
         super(props);
 
         this.requestParametersBuilder = {
-            getTicks: { requestName: "getTicks", recordName: "Tick", fn: () => this.makeGetTicksRequestParameters() },
+            getTicks: { requestName: "getTicks", recordName: "ITick", fn: () => this.makeGetTicksRequestParameters() },
 
             getIntraday1: {
                 requestName: "getIntraday",
-                recordName: "IntradayBar",
+                recordName: "IIntradayBar",
                 fn: () => this.makeGetIntradayRequestParameters(TimeSeries.IntradaySeriesType.oneMinuteBars)
             },
             getIntraday5: {
                 requestName: "getIntraday",
-                recordName: "IntradayBar",
+                recordName: "IIntradayBar",
                 fn: () => this.makeGetIntradayRequestParameters(TimeSeries.IntradaySeriesType.fiveMinuteBars)
             },
             getIntradayN: {
                 requestName: "getIntraday",
-                recordName: "IntradayBar",
+                recordName: "IIntradayBar",
                 fn: () => this.makeGetIntradayRequestParameters(TimeSeries.IntradaySeriesType.specifiedMinuteBars)
             },
 
             getHistoryDaily: {
                 requestName: "getHistory",
-                recordName: "HistoryBar",
+                recordName: "IHistoryBar",
                 fn: () => this.makeGetHistoryRequestParameters(TimeSeries.HistorySeriesType.dailyBars)
             },
             getHistoryWeekly: {
                 requestName: "getHistory",
-                recordName: "HistoryBar",
+                recordName: "IHistoryBar",
                 fn: () => this.makeGetHistoryRequestParameters(TimeSeries.HistorySeriesType.weeklyBars)
             },
             getHistoryMonthly: {
                 requestName: "getHistory",
-                recordName: "HistoryBar",
+                recordName: "IHistoryBar",
                 fn: () => this.makeGetHistoryRequestParameters(TimeSeries.HistorySeriesType.monthlyBars)
             }
         };
@@ -375,10 +375,10 @@ class ComponentImpl extends React.PureComponent<Props> {
         );
     };
 
-    private setCommonParameters(requestParameters: Partial<TimeSeries.RequestParameters>) {
+    private setCommonParameters(requestParameters: Partial<TimeSeries.IRequestParameters>) {
         requestParameters.key = this.props.timeSeries.key;
-        requestParameters.periods = this.props.timeSeries.periods.map((period: TimeSeries.Period) => {
-            let newPeriod: TimeSeries.Period = { ...period };
+        requestParameters.periods = this.props.timeSeries.periods.map((period: TimeSeries.IPeriod) => {
+            let newPeriod: TimeSeries.IPeriod = { ...period };
 
             // The date/time picker gives us UTC values for whatever was entered.
             // For utcDateTime in the TSS API, we can just pass on as-is.
@@ -409,17 +409,17 @@ class ComponentImpl extends React.PureComponent<Props> {
     }
 
     private makeGetTicksRequestParameters() {
-        const requestParameters: Partial<TimeSeries.TickRequestParameters> = {
+        const requestParameters: Partial<TimeSeries.ITickRequestParameters> = {
             recordFilterType: this.props.timeSeries.tickRecordFilterType
         };
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as TimeSeries.TickRequestParameters;
+        return requestParameters as TimeSeries.ITickRequestParameters;
     }
 
     private makeGetIntradayRequestParameters(seriesType: TimeSeries.IntradaySeriesType) {
-        const requestParameters: Partial<TimeSeries.IntradayRequestParameters> = {
+        const requestParameters: Partial<TimeSeries.IIntradayRequestParameters> = {
             seriesType,
             recordFilterType: this.props.timeSeries.intradayRecordFilterType,
             fieldFilterType: this.props.timeSeries.intradayFieldFilterType,
@@ -428,18 +428,18 @@ class ComponentImpl extends React.PureComponent<Props> {
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as TimeSeries.IntradayRequestParameters;
+        return requestParameters as TimeSeries.IIntradayRequestParameters;
     }
 
     private makeGetHistoryRequestParameters(seriesType: TimeSeries.HistorySeriesType) {
-        const requestParameters: Partial<TimeSeries.HistoryRequestParameters> = {
+        const requestParameters: Partial<TimeSeries.IHistoryRequestParameters> = {
             seriesType,
             fieldFilterType: this.props.timeSeries.historyFieldFilterType
         };
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as TimeSeries.HistoryRequestParameters;
+        return requestParameters as TimeSeries.IHistoryRequestParameters;
     }
 
     private readonly id = uuid();

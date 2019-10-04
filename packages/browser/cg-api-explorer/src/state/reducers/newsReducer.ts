@@ -10,7 +10,7 @@ import { FieldId, News } from "@activfinancial/cg-api";
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // State to store in redux store.
-export interface State extends News.RequestParameters {}
+export interface State extends News.IRequestParameters {}
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

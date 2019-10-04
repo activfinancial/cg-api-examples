@@ -4,15 +4,12 @@
 
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 import {
-    Client,
-    Field,
-    FieldData,
+    IClient,
+    IField,
+    IFieldData,
     FieldId,
     FieldType,
-    formatField,
-    FormatFieldOptions,
     getExchangeCode,
-    NumberFormat,
     RelationshipId,
     StatusCode,
     Streaming,
@@ -21,8 +18,9 @@ import {
     TRational
 } from "@activfinancial/cg-api";
 
-import { getTrendHelperFromElement, applyTrendStyle, clearTrendStyle } from "../../common/formatFieldValue";
+import { getTrendHelperFromElement, applyTrendStyle, clearTrendStyle } from "../../common/trendingHelpers";
 import { addUnloadHandler } from "../../../common/utils";
+import { formatField, FormatFieldOptions, NumberFormat } from "../../../common/formatField";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";
@@ -53,8 +51,8 @@ interface OptionRow {
     exchangeCode: string; // For ordering.
     element: HTMLElement;
 
-    updateCallOption: (image: Streaming.Record) => void;
-    updatePutOption: (image: Streaming.Record) => void;
+    updateCallOption: (image: Streaming.IRecord) => void;
+    updatePutOption: (image: Streaming.IRecord) => void;
     updateInTheMoney: (previousUnderlyingPrice: number | null, underlyingPrice: number) => void;
 }
 
@@ -111,9 +109,9 @@ class OptionChain extends LitElement implements IExample {
     private readonly overlay: HTMLDivElement;
     private readonly resizeObserver = new ResizeObserver(() => this.processResize(this.rootElement));
 
-    private clientPromise: Promise<Client> | null = null;
-    private client: Client | null = null;
-    private requestHandle: Streaming.RequestHandle | null = null;
+    private clientPromise: Promise<IClient> | null = null;
+    private client: IClient | null = null;
+    private requestHandle: Streaming.IRequestHandle | null = null;
     private optionChainData: OptionChainData = [];
     private underlyingPrice: number = 0;
     private shouldExpandEarliestExpiration: boolean = true;
@@ -196,7 +194,7 @@ class OptionChain extends LitElement implements IExample {
         this.setStatus("Waiting...");
     }
 
-    async connect(clientPromise: Promise<Client>) {
+    async connect(clientPromise: Promise<IClient>) {
         if (this.clientPromise === clientPromise) {
             return;
         }
@@ -282,7 +280,7 @@ class OptionChain extends LitElement implements IExample {
         this.processResize(this.rootElement);
 
         try {
-            const requestParameters: Streaming.GetMatchParameters = {
+            const requestParameters: Streaming.IGetMatchParameters = {
                 key: this.symbol,
                 matchType: Streaming.GetMatchType.composite,
                 shouldMatchExact: true,
@@ -298,7 +296,7 @@ class OptionChain extends LitElement implements IExample {
                     }
                 },
                 subscription: {
-                    updateHandler: (update: Streaming.Update) => {
+                    updateHandler: (update: Streaming.IUpdate) => {
                         if (update.relationshipId === RelationshipId[this.relationshipId as keyof typeof RelationshipId]) {
                             if (update.isNewRecord) {
                                 this.processOption(update);
@@ -351,7 +349,7 @@ class OptionChain extends LitElement implements IExample {
         this.underlyingPrice = 0;
     }
 
-    private processRecord(record: Streaming.Image) {
+    private processRecord(record: Streaming.IImage) {
         switch (record.relationshipId) {
             case RelationshipId.none:
                 this.processUnderlying(record);
@@ -373,7 +371,7 @@ class OptionChain extends LitElement implements IExample {
         }
     }
 
-    private processUnderlying(record: Streaming.Image) {
+    private processUnderlying(record: Streaming.IImage) {
         ++this.stats.responsesReturned;
 
         this.underlyingFieldInfo[FieldId.FID_SYMBOL]!.element.textContent = record.responseKey.symbol;
@@ -411,7 +409,7 @@ class OptionChain extends LitElement implements IExample {
             }
         }
 
-        this.requestHandle!.setUpdateHandler(record.streamId, (update: Streaming.Update) => {
+        this.requestHandle!.setUpdateHandler(record.streamId, (update: Streaming.IUpdate) => {
             ++this.stats.totalUpdates;
 
             const previousUnderlyingPrice = this.underlyingPrice;
@@ -438,7 +436,7 @@ class OptionChain extends LitElement implements IExample {
         }
     }
 
-    private updateUnderlying(fieldData: FieldData) {
+    private updateUnderlying(fieldData: IFieldData) {
         for (const field of fieldData) {
             if (!field.doesUpdateLastValue) {
                 continue;
@@ -463,7 +461,7 @@ class OptionChain extends LitElement implements IExample {
         }
     }
 
-    private updateUnderlyingField(field: Field) {
+    private updateUnderlyingField(field: IField) {
         const fieldInfo = this.underlyingFieldInfo[field.id];
         if (fieldInfo != null) {
             if (field.type === FieldType.tRational) {
@@ -476,7 +474,7 @@ class OptionChain extends LitElement implements IExample {
         }
     }
 
-    private processOption(record: Streaming.Record) {
+    private processOption(record: Streaming.IRecord) {
         ++this.stats.responsesReturned;
 
         const optionType = record.getField(FieldId.FID_OPTION_TYPE);
@@ -516,7 +514,7 @@ class OptionChain extends LitElement implements IExample {
         updateOption(record);
         optionRow.updateInTheMoney(null, this.underlyingPrice);
 
-        this.requestHandle!.setUpdateHandler(record.streamId, (update: Streaming.Update) => {
+        this.requestHandle!.setUpdateHandler(record.streamId, (update: Streaming.IUpdate) => {
             ++this.stats.totalUpdates;
 
             if (!update.isDelete) {
@@ -561,7 +559,7 @@ class OptionChain extends LitElement implements IExample {
         return expirationSection;
     }
 
-    private createOrFindOptionRow(symbol: string, expirationSection: ExpirationSection, strikePriceField: Field): OptionRow {
+    private createOrFindOptionRow(symbol: string, expirationSection: ExpirationSection, strikePriceField: IField): OptionRow {
         // Key for an option in an expiry date section is strike+root+exchange.
         const root = symbol.slice(0, symbol.indexOf(SymbolSeparator.expirationDateSeparator));
         const exchangeCode = getExchangeCode(symbol);
@@ -664,7 +662,7 @@ class OptionChain extends LitElement implements IExample {
         }
     }
 
-    private createOptionRow(symbol: string, strikePriceField: Field, root: string, exchangeCode: string): OptionRow {
+    private createOptionRow(symbol: string, strikePriceField: IField, root: string, exchangeCode: string): OptionRow {
         const rowElement = document.createElement("div");
         rowElement.className = "option-chain-option-row";
         rowElement.innerHTML = optionRowHtml;
@@ -708,7 +706,7 @@ class OptionChain extends LitElement implements IExample {
         this.processResize(rowElement);
 
         function makeUpdateOption(fieldInfos: FieldInfo[]) {
-            return function(image: Streaming.Record) {
+            return function(image: Streaming.IRecord) {
                 for (const field of image.fieldData) {
                     if (!field.doesUpdateLastValue) {
                         continue;

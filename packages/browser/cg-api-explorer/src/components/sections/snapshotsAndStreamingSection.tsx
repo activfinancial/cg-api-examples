@@ -46,7 +46,7 @@ import {
 } from "../../state/actions/snapshotsAndStreamingActions";
 import { dispatchAddSubscriptionInfo, dispatchRemoveSubscriptionInfo } from "../../state/actions/subscriptionManagementActions";
 
-import { Client, PermissionLevel, RelationshipId, Streaming } from "@activfinancial/cg-api";
+import { IClient, PermissionLevel, RelationshipId, Streaming } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps extends SnapshotsAndStreamingState {
-    client: Client | null;
+    client: IClient | null;
     connectionInfo: ConnectionInfo;
 }
 
@@ -77,7 +77,7 @@ const mapDispatchToProps = {
 type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
 
 interface MakeRequestParameters {
-    (): Streaming.AllRequestParameters;
+    (): Streaming.IAllRequestParameters;
 }
 
 /** Request parameter builders keyed by request name. */
@@ -397,10 +397,10 @@ class ComponentImpl extends React.PureComponent<Props> {
         const requestParameters = this.requestParametersBuilder[requestName]();
         let key: string | null = null;
 
-        MakeRequest.initiateAsyncIterable<Streaming.Record>(
+        MakeRequest.initiateAsyncIterable<Streaming.IRecord>(
             `client.streaming.${requestName}`,
             JSON.stringify(requestParameters, null, 2),
-            "Streaming.Record",
+            "Streaming.IImage",
             () => {
                 // TODO see if we can't get rid of that last cast...
                 const requestHandle = this.props.client!.streaming[requestName](requestParameters as any);
@@ -432,17 +432,17 @@ class ComponentImpl extends React.PureComponent<Props> {
     }
 
     private makeGetEqualParameters() {
-        const requestParameters: Partial<Streaming.GetEqualParameters> = {
+        const requestParameters: Partial<Streaming.IGetEqualParameters> = {
             key: this.props.symbolList
         };
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as Streaming.GetEqualParameters;
+        return requestParameters as Streaming.IGetEqualParameters;
     }
 
     private makeGetMatchParameters() {
-        const requestParameters: Partial<Streaming.GetMatchParameters> = {
+        const requestParameters: Partial<Streaming.IGetMatchParameters> = {
             key: this.props.symbolList,
             matchType: this.props.matchType,
             // The UI logic is the reverse of the API for "clarity".
@@ -451,33 +451,33 @@ class ComponentImpl extends React.PureComponent<Props> {
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as Streaming.GetMatchParameters;
+        return requestParameters as Streaming.IGetMatchParameters;
     }
 
     private makeGetPatternParameters() {
-        const requestParameters: Partial<Streaming.GetPatternParameters> = {
+        const requestParameters: Partial<Streaming.IGetPatternParameters> = {
             key: this.props.symbolIdList,
             reverseOrder: this.props.reverseOrder
         };
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as Streaming.GetPatternParameters;
+        return requestParameters as Streaming.IGetPatternParameters;
     }
 
     private makeGetFirstLastParameters() {
-        const requestParameters: Partial<Streaming.GetFirstLastParameters> = {
+        const requestParameters: Partial<Streaming.IGetFirstLastParameters> = {
             key: this.props.tableNumber,
             numberOfRecords: this.props.numberOfRecords
         };
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as Streaming.GetFirstLastParameters;
+        return requestParameters as Streaming.IGetFirstLastParameters;
     }
 
     private makeGetNextPreviousParameters() {
-        const requestParameters: Partial<Streaming.GetNextPreviousParameters> = {
+        const requestParameters: Partial<Streaming.IGetNextPreviousParameters> = {
             key: {
                 tableNumber: this.props.tableNumber!,
                 symbol: this.props.symbol
@@ -487,10 +487,10 @@ class ComponentImpl extends React.PureComponent<Props> {
 
         this.setCommonParameters(requestParameters);
 
-        return requestParameters as Streaming.GetNextPreviousParameters;
+        return requestParameters as Streaming.IGetNextPreviousParameters;
     }
 
-    private setCommonParameters(requestParameters: Partial<Streaming.NavigationalRequestParameters>) {
+    private setCommonParameters(requestParameters: Partial<Streaming.INavigationalRequestParameters>) {
         requestParameters.relationships = {};
 
         for (const relationshipInfo of this.props.relationships) {
@@ -531,7 +531,7 @@ class ComponentImpl extends React.PureComponent<Props> {
                 }
 
                 requestParameters.subscription.conflation.dynamicConflationHandler = (
-                    dynamicConflationInfo: Streaming.DynamicConflationInfo
+                    dynamicConflationInfo: Streaming.IDynamicConflationInfo
                 ) => renderDynamicConflationInfo(this.props.client!, dynamicConflationInfo);
             }
         }
@@ -540,8 +540,8 @@ class ComponentImpl extends React.PureComponent<Props> {
         requestParameters.permissionLevel = this.props.permissionLevel;
     }
 
-    private readonly updateHandler = (update: Streaming.Update) => {
-        renderUpdate(this.props.client!, "Streaming.Update", update.responseKey.symbol, update);
+    private readonly updateHandler = (update: Streaming.IUpdate) => {
+        renderUpdate(this.props.client!, "Streaming.IUpdate", update.responseKey.symbol, update);
     };
 
     private readonly id = uuid();

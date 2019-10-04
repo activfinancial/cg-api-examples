@@ -2,7 +2,7 @@
  * Time series chart custom element.
  */
 
-import { Client, FieldId, TimeSeries, RelationshipId, Streaming } from "@activfinancial/cg-api";
+import { IClient, FieldId, TimeSeries, RelationshipId, Streaming } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
 import { addUnloadHandler } from "../../../common/utils";
@@ -56,10 +56,10 @@ class Chart extends LitElement implements IExample {
         }
     });
 
-    private clientPromise: Promise<Client> | null = null;
-    private api: Client | null = null;
-    private requestHandle: TimeSeries.RequestHandle<TimeSeries.HistoryBar> | null = null;
-    private symbolInfoRequestHandle: Streaming.RequestHandle | null = null;
+    private clientPromise: Promise<IClient> | null = null;
+    private client: IClient | null = null;
+    private requestHandle: TimeSeries.IRequestHandle<TimeSeries.IHistoryBar> | null = null;
+    private symbolInfoRequestHandle: Streaming.IRequestHandle | null = null;
     private chart: bb.Chart | null = null;
 
     private stats = new ExampleStats();
@@ -90,7 +90,7 @@ class Chart extends LitElement implements IExample {
         this.setStatus("Waiting...");
     }
 
-    async connect(connected: Promise<Client>) {
+    async connect(connected: Promise<IClient>) {
         if (this.clientPromise === connected) {
             return;
         }
@@ -99,7 +99,7 @@ class Chart extends LitElement implements IExample {
         this.setStatus("Connecting...");
 
         try {
-            this.api = await connected;
+            this.client = await connected;
         } catch (e) {
             this.setStatus(`Error connecting: ${e}`);
             throw e;
@@ -109,13 +109,13 @@ class Chart extends LitElement implements IExample {
         this.createChart();
 
         try {
-            await this.api.disconnected;
+            await this.client.disconnected;
             this.setStatus("Disconnected");
         } catch (e) {
             this.setStatus(`Connection broken: ${e}`);
         } finally {
             this.destroyChart();
-            this.api = null;
+            this.client = null;
         }
     }
 
@@ -143,7 +143,7 @@ class Chart extends LitElement implements IExample {
 
         this.symbolLabel.textContent = this.symbol;
 
-        if (this.api == null || this.symbol === "") {
+        if (this.client == null || this.symbol === "") {
             return;
         }
 
@@ -153,7 +153,7 @@ class Chart extends LitElement implements IExample {
         // Some metadata. Fire off in the background and render when we get a response.
         // FID_NAME from the record itself, or company nav.
         (async () => {
-            this.symbolInfoRequestHandle = this.api!.streaming.getEqual({
+            this.symbolInfoRequestHandle = this.client!.streaming.getEqual({
                 key: this.symbol,
                 relationships: {
                     [RelationshipId.none]: {
@@ -174,7 +174,7 @@ class Chart extends LitElement implements IExample {
         })();
 
         // Daily bar request.
-        this.requestHandle = this.api.timeSeries.getHistory({
+        this.requestHandle = this.client.timeSeries.getHistory({
             key: this.symbol,
             seriesType: TimeSeries.HistorySeriesType.dailyBars,
             periods: [{ type: TimeSeries.PeriodType.tradingDayCount, count: 1500 }, { type: TimeSeries.PeriodType.now }],

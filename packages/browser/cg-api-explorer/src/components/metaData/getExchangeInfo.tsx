@@ -14,7 +14,7 @@ import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import { AppState } from "../../state/store";
 import { dispatchUpdateMetaData } from "../../state/actions/metaDataActions";
 
-import { Client } from "@activfinancial/cg-api";
+import { IClient } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps extends LiftedState {
-    client: Client | null;
+    client: IClient | null;
     connectionState: ConnectionState;
 }
 
@@ -69,7 +69,7 @@ class ComponentImpl extends React.PureComponent<Props> {
     private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        MakeRequest.initiate("client.metaData.getExchangeInfo", this.props.symbol, "MetaData.ExchangeInfo", () =>
+        MakeRequest.initiate("client.metaData.getExchangeInfo", this.props.symbol, "MetaData.IExchangeInfo", () =>
             this.props.client!.metaData.getExchangeInfo(this.props.symbol)
         );
     };

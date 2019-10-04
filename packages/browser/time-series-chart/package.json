@@ -33,6 +33,7 @@
     },
     "dependencies": {
         "@activfinancial/cg-api": "^0.13.0",
+        "@webcomponents/webcomponentsjs": "^2.3.0",
         "billboard.js": "^1.10.2",
         "lit-element": "^2.2.1",
         "resize-observer": "^1.0.0"
@@ -46,7 +47,7 @@
         "ts-loader": "^6.2.1",
         "typescript": "^3.6.4",
         "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.9",
+        "webpack-cli": "^3.3.10",
         "webpack-dev-server": "^3.9.0"
     }
 }

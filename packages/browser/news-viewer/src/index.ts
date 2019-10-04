@@ -2,10 +2,11 @@
  * News viewer custom element.
  */
 
-import { Client, Field, FieldId, News, formatField } from "@activfinancial/cg-api";
+import { IClient, IField, FieldId, News } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
 import { addUnloadHandler } from "../../../common/utils";
+import { formatField } from "../../../common/formatField";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";
@@ -91,10 +92,10 @@ class NewsViewer extends LitElement implements IExample {
     private readonly nextStoryButton: HTMLButtonElement;
     private readonly storyBodyElement: HTMLDivElement;
 
-    private clientPromise: Promise<Client> | null = null;
-    private client: Client | null = null;
-    private headlineRequestHandle: News.RequestHandle | null = null;
-    private bodyRequestHandle: News.RequestHandle | null = null;
+    private clientPromise: Promise<IClient> | null = null;
+    private client: IClient | null = null;
+    private headlineRequestHandle: News.IRequestHandle | null = null;
+    private bodyRequestHandle: News.IRequestHandle | null = null;
 
     private readonly storyBodyParser = new DOMParser();
 
@@ -179,7 +180,7 @@ class NewsViewer extends LitElement implements IExample {
         this.setStatus("Waiting...");
     }
 
-    async connect(connected: Promise<Client>) {
+    async connect(connected: Promise<IClient>) {
         if (this.clientPromise === connected) {
             return;
         }
@@ -240,7 +241,7 @@ class NewsViewer extends LitElement implements IExample {
         try {
             const requestParameters = {
                 query: this.query,
-                updateHandler: (update: News.Update) => this.processUpdate(update),
+                updateHandler: (update: News.IUpdate) => this.processUpdate(update),
                 fieldIds: [
                     FieldId.FID_HEADLINE,
                     FieldId.FID_MAGAZINE,
@@ -286,14 +287,14 @@ class NewsViewer extends LitElement implements IExample {
         this.unsubscribeStoryBody();
     }
 
-    private processRecord(record: News.Story) {
+    private processRecord(record: News.IStory) {
         ++this.stats.responsesReturned;
 
         // Results are newest first, so append to the headline table.
         this.createHeadlineRow(record, true);
     }
 
-    private processUpdate(update: News.Update) {
+    private processUpdate(update: News.IUpdate) {
         ++this.stats.totalUpdates;
 
         if (update.isNewRecord) {
@@ -301,7 +302,7 @@ class NewsViewer extends LitElement implements IExample {
         }
     }
 
-    private createHeadlineRow(story: News.Story, shouldAppend: boolean) {
+    private createHeadlineRow(story: News.IStory, shouldAppend: boolean) {
         const storyDateTimeField = story.getField(FieldId.FID_STORY_DATE_TIME);
         const magazineField = story.getField(FieldId.FID_MAGAZINE);
         const headlineField = story.getField(FieldId.FID_HEADLINE);
@@ -364,7 +365,7 @@ class NewsViewer extends LitElement implements IExample {
                     FieldId.FID_PREVIOUS_NEWS_SYMBOL,
                     FieldId.FID_CHARACTER_SET
                 ],
-                updateHandler: (update: News.Update) => this.showStoryBody(update)
+                updateHandler: (update: News.IUpdate) => this.showStoryBody(update)
             };
 
             this.bodyRequestHandle = this.client.news.getStories(requestParameters);
@@ -384,7 +385,7 @@ class NewsViewer extends LitElement implements IExample {
 
     private static readonly comtextSuppliedClass = "news-viewer-comtex-supplied";
 
-    private static setNavigationButton(field: Field, button: HTMLButtonElement): string | null {
+    private static setNavigationButton(field: IField, button: HTMLButtonElement): string | null {
         if (field.value == null) {
             NewsViewer.resetNavigationButton(button);
 
@@ -402,7 +403,7 @@ class NewsViewer extends LitElement implements IExample {
         button.title = "";
     }
 
-    private showStoryBody(story: News.Story) {
+    private showStoryBody(story: News.IStory) {
         this.storySymbolElement.textContent = story.newsSymbol;
 
         const storyBodyField = story.getField(FieldId.FID_STORY_BODY);

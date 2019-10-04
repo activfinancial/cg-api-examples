@@ -33,10 +33,13 @@
     },
     "dependencies": {
         "@activfinancial/cg-api": "^0.13.0",
-        "lit-element": "^2.2.1"
+        "@webcomponents/webcomponentsjs": "^2.3.0",
+        "lit-element": "^2.2.1",
+        "sprintf-js": "^1.1.2"
     },
     "devDependencies": {
         "@microsoft/api-extractor": "^7.5.2",
+        "@types/sprintf-js": "^1.1.2",
         "raw-loader": "^3.1.0",
         "rimraf": "^3.0.0",
         "source-map-loader": "^0.2.4",
@@ -45,7 +48,7 @@
         "typescript": "^3.6.4",
         "url-loader": "^2.2.0",
         "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.9",
+        "webpack-cli": "^3.3.10",
         "webpack-dev-server": "^3.9.0"
     }
 }

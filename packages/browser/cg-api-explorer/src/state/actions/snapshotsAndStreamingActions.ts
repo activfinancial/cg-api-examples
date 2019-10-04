@@ -86,11 +86,11 @@ export function dispatchAddSymbolId(): AddSymbolIdAction {
 /** Update SymbolId interface. */
 export interface UpdateSymbolIdAction extends ActionBase<ActionType.updateSymbolId> {
     key: string;
-    symbolId: Partial<Streaming.SymbolId>;
+    symbolId: Partial<Streaming.ISymbolId>;
 }
 
 /** Dispatch function to update a SymbolId. */
-export function dispatchUpdateSymbolId(key: string, symbolId: Partial<Streaming.SymbolId>): UpdateSymbolIdAction {
+export function dispatchUpdateSymbolId(key: string, symbolId: Partial<Streaming.ISymbolId>): UpdateSymbolIdAction {
     return {
         type: ActionType.updateSymbolId,
         key,

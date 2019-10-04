@@ -3,9 +3,9 @@
  */
 
 import {
-    Client,
+    IClient,
     Streaming,
-    Field,
+    IField,
     FieldId,
     FieldType,
     StatusCode,
@@ -13,12 +13,13 @@ import {
     Trend,
     StatusCodeError,
     TableNumber,
-    formatField as formatFieldInternal
+    RelationshipId
 } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
-import { getTrendHelperFromString } from "../../common/formatFieldValue";
+import { getTrendHelperFromString } from "../../common/trendingHelpers";
 import { addUnloadHandler } from "../../../common/utils";
+import { formatField as formatFieldInternal } from "../../../common/formatField";
 
 // Note just using css-loader explicitly to get an object; not loading in to the page.
 import commonCss from "!css-loader!../../common/common.css";
@@ -29,7 +30,7 @@ import { LitElement, PropertyValues, html, customElement, property, css, unsafeC
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** "---" for undefined fields. */
-function formatField(field: Field): string {
+function formatField(field: IField): string {
     return formatFieldInternal(field, { undefinedText: "---" });
 }
 
@@ -47,7 +48,7 @@ interface FieldInfo {
     isVisible: boolean;
 
     /** Field data from cg-api. */
-    field: Field;
+    field: IField;
 
     /** Textual value to render. */
     textValue: string | null;
@@ -84,9 +85,9 @@ interface Attributes {
  */
 @customElement("record-viewer")
 class RecordViewer extends LitElement implements IExample {
-    private clientPromise: Promise<Client> | null = null;
-    private client: Client | null = null;
-    private requestHandle: Streaming.RequestHandle | null = null;
+    private clientPromise: Promise<IClient> | null = null;
+    private client: IClient | null = null;
+    private requestHandle: Streaming.IRequestHandle | null = null;
 
     private fields: FieldInfo[] = [];
 
@@ -113,13 +114,16 @@ class RecordViewer extends LitElement implements IExample {
 
     // Internal state that causes re-render on change.
     @property()
+    private name: string = "";
+
+    @property()
     private tableName: string = "";
 
     @property()
     private tableNumber: TableNumber = TableNumber.undefined;
 
     @property()
-    private symbolLabel: string = "";
+    private resolvedSymbol: string = "";
 
     @property()
     private exchangeName: string = "";
@@ -145,7 +149,7 @@ class RecordViewer extends LitElement implements IExample {
         this.setStatus("Waiting...");
     }
 
-    async connect(clientPromise: Promise<Client>) {
+    async connect(clientPromise: Promise<IClient>) {
         if (this.clientPromise === clientPromise) {
             return;
         }
@@ -209,8 +213,8 @@ class RecordViewer extends LitElement implements IExample {
                 <div class="activ-cg-api-webcomponent record-viewer">
                     <div class="record-viewer-header">
                         <div class="record-viewer-title">
-                            <h1 class="record-viewer-title-symbol">${this.symbolLabel}</h1>
-                            <h5 class="record-viewer-title-exchange">${this.exchangeName}</h5>
+                            <h1 class="record-viewer-title-symbol">${this.resolvedSymbol}</h1>
+                            <h5 class="record-viewer-title-exchange">${this.nameToString()}</h5>
                             <h5 class="record-viewer-title-table">${this.tableName} (${this.tableNumber})</h5>
                         </div>
                         <form class="record-viewer-filter-form" @submit=${(e: Event) => e.preventDefault()}>
@@ -218,9 +222,9 @@ class RecordViewer extends LitElement implements IExample {
                                 class="record-viewer-filter-value"
                                 type="search"
                                 placeholder="Filter fields"
-                                @keyup=${this.handleFilterEvent}
-                                @search=${this.handleFilterEvent}
-                                @change=${this.handleFilterEvent}
+                                @keyup=${this.processFilterEvent}
+                                @search=${this.processFilterEvent}
+                                @change=${this.processFilterEvent}
                             />
                         </form>
                     </div>
@@ -240,6 +244,20 @@ class RecordViewer extends LitElement implements IExample {
                 </div>
             `;
         }
+    }
+
+    private nameToString() {
+        let res = this.name;
+
+        if (this.exchangeName.length > 0) {
+            if (res.length > 0) {
+                res += " ";
+            }
+
+            res += `(${this.exchangeName})`;
+        }
+
+        return res;
     }
 
     private static renderField(fieldInfo: FieldInfo) {
@@ -262,15 +280,21 @@ class RecordViewer extends LitElement implements IExample {
             return;
         }
 
-        this.symbolLabel = this.symbol;
+        this.resolvedSymbol = this.symbol;
         this.stats = new ExampleStats();
         this.setStatus("Subscribing...");
 
         try {
-            const requestParameters: Streaming.GetMatchParameters = {
+            const requestParameters: Streaming.IGetMatchParameters = {
                 key: this.symbol,
                 matchType: Streaming.GetMatchType.composite,
                 shouldMatchExact: true,
+                relationships: {
+                    [RelationshipId.none]: {},
+                    [RelationshipId.company]: {
+                        fieldIds: [FieldId.FID_NAME]
+                    }
+                },
                 subscription: {
                     updateHandler: this.processUpdate
                 }
@@ -294,24 +318,41 @@ class RecordViewer extends LitElement implements IExample {
                     this.stats.initialResponseTimestamp = performance.now();
                 }
 
-                if (StatusCode.success !== record.statusCode) {
-                    throw new StatusCodeError(record.statusCode);
+                switch (record.relationshipId) {
+                    case RelationshipId.none:
+                        if (StatusCode.success !== record.statusCode) {
+                            throw new StatusCodeError(record.statusCode);
+                        }
+
+                        this.processRecord(record);
+                        break;
+
+                    case RelationshipId.company:
+                        {
+                            const nameField = record.getField(FieldId.FID_NAME);
+                            if (nameField.statusCode === StatusCode.success && this.name === "") {
+                                this.name = formatField(nameField);
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
-
-                this.processRecord(record);
             }
-
-            this.stats.renderingCompleteTimestamp = performance.now();
         } catch (e) {
             this.setStatus(`Error subscribing: ${e}`);
         }
+
+        this.stats.renderingCompleteTimestamp = performance.now();
     }
 
     private unsubscribe() {
         this.fields = [];
+        this.name = "";
         this.tableName = "";
         this.tableNumber = TableNumber.undefined;
-        this.symbolLabel = "";
+        this.resolvedSymbol = "";
         this.exchangeName = "";
 
         if (this.requestHandle != null) {
@@ -320,10 +361,10 @@ class RecordViewer extends LitElement implements IExample {
         }
     }
 
-    private async processRecord(record: Streaming.Image) {
+    private async processRecord(record: Streaming.IImage) {
         ++this.stats.responsesReturned;
 
-        this.symbolLabel = record.responseKey.symbol;
+        this.resolvedSymbol = record.responseKey.symbol;
 
         this.client!.metaData.getExchangeInfo(record.responseKey.symbol).then((exchangeInfo) => {
             this.exchangeName = exchangeInfo.name;
@@ -338,12 +379,16 @@ class RecordViewer extends LitElement implements IExample {
 
         for (const field of record.fieldData) {
             this.createFieldInfo(field);
+
+            if (field.id === FieldId.FID_NAME) {
+                this.name = formatField(field);
+            }
         }
 
         // NB this.symbolLabel is registered as a property so we'll get a re-render scheduled automatically.
     }
 
-    private readonly processUpdate = (update: Streaming.Update) => {
+    private readonly processUpdate = (update: Streaming.IUpdate) => {
         ++this.stats.totalUpdates;
 
         for (const field of update.fieldData) {
@@ -360,7 +405,7 @@ class RecordViewer extends LitElement implements IExample {
         this.requestUpdate();
     };
 
-    private updateField(field: Field) {
+    private updateField(field: IField) {
         const fieldInfo = this.fields[field.id];
         if (fieldInfo != null) {
             fieldInfo.field = field;
@@ -371,7 +416,7 @@ class RecordViewer extends LitElement implements IExample {
         }
     }
 
-    private async createFieldInfo(field: Field) {
+    private async createFieldInfo(field: IField) {
         // Function to get trending this field (if any) from its value.
         const getTrendHelper = getTrendHelperFromString(field.id, fieldIdTrends[field.id] || "tick");
 
@@ -436,7 +481,7 @@ class RecordViewer extends LitElement implements IExample {
         return fieldName.toLowerCase().includes(this.filterValue.toLowerCase());
     }
 
-    private readonly handleFilterEvent = (e: Event) => {
+    private readonly processFilterEvent = (e: Event) => {
         e.preventDefault();
 
         this.filterValue = e.target != null ? (e.target as HTMLInputElement).value : "";

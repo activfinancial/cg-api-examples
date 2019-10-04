@@ -25,7 +25,7 @@ import { State as NewsState } from "../../state/reducers/newsReducer";
 import { dispatchUpdateNews } from "../../state/actions/newsActions";
 import { dispatchAddSubscriptionInfo, dispatchRemoveSubscriptionInfo } from "../../state/actions/subscriptionManagementActions";
 
-import { Client, News, PermissionLevel } from "@activfinancial/cg-api";
+import { IClient, News, PermissionLevel } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps extends NewsState {
-    client: Client | null;
+    client: IClient | null;
     connectionInfo: ConnectionInfo;
 }
 
@@ -316,7 +316,7 @@ class Component extends React.PureComponent<Props> {
     // TODO same code as SD pretty much. Factor out?
     private async makeRequest() {
         // TODO surely can do a runtime pick of properties based on the RequestParameters type.
-        const requestParameters: News.RequestParameters = {
+        const requestParameters: News.IRequestParameters = {
             query: this.props.query,
             startDate: this.props.startDate,
             endDate: this.props.endDate,
@@ -332,7 +332,7 @@ class Component extends React.PureComponent<Props> {
         MakeRequest.initiateAsyncIterable(
             "client.news.getStories",
             JSON.stringify(requestParameters, null, 2),
-            "News.Record",
+            "News.IRecord",
             () => {
                 const requestHandle = this.props.client!.news.getStories(requestParameters);
 
@@ -358,8 +358,8 @@ class Component extends React.PureComponent<Props> {
         );
     }
 
-    private readonly updateHandler = (update: News.Update) =>
-        renderUpdate(this.props.client!, "News.Update", update.newsSymbol, update);
+    private readonly updateHandler = (update: News.IUpdate) =>
+        renderUpdate(this.props.client!, "News.IUpdate", update.newsSymbol, update);
 }
 
 function mapStateToProps(state: AppState): ReduxStateProps {

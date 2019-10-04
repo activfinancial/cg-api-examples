@@ -3,7 +3,7 @@
  */
 
 import {
-    Client,
+    IClient,
     EntityType,
     EventType,
     FieldId,
@@ -67,7 +67,7 @@ interface IntervalMap {
 
 interface SubscriptionEntry {
     /** Streaming update handle. */
-    requestHandle?: Streaming.RequestHandle;
+    requestHandle?: Streaming.IRequestHandle;
 
     /** The ChartEngine to update. */
     chartEngine: ChartEngine;
@@ -76,7 +76,7 @@ interface SubscriptionEntry {
     isPrimary: boolean;
 
     /** Streaming update handler. */
-    processUpdate: (update: Streaming.Update) => void;
+    processUpdate: (update: Streaming.IUpdate) => void;
 
     /** Since we only get trade time. Stored as ms since epoch. */
     currentDate: number;
@@ -207,7 +207,7 @@ export class ActivQuoteFeed implements QuoteFeed {
         }
     };
 
-    private clientPromise: Promise<Client> | null = null;
+    private clientPromise: Promise<IClient> | null = null;
     private subscriptionMap: SubscriptionMap = {};
 
     /**
@@ -217,7 +217,7 @@ export class ActivQuoteFeed implements QuoteFeed {
      */
     constructor(private readonly updateType: UpdateType) {}
 
-    setClient(clientPromise: Promise<Client> | null) {
+    setClient(clientPromise: Promise<IClient> | null) {
         this.clientPromise = clientPromise;
     }
 
@@ -253,7 +253,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             chartEngine: subscriptionInfo.stx,
             // id only set on secondary series, by the looks of it.
             isPrimary: subscriptionInfo.id == null,
-            processUpdate: function(update: Streaming.Update) {
+            processUpdate: function(update: Streaming.IUpdate) {
                 const lastSale: LastSale = {};
                 let time: number = 0;
 
@@ -311,7 +311,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             subscription: {
                 type: Streaming.SubscriptionType.eventTypeFilterIncludeList,
                 eventTypes: EventType.trade,
-                updateHandler: (update: Streaming.Update) => {
+                updateHandler: (update: Streaming.IUpdate) => {
                     subscriptionEntry.processUpdate(update);
                 }
             }
@@ -422,7 +422,7 @@ export class ActivQuoteFeed implements QuoteFeed {
 
     // End of ChartIQ interface.
 
-    private static makeEndPeriod(dateFormat: TimeSeries.DatePeriodTypes, endDate: Date | null): TimeSeries.Period {
+    private static makeEndPeriod(dateFormat: TimeSeries.DatePeriodTypes, endDate: Date | null): TimeSeries.IPeriod {
         return endDate ? { type: dateFormat, date: endDate } : { type: TimeSeries.PeriodType.now };
     }
 
@@ -467,7 +467,7 @@ export class ActivQuoteFeed implements QuoteFeed {
             recordFilterType: TimeSeries.IntradayRecordFilterType.regularTrades
         });
 
-        this.processResponses(requestType, requestHandle, callback);
+        this.processResponses<TimeSeries.IIntradayBar>(requestType, requestHandle, callback);
     }
 
     private async makeHistoryRequest(
@@ -493,12 +493,12 @@ export class ActivQuoteFeed implements QuoteFeed {
             fieldFilterType: TimeSeries.HistoryFieldFilterType.miniBar
         });
 
-        this.processResponses(requestType, requestHandle, callback);
+        this.processResponses<TimeSeries.IHistoryBar>(requestType, requestHandle, callback);
     }
 
-    private processResponses<T extends TimeSeries.BarFieldSet>(
+    private processResponses<T extends TimeSeries.IHistoryBar | TimeSeries.IIntradayBar>(
         requestType: string,
-        requestHandle: TimeSeries.RequestHandle<T>,
+        requestHandle: TimeSeries.IRequestHandle<T>,
         callback: FetchCallback
     ) {
         (async () => {
@@ -539,7 +539,7 @@ export class ActivQuoteFeed implements QuoteFeed {
  * ChartIQ symbol lookup interface for ACTIV.
  */
 export class ActivLookupDriver implements LookupDriver {
-    private clientPromise: Promise<Client> | null = null;
+    private clientPromise: Promise<IClient> | null = null;
     private requestCounter: number = 0;
 
     // TODO not sure how to get the ciqInheritsFrom() working but equally in chartiq/js/symbolLookup.js
@@ -555,7 +555,7 @@ export class ActivLookupDriver implements LookupDriver {
      */
     constructor(private readonly maxResults: number = 100) {}
 
-    setClient(clientPromise: Promise<Client> | null) {
+    setClient(clientPromise: Promise<IClient> | null) {
         this.clientPromise = clientPromise;
     }
 
@@ -670,7 +670,7 @@ export class ActivLookupDriver implements LookupDriver {
     }
 
     private async processResponse(
-        requestHandle: SymbolDirectory.RequestHandle,
+        requestHandle: SymbolDirectory.IRequestHandle,
         thisRequestCounter: number,
         results: LookupResult[],
         maxResults: number

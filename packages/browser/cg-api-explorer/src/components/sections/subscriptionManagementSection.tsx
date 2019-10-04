@@ -23,17 +23,17 @@ import {
     dispatchUnsubscribeAll
 } from "../../state/actions/subscriptionManagementActions";
 
-import { Client, Unsubscribable, Streaming } from "@activfinancial/cg-api";
+import { IClient, IDeletable, Streaming } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 export interface SubscriptionInfo {
     key: string;
-    requestHandle: Unsubscribable;
+    requestHandle: IDeletable;
     name: string;
     tooltip: string;
 
-    conflationParameters?: Streaming.ConflationParameters;
+    conflationParameters?: Streaming.IConflationParameters;
 }
 
 // Own props.
@@ -41,7 +41,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps {
-    client: Client | null;
+    client: IClient | null;
     subscriptionInfoList: SubscriptionInfo[];
 }
 
@@ -56,7 +56,7 @@ const mapDispatchToProps = {
 type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
 
 // Local state.
-interface State extends Streaming.SessionConflationParameters {}
+interface State extends Streaming.ISessionConflationParameters {}
 
 class ComponentImpl extends React.PureComponent<Props, State> {
     constructor(props: Props) {
@@ -110,11 +110,11 @@ class ComponentImpl extends React.PureComponent<Props, State> {
                                         >
                                             <ConflationParametersControl.Component
                                                 conflationType={
-                                                    (subscriptionInfo.conflationParameters as Streaming.EnabledConflationParameters)
+                                                    (subscriptionInfo.conflationParameters as Streaming.IEnabledConflationParameters)
                                                         .type
                                                 }
                                                 conflationInterval={
-                                                    (subscriptionInfo.conflationParameters as Streaming.EnabledConflationParameters)
+                                                    (subscriptionInfo.conflationParameters as Streaming.IEnabledConflationParameters)
                                                         .interval
                                                 }
                                                 shouldEnableDynamicConflation={
@@ -175,30 +175,30 @@ class ComponentImpl extends React.PureComponent<Props, State> {
         subscriptionInfo: SubscriptionInfo,
         newState: Partial<ConflationParametersControl.LiftedState>
     ) => {
-        const conflationParameters: Streaming.ConflationParameters = {
+        const conflationParameters: Streaming.IConflationParameters = {
             ...subscriptionInfo.conflationParameters
         };
 
         // TODO bit messy. Maybe use Streaming.ConflationParameters in the control.
         if ("conflationType" in newState) {
             if (newState.conflationType == null) {
-                delete (conflationParameters as Streaming.EnabledConflationParameters).type;
+                delete (conflationParameters as Streaming.IEnabledConflationParameters).type;
             } else {
-                (conflationParameters as Streaming.EnabledConflationParameters).type = newState.conflationType;
+                (conflationParameters as Streaming.IEnabledConflationParameters).type = newState.conflationType;
             }
         }
 
         if ("conflationInterval" in newState) {
             if (newState.conflationInterval == null) {
-                delete (conflationParameters as Streaming.EnabledConflationParameters).interval;
+                delete (conflationParameters as Streaming.IEnabledConflationParameters).interval;
             } else {
-                (conflationParameters as Streaming.EnabledConflationParameters).interval = newState.conflationInterval;
+                (conflationParameters as Streaming.IEnabledConflationParameters).interval = newState.conflationInterval;
             }
         }
 
         if ("shouldEnableDynamicConflation" in newState) {
             if (newState.shouldEnableDynamicConflation) {
-                conflationParameters.dynamicConflationHandler = (dynamicConflationInfo: Streaming.DynamicConflationInfo) =>
+                conflationParameters.dynamicConflationHandler = (dynamicConflationInfo: Streaming.IDynamicConflationInfo) =>
                     renderDynamicConflationInfo(this.props.client!, dynamicConflationInfo);
             } else {
                 delete conflationParameters.dynamicConflationHandler;
@@ -210,7 +210,7 @@ class ComponentImpl extends React.PureComponent<Props, State> {
 
     private async onUpdateConflation(subscriptionInfo: SubscriptionInfo) {
         if (subscriptionInfo.conflationParameters) {
-            const requestHandle = subscriptionInfo.requestHandle as Streaming.RequestHandle;
+            const requestHandle = subscriptionInfo.requestHandle as Streaming.IRequestHandle;
 
             MakeRequest.initiate(
                 "requestHandle.setConflationParameters",
@@ -218,7 +218,8 @@ class ComponentImpl extends React.PureComponent<Props, State> {
                     ? JSON.stringify(subscriptionInfo.conflationParameters)
                     : "",
                 "Result",
-                () => requestHandle.setConflationParameters(subscriptionInfo.conflationParameters as Streaming.ConflationParameters)
+                () =>
+                    requestHandle.setConflationParameters(subscriptionInfo.conflationParameters as Streaming.IConflationParameters)
             );
         }
     }

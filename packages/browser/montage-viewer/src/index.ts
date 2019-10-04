@@ -2,13 +2,14 @@
  * MontageViewer custom element.
  */
 
-import { Client, Streaming, FieldType, StatusCode, TRational, TableNumber, TrendType, formatField } from "@activfinancial/cg-api";
+import { IClient, Streaming, FieldType, StatusCode, TRational, TableNumber, TrendType } from "@activfinancial/cg-api";
 import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 
 import { FieldInfo, tableInfos } from "./tableFields";
 
-import { applyTrendStyle, clearTrendStyle, getTrendHelperFromString } from "../../common/formatFieldValue";
+import { applyTrendStyle, clearTrendStyle, getTrendHelperFromString } from "../../common/trendingHelpers";
 import { addUnloadHandler } from "../../../common/utils";
+import { formatField } from "../../../common/formatField";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";
@@ -39,9 +40,9 @@ class MontageViewer extends LitElement implements IExample {
     private readonly status: HTMLDivElement;
     private readonly overlay: HTMLDivElement;
 
-    private clientPromise: Promise<Client> | null = null;
-    private client: Client | null = null;
-    private requestHandle: Streaming.RequestHandle | null = null;
+    private clientPromise: Promise<IClient> | null = null;
+    private client: IClient | null = null;
+    private requestHandle: Streaming.IRequestHandle | null = null;
     private fieldInfos: FieldInfo[] = [];
     private stats = new ExampleStats();
 
@@ -76,7 +77,7 @@ class MontageViewer extends LitElement implements IExample {
         this.setStatus("Waiting...");
     }
 
-    async connect(clientPromise: Promise<Client>) {
+    async connect(clientPromise: Promise<IClient>) {
         if (this.clientPromise === clientPromise) {
             return;
         }
@@ -157,7 +158,7 @@ class MontageViewer extends LitElement implements IExample {
                 return { tableNumber, symbol: pattern };
             });
 
-            const requestParameters: Streaming.GetPatternParameters = {
+            const requestParameters: Streaming.IGetPatternParameters = {
                 key: symbolIdList,
                 fieldIds: this.fieldInfos.map((fieldInfo: FieldInfo) => fieldInfo.fieldId),
                 subscription: {
@@ -206,7 +207,7 @@ class MontageViewer extends LitElement implements IExample {
         }
     }
 
-    private processRecord(record: Streaming.Image) {
+    private processRecord(record: Streaming.IImage) {
         ++this.stats.responsesReturned;
 
         if (record.statusCode !== StatusCode.success) {
@@ -216,7 +217,7 @@ class MontageViewer extends LitElement implements IExample {
 
         const updateRow = this.createRow();
 
-        this.requestHandle!.setUpdateHandler(record.streamId, (update: Streaming.Update) => {
+        this.requestHandle!.setUpdateHandler(record.streamId, (update: Streaming.IUpdate) => {
             ++this.stats.totalUpdates;
             updateRow(update);
         });
@@ -270,7 +271,7 @@ class MontageViewer extends LitElement implements IExample {
             fieldIdToIndex[this.fieldInfos[i].fieldId] = i;
         }
 
-        const updateRow = (record: Streaming.Record) => {
+        const updateRow = (record: Streaming.IRecord) => {
             for (const field of record.fieldData) {
                 const index = fieldIdToIndex[field.id];
 

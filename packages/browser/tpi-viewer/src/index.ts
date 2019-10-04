@@ -2,9 +2,10 @@
  * TpiViewer custom element.
  */
 
-import { Client, Streaming, FieldData, formatField } from "@activfinancial/cg-api";
+import { IClient, Streaming, IFieldData } from "@activfinancial/cg-api";
 
 import { addUnloadHandler } from "../../../common/utils";
+import { formatField } from "../../../common/formatField";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";
@@ -41,9 +42,9 @@ class TpiViewer extends LitElement {
     private readonly status: HTMLDivElement;
     private readonly overlay: HTMLDivElement;
 
-    private clientPromise: Promise<Client> | null = null;
-    private client: Client | null = null;
-    private requestHandle: Streaming.RequestHandle | null = null;
+    private clientPromise: Promise<IClient> | null = null;
+    private client: IClient | null = null;
+    private requestHandle: Streaming.IRequestHandle | null = null;
 
     private fields: HTMLElement[] = [];
 
@@ -110,7 +111,7 @@ class TpiViewer extends LitElement {
         this.setStatus("Waiting...");
     }
 
-    async connect(clientPromise: Promise<Client>) {
+    async connect(clientPromise: Promise<IClient>) {
         if (this.clientPromise === clientPromise) {
             return;
         }
@@ -194,7 +195,7 @@ class TpiViewer extends LitElement {
         this.totalUpdates = 0;
     }
 
-    private setConflationParameters(requestParameters: Streaming.RequestParameters) {
+    private setConflationParameters(requestParameters: Streaming.IRequestParameters) {
         if (this.conflationType !== "none") {
             requestParameters.subscription!.conflation = {
                 type: Streaming.ConflationType[this.conflationType as keyof typeof Streaming.ConflationType],
@@ -209,7 +210,7 @@ class TpiViewer extends LitElement {
         }
 
         try {
-            const requestParameters: Streaming.GetEqualParameters = {
+            const requestParameters: Streaming.IGetEqualParameters = {
                 key: this.symbol,
                 subscription: {
                     updateHandler: this.processUpdate
@@ -231,7 +232,7 @@ class TpiViewer extends LitElement {
         }
 
         try {
-            const requestParameters: Streaming.GetFirstLastParameters = {
+            const requestParameters: Streaming.IGetFirstLastParameters = {
                 key: TpiViewer.tpiTable,
                 subscription: {
                     updateHandler: this.processUpdate
@@ -253,7 +254,7 @@ class TpiViewer extends LitElement {
         }
 
         try {
-            const requestParameters: Streaming.GetNextPreviousParameters = {
+            const requestParameters: Streaming.IGetNextPreviousParameters = {
                 key: { tableNumber: TpiViewer.tpiTable, symbol: this.symbol },
                 subscription: {
                     updateHandler: this.processUpdate
@@ -271,7 +272,7 @@ class TpiViewer extends LitElement {
         }
     }
 
-    private async processResponse(requestHandle: Streaming.RequestHandle) {
+    private async processResponse(requestHandle: Streaming.IRequestHandle) {
         // Asynchronously iterate all records resulting from the request.
         // Here we'll only ever have 1 record though.
         for await (const record of requestHandle!) {
@@ -286,7 +287,7 @@ class TpiViewer extends LitElement {
         this.renderingCompleteTimestamp = performance.now();
     }
 
-    private async processRecord(requestHandle: Streaming.RequestHandle, record: Streaming.Image) {
+    private async processRecord(requestHandle: Streaming.IRequestHandle, record: Streaming.IImage) {
         ++this.responsesReturned;
 
         // Successfully subscribed to new record, so kill any old one.
@@ -298,12 +299,12 @@ class TpiViewer extends LitElement {
         this.processFieldData(record.fieldData);
     }
 
-    private readonly processUpdate = (update: Streaming.Update) => {
+    private readonly processUpdate = (update: Streaming.IUpdate) => {
         ++this.totalUpdates;
         this.processFieldData(update.fieldData);
     };
 
-    private processFieldData(fieldData: FieldData) {
+    private processFieldData(fieldData: IFieldData) {
         for (const field of fieldData) {
             if (field.doesUpdateLastValue) {
                 const element = this.fields[field.id];

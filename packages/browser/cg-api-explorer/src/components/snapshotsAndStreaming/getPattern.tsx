@@ -24,7 +24,7 @@ export interface LiftedState extends SymbolIdListControl.LiftedState {
 interface OwnProps {
     addSymbolId: () => void;
     removeSymbolId: (key: string) => void;
-    updateSymbolId: (key: string, symbolId: Partial<Streaming.SymbolId>) => void;
+    updateSymbolId: (key: string, symbolId: Partial<Streaming.ISymbolId>) => void;
     onChange: (newState: Partial<LiftedState>, shouldSubmit?: boolean) => void;
 }
 

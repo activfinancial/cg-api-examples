@@ -15,9 +15,15 @@
             "webRoot": "${workspaceFolder}/packages/browser/cg-api-explorer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
-                "webpack://activ_cg_api_explorer/*": "${webRoot}/*"
+                "webpack://activ_cg_api_explorer/*": "${webRoot}/*",
+                // cg-api is embedded in cg-api-explorer output so this is the path we end up with.
+                "webpack://activ_cg_api_explorer/webpack://activCgApi/*": "${workspaceFolder}/../cg-api.git/packages/cg-api/*",
+                "webpack://activ_cg_api_explorer/webpack://activCgApi/webpack://activCgApiCommon/*": "${workspaceFolder}/../cg-api.git/packages/cg-api-common/*",
+                "webpack://activ_cg_api_explorer/webpack://activCgApi/webpack://activMiddleware/*":  "${workspaceFolder}/../cg-api.git/packages/middleware/*",
+                "webpack://activ_cg_api_explorer/webpack://activCgApiFsbl/*": "${workspaceFolder}/../cg-api.git/packages/cg-api-fsbl/*",
+                "webpack://activ_cg_api_explorer/webpack://activCgApiFsbl/webpack://activCgApiJson/*": "${workspaceFolder}/../cg-api.git/packages/cg-api-json/*",
+                // Argh it won't follow symlinks. This would be preferable to decouple from my filesystem layout:
+                // "webpack://activ_cg_api_explorer/webpack://activCgApi/*": "${workspaceFolder}/node_modules/@activfinancial/cg-api/*"
             },
             "userDataDir": false
         },
@@ -32,9 +38,7 @@
             "webRoot": "${workspaceFolder}/packages/browser/montage-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
-                "webpack://activ_montage_viewer/*": "${webRoot}/*"
+                "webpack://activ_montage_viewer/*": "${webRoot}/*",
             },
             "userDataDir": false
         },
@@ -49,8 +53,6 @@
             "webRoot": "${workspaceFolder}/packages/browser/option-chain",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_option_chain/*": "${webRoot}/*"
             },
             "userDataDir": false
@@ -66,8 +68,6 @@
             "webRoot": "${workspaceFolder}/packages/browser/record-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_record_viewer/*": "${webRoot}/*"
             },
             "userDataDir": false
@@ -83,8 +83,6 @@
             "webRoot": "${workspaceFolder}/packages/browser/time-series-chart",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_time_series_chart/*": "${webRoot}/*"
             },
             "userDataDir": false
@@ -99,7 +97,6 @@
             "webRoot": "${workspaceFolder}/packages/chartiq/chartiq-sample",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_chartiq_sample/*": "${webRoot}/*"
             },
             "userDataDir": false
@@ -112,8 +109,9 @@
             "keepProfileChanges": true,
             "name": "Launch Firefox to chartiq-sample",
             "url": "http://localhost:8880/index.html",
+            "preLaunchTask": "serve-chartiq-sample",
             "webRoot": "${workspaceFolder}/packages/chartiq/chartiq-sample",
-            "sourceMaps": "server",
+            "sourceMaps": "client",
             "pathMappings": [
                 {
                     "url": "webpack://activ_chartiq_sample/",
@@ -132,8 +130,6 @@
             "webRoot": "${workspaceFolder}/packages/browser/news-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_news_viewer/*": "${webRoot}/*"
             },
             "userDataDir": false
@@ -149,8 +145,6 @@
             "webRoot": "${workspaceFolder}/packages/browser/tpi-viewer",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_tpi_viewer/*": "${webRoot}/*"
             },
             "userDataDir": false
@@ -166,8 +160,6 @@
             "webRoot": "${workspaceFolder}/packages/openfin/activ-workstation",
             "sourceMaps": true,
             "sourceMapPathOverrides": {
-                // Note in this case we need the webpack.config.js "library" name as a prefix in the mapping.
-                "webpack://activ/*": "${workspaceFolder}/packages/cg-api/*",
                 "webpack://activ_workstation/*": "${webRoot}/*"
             }
         },
@@ -181,8 +173,8 @@
             "sourceMaps": true,
             "outFiles": [ "${workspaceFolder}/packages/node/get-match/lib/*" ],
             "sourceMapPathOverrides": {
-                "webpack:///webpack:///*": "${workspaceFolder}/packages/cg-api/*",
-                "webpack:///*": "${workspaceFolder}/packages/node/get-match/*"
+                "webpack://getMatch/*": "${workspaceFolder}/packages/node/get-match/*",
+                "webpack://getMatch/rollup://activCgApi/*": "${workspaceFolder}/../cg-api.git/packages/cg-api/*"
             }
         },
         {
@@ -195,8 +187,8 @@
             "sourceMaps": true,
             "outFiles": [ "${workspaceFolder}/packages/node/get-history/lib/*" ],
             "sourceMapPathOverrides": {
-                "webpack:///webpack:///*": "${workspaceFolder}/packages/cg-api/*",
-                "webpack:///*": "${workspaceFolder}/packages/node/get-history/*"
+                "webpack://getHistory/*": "${workspaceFolder}/packages/node/get-history/*",
+                "webpack://getMatch/rollup://activCgApi/*": "${workspaceFolder}/../cg-api.git/packages/cg-api/*"
             }
         }
     ]

@@ -20,7 +20,7 @@ import { Streaming, FieldId, RelationshipId } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-export interface RelationshipInfo extends Streaming.Relationship {
+export interface RelationshipInfo extends Streaming.IRelationship {
     id?: RelationshipId;
     key: string;
 }

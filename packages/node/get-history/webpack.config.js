@@ -13,7 +13,8 @@ const config = {
     entry: "./src/index.ts",
     output: {
         filename: outputFile,
-        path: outputPath
+        path: outputPath,
+        library: "getHistory"
     },
     devtool: "source-map",
     module: {

@@ -21,7 +21,7 @@ import { AppState } from "../../state/store";
 import { State as SymbolDirectoryState } from "../../state/reducers/symbolDirectoryReducer";
 import { dispatchUpdateSymbolDirectory } from "../../state/actions/symbolDirectoryActions";
 
-import { Client, SymbolDirectory, FieldId } from "@activfinancial/cg-api";
+import { IClient, SymbolDirectory, FieldId } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps extends SymbolDirectoryState {
-    client: Client | null;
+    client: IClient | null;
     connectionInfo: ConnectionInfo;
 }
 
@@ -154,7 +154,7 @@ class ComponentImpl extends React.PureComponent<Props> {
     private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // TODO surely can do a runtime pick of properties based on the RequestParameters type.
-        const requestParameters: SymbolDirectory.RequestParameters = {
+        const requestParameters: SymbolDirectory.IRequestParameters = {
             fieldId: this.props.fieldId,
             search: this.props.search,
             filterType: this.props.filterType,
@@ -165,7 +165,7 @@ class ComponentImpl extends React.PureComponent<Props> {
         MakeRequest.initiateAsyncIterable(
             "client.symbolDirectory.getSymbols",
             JSON.stringify(requestParameters, null, 2),
-            "SymbolDirectory.SymbolResponse",
+            "SymbolDirectory.ISymbolResponse",
             () => this.props.client!.symbolDirectory.getSymbols(requestParameters)
         );
     };

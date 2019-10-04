@@ -152,7 +152,7 @@ function addSymbolId(state: State) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function updateSymbolId(state: State, key: string, symbolId: Partial<Streaming.SymbolId>) {
+function updateSymbolId(state: State, key: string, symbolId: Partial<Streaming.ISymbolId>) {
     const index = findSymbolId(state, key);
     if (index === -1) {
         return state;

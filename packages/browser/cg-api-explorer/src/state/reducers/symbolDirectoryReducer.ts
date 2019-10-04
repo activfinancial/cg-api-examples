@@ -10,7 +10,7 @@ import { FieldId, SymbolDirectory } from "@activfinancial/cg-api";
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 // State to store in redux store.
-export interface State extends SymbolDirectory.RequestParameters {}
+export interface State extends SymbolDirectory.IRequestParameters {}
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

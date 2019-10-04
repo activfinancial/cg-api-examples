@@ -19,17 +19,18 @@ import {
     OutputType
 } from "./state/actions/outputContainerActions";
 
+import { formatField } from "../../../common/formatField";
+
 import reactHtmlParse from "html-react-parser";
 
 import {
-    Client,
     EntityType,
     EventType,
-    FieldData,
     FieldId,
     FieldType,
     FieldValue,
-    formatField,
+    IClient,
+    IFieldData,
     MetaData,
     News,
     PermissionId,
@@ -41,8 +42,7 @@ import {
     Streaming,
     TableNumber,
     TableType,
-    TimeSeries,
-    Vector
+    TimeSeries
 } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -127,20 +127,20 @@ function getNameSpanStyle(depth: number) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function getNewsStoryBody(client: Client, newsSymbol: string) {
+function getNewsStoryBody(client: IClient, newsSymbol: string) {
     const requestParameters = {
         query: `newssymbol=${newsSymbol}`,
         fieldIds: [FieldId.FID_HEADLINE, FieldId.FID_MAGAZINE, FieldId.FID_STORY_BODY, FieldId.FID_STORY_DATE_TIME]
     };
 
-    MakeRequest.initiateAsyncIterable("client.news.getStories", JSON.stringify(requestParameters, null, 2), "News.Record", () =>
+    MakeRequest.initiateAsyncIterable("client.news.getStories", JSON.stringify(requestParameters, null, 2), "News.IRecord", () =>
         client.news.getStories(requestParameters)
     );
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function getEqual(client: Client, symbol: string) {
+function getEqual(client: IClient, symbol: string) {
     const requestParameters = {
         key: symbol
     };
@@ -148,26 +148,26 @@ function getEqual(client: Client, symbol: string) {
     MakeRequest.initiateAsyncIterable(
         "client.streaming.getEqual",
         JSON.stringify(requestParameters, null, 2),
-        "Streaming.Record",
+        "Streaming.IImage",
         () => client.streaming.getEqual(requestParameters)
     );
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function getTableSpecification(client: Client, tableNumber: TableNumber) {
+function getTableSpecification(client: IClient, tableNumber: TableNumber) {
     MakeRequest.initiate(
         "client.metaData.getTableSpecification",
         `PermissionLevel.realtime, ${tableNumber}`,
-        "MetaData.TableSpecification",
+        "MetaData.ITableSpecification",
         () => client.metaData.getTableSpecification(PermissionLevel.realtime, tableNumber)
     );
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function getUniversalFieldHelper(client: Client, fieldId: FieldId) {
-    MakeRequest.initiate("client.metaData.getUniversalFieldHelper", `${fieldId}`, "MetaData.UniversalFieldHelper", () =>
+function getUniversalFieldHelper(client: IClient, fieldId: FieldId) {
+    MakeRequest.initiate("client.metaData.getUniversalFieldHelper", `${fieldId}`, "MetaData.IUniversalFieldHelper", () =>
         client.metaData.getUniversalFieldHelper(fieldId)
     );
 }
@@ -183,7 +183,7 @@ interface PropertyFormatterResult {
     output: React.ReactElement | React.ReactElement[] | string;
 }
 
-type PropertyFormatter = (client: Client, value: any, depth: number) => PropertyFormatterResult;
+type PropertyFormatter = (client: IClient, value: any, depth: number) => PropertyFormatterResult;
 interface PropertyFormatters {
     [propertyName: string]: PropertyFormatter;
 }
@@ -202,7 +202,7 @@ function formatEnum<T>(enumObject: T, value: any) {
 const propertyFormatters = (function() {
     let propertyFormatters: PropertyFormatters = {};
 
-    function makeTableNumberLink(client: Client, tableNumber: TableNumber) {
+    function makeTableNumberLink(client: IClient, tableNumber: TableNumber) {
         // Note using an anchor rather than a button to keep the text alignment nice in the output control.
         return (
             <a
@@ -217,7 +217,7 @@ const propertyFormatters = (function() {
         );
     }
 
-    function makeTableNumberSuffix(client: Client, symbolId: Streaming.SymbolId) {
+    function makeTableNumberSuffix(client: IClient, symbolId: Streaming.ISymbolId) {
         if (symbolId.hasOwnProperty("tableNumber") && symbolId.tableNumber !== TableNumber.undefined) {
             return (
                 <>
@@ -230,7 +230,7 @@ const propertyFormatters = (function() {
         return "";
     }
 
-    function symbolIdNoLink(client: Client, symbolId: Streaming.SymbolId, depth: number) {
+    function symbolIdNoLink(client: IClient, symbolId: Streaming.ISymbolId, depth: number) {
         return {
             output: (
                 <>
@@ -241,11 +241,11 @@ const propertyFormatters = (function() {
         };
     }
 
-    propertyFormatters.statusCode = (client: Client, statusCode: StatusCode, depth: number) => ({
+    propertyFormatters.statusCode = (client: IClient, statusCode: StatusCode, depth: number) => ({
         output: formatEnum(StatusCode, statusCode)
     });
 
-    propertyFormatters.symbolId = function(client: Client, symbolId: Streaming.SymbolId, depth: number) {
+    propertyFormatters.symbolId = function(client: IClient, symbolId: Streaming.ISymbolId, depth: number) {
         if (symbolId.symbol.length === 0) {
             return symbolIdNoLink(client, symbolId, depth);
         }
@@ -274,15 +274,20 @@ const propertyFormatters = (function() {
     propertyFormatters.responseKey = propertyFormatters.symbolId;
 
     // Just because we don't want to display 48 processor names!
-    propertyFormatters.processorInfoList = (client: Client, processorInfoList: Vector<string>, depth: number) => ({
-        output: processorInfoList.size() ? processorInfoList.get(0) : "Unknown processor"
-    });
+    propertyFormatters.processorInfoList = (client: IClient, processorInfoList: Iterable<string>, depth: number) => {
+        let output = "Unknown processor";
+        for (output of processorInfoList) {
+            break;
+        }
 
-    propertyFormatters.fieldType = (client: Client, fieldType: FieldType, depth: number) => ({
+        return { output };
+    };
+
+    propertyFormatters.fieldType = (client: IClient, fieldType: FieldType, depth: number) => ({
         output: formatEnum(FieldType, fieldType)
     });
 
-    propertyFormatters.fieldId = (client: Client, fieldId: FieldId, depth: number) => {
+    propertyFormatters.fieldId = (client: IClient, fieldId: FieldId, depth: number) => {
         // Clicking on a "fieldId" property will get the UniversalFieldHelper for it.
         // Note using an anchor rather than a button to keep the text alignment nice in the output control.
         return {
@@ -302,19 +307,19 @@ const propertyFormatters = (function() {
         };
     };
 
-    propertyFormatters.eventType = (client: Client, eventType: EventType, depth: number) => ({
+    propertyFormatters.eventType = (client: IClient, eventType: EventType, depth: number) => ({
         output: formatEnum(EventType, eventType)
     });
 
-    propertyFormatters.entityType = (client: Client, entityType: EntityType, depth: number) => ({
+    propertyFormatters.entityType = (client: IClient, entityType: EntityType, depth: number) => ({
         output: formatEnum(EntityType, entityType)
     });
 
-    propertyFormatters.permissionId = (client: Client, permissionId: PermissionId, depth: number) => ({
+    propertyFormatters.permissionId = (client: IClient, permissionId: PermissionId, depth: number) => ({
         output: formatEnum(PermissionId, permissionId)
     });
 
-    propertyFormatters.permissionIdList = (client: Client, permissionIdList: PermissionIdList, depth: number) => ({
+    propertyFormatters.permissionIdList = (client: IClient, permissionIdList: PermissionIdList, depth: number) => ({
         output: joinIterable(
             permissionIdList,
             listDelimiter,
@@ -322,15 +327,15 @@ const propertyFormatters = (function() {
         )
     });
 
-    propertyFormatters.permissionIdType = (client: Client, permissionIdType: MetaData.PermissionIdType, depth: number) => ({
+    propertyFormatters.permissionIdType = (client: IClient, permissionIdType: MetaData.PermissionIdType, depth: number) => ({
         output: formatEnum(MetaData.PermissionIdType, permissionIdType)
     });
 
-    propertyFormatters.permissionLevel = (client: Client, permissionLevel: PermissionLevel, depth: number) => ({
+    propertyFormatters.permissionLevel = (client: IClient, permissionLevel: PermissionLevel, depth: number) => ({
         output: formatEnum(PermissionLevel, permissionLevel)
     });
 
-    propertyFormatters.permissionLevelList = (client: Client, permissionLevelList: PermissionLevelList, depth: number) => ({
+    propertyFormatters.permissionLevelList = (client: IClient, permissionLevelList: PermissionLevelList, depth: number) => ({
         output: joinIterable(
             permissionLevelList,
             listDelimiter,
@@ -338,21 +343,21 @@ const propertyFormatters = (function() {
         )
     });
 
-    propertyFormatters.conflationType = (client: Client, conflationType: Streaming.ConflationType, depth: number) => ({
+    propertyFormatters.conflationType = (client: IClient, conflationType: Streaming.ConflationType, depth: number) => ({
         output: formatEnum(Streaming.ConflationType, conflationType)
     });
 
     propertyFormatters.idealConflationType = propertyFormatters.conflationType;
 
     propertyFormatters.dynamicConflationTrigger = (
-        client: Client,
+        client: IClient,
         dynamicConflationTrigger: Streaming.DynamicConflationTrigger,
         depth: number
     ) => ({
         output: formatEnum(Streaming.DynamicConflationTrigger, dynamicConflationTrigger)
     });
 
-    propertyFormatters.conflationTypeList = (client: Client, conflationTypeList: Streaming.ConflationTypeList, depth: number) => ({
+    propertyFormatters.conflationTypeList = (client: IClient, conflationTypeList: Streaming.ConflationTypeList, depth: number) => ({
         output: joinIterable(
             conflationTypeList,
             listDelimiter,
@@ -361,30 +366,30 @@ const propertyFormatters = (function() {
         )
     });
 
-    propertyFormatters.conflationIntervalList = (client: Client, conflationIntervalList: number[], depth: number) => ({
+    propertyFormatters.conflationIntervalList = (client: IClient, conflationIntervalList: number[], depth: number) => ({
         output: joinIterable(conflationIntervalList, listDelimiter)
     });
 
-    propertyFormatters.relationshipId = (client: Client, relationshipId: RelationshipId, depth: number) => ({
+    propertyFormatters.relationshipId = (client: IClient, relationshipId: RelationshipId, depth: number) => ({
         output: formatEnum(RelationshipId, relationshipId)
     });
 
-    propertyFormatters.tableNumber = (client: Client, tableNumber: TableNumber, depth: number) => {
+    propertyFormatters.tableNumber = (client: IClient, tableNumber: TableNumber, depth: number) => {
         // Clicking a "tableNumber" entry gets the table spec.
         return {
             output: makeTableNumberLink(client, tableNumber)
         };
     };
 
-    propertyFormatters.tableType = (client: Client, tableType: TableType, depth: number) => ({
+    propertyFormatters.tableType = (client: IClient, tableType: TableType, depth: number) => ({
         output: formatEnum(TableType, tableType)
     });
 
-    propertyFormatters.tickType = (client: Client, tickType: TimeSeries.TickType, depth: number) => ({
+    propertyFormatters.tickType = (client: IClient, tickType: TimeSeries.TickType, depth: number) => ({
         output: formatEnum(TimeSeries.TickType, tickType)
     });
 
-    propertyFormatters.newsSymbol = (client: Client, newsSymbol: string, depth: number) => {
+    propertyFormatters.newsSymbol = (client: IClient, newsSymbol: string, depth: number) => {
         // Clicking news symbol gets the story body.
         // Note using an anchor rather than a button to keep the text alignment nice in the output control.
         return {
@@ -402,7 +407,7 @@ const propertyFormatters = (function() {
         };
     };
 
-    propertyFormatters.fieldData = (client: Client, fieldData: FieldData, depth: number) => {
+    propertyFormatters.fieldData = (client: IClient, fieldData: IFieldData, depth: number) => {
         // The big one. Format field data nicely.
 
         const rowStyle = getRowStyle(depth + 1);
@@ -460,13 +465,15 @@ function mightBeEmbindVector(object: any) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function renderEmbindVector<T>(client: Client, object: Vector<T>, depth: number) {
+function renderEmbindVector<T>(client: IClient, object: Iterable<T>, depth: number) {
     let elements: React.ReactElement[] = [];
 
     // embind vectors.
-    for (let i = 0; i < object.size(); ++i) {
+    let i = 0;
+    for (const value of object) {
         // TODO output-timestamp is a bit poo.
-        renderProperty(elements, client, `[${i}]`, "output-timestamp", object.get(i), depth);
+        renderProperty(elements, client, `[${i}]`, "output-timestamp", value, depth);
+        ++i;
     }
 
     return elements;
@@ -474,7 +481,7 @@ function renderEmbindVector<T>(client: Client, object: Vector<T>, depth: number)
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-function renderArray(client: Client, object: any[], depth: number) {
+function renderArray(client: IClient, object: any[], depth: number) {
     let elements: React.ReactElement[] = [];
 
     for (let i = 0; i < object.length; ++i) {
@@ -487,7 +494,7 @@ function renderArray(client: Client, object: any[], depth: number) {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-export function renderObject(client: Client, objectName: string, messageObject: any): React.ReactElement[] {
+export function renderObject(client: IClient, objectName: string, messageObject: any): React.ReactElement[] {
     let elements: React.ReactElement[] = [];
 
     // TODO output-timestamp is a bit poo.
@@ -500,7 +507,7 @@ export function renderObject(client: Client, objectName: string, messageObject: 
 
 function renderProperty(
     elements: React.ReactElement[],
-    client: Client,
+    client: IClient,
     propertyName: string,
     propertyNameClassList: string,
     propertyValue: any,
@@ -671,7 +678,7 @@ export async function renderError(requestName: string, error: Error) {
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** Render an update. */
-export function renderUpdate(client: Client, updateTypeName: string, key: string, update: Streaming.Update | News.Update) {
+export function renderUpdate(client: IClient, updateTypeName: string, key: string, update: Streaming.IUpdate | News.IUpdate) {
     store.dispatch(
         dispatchAppendOutput(
             OutputType.update,
@@ -691,7 +698,7 @@ export function renderUpdate(client: Client, updateTypeName: string, key: string
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** Render a DynamicConflationInfo. */
-export function renderDynamicConflationInfo(client: Client, dynamicConflationInfo: Streaming.DynamicConflationInfo) {
+export function renderDynamicConflationInfo(client: IClient, dynamicConflationInfo: Streaming.IDynamicConflationInfo) {
     store.dispatch(
         dispatchAppendOutput(
             OutputType.always,

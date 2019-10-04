@@ -2,7 +2,7 @@
  * Time series chart example using ChartIQ.
  */
 
-import { connect, Client, asyncSleep } from "@activfinancial/cg-api";
+import { connect, IClient, asyncSleep } from "@activfinancial/cg-api";
 import { domReady } from "../../../common/utils";
 import { ActivQuoteFeed, ActivLookupDriver, UpdateType } from "@activfinancial/chartiq-adapter";
 
@@ -21,7 +21,7 @@ class Chart {
      *
      * @param client connection to ContentGateway.
      */
-    constructor(clientPromise: Promise<Client>) {
+    constructor(clientPromise: Promise<IClient>) {
         this.setClient(clientPromise);
         initChartIq(this.quoteFeed, this.lookupDriver);
     }
@@ -31,7 +31,7 @@ class Chart {
      *
      * @param client
      */
-    setClient(clientPromise: Promise<Client> | null) {
+    setClient(clientPromise: Promise<IClient> | null) {
         this.quoteFeed.setClient(clientPromise);
         this.lookupDriver.setClient(clientPromise);
     }

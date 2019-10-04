@@ -8,7 +8,7 @@ import { ConnectionInfo, ConnectionState } from "../../connectionInfo";
 import * as ConnectionManagementSection from "../../components/sections/connectionManagementSection";
 import uuid from "uuid/v4";
 
-import { Client } from "@activfinancial/cg-api";
+import { IClient } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export interface State extends ConnectionManagementSection.LiftedState {
     isInternalNetwork: boolean;
 
     /** CG API client. */
-    client: Client | null;
+    client: IClient | null;
 
     /** Connection state. */
     connectionInfo: ConnectionInfo;

@@ -16,7 +16,7 @@ import { Streaming } from "@activfinancial/cg-api";
 
 // State to be lifted up and managed elsewhere.
 interface LiftedState {
-    symbolId: Streaming.SymbolId;
+    symbolId: Streaming.ISymbolId;
 }
 
 // Own props.
@@ -24,7 +24,7 @@ interface OwnProps {
     placeholder?: string;
     required?: boolean;
     onRemove?: () => void;
-    onChange: (symbolId: Partial<Streaming.SymbolId>) => void;
+    onChange: (symbolId: Partial<Streaming.ISymbolId>) => void;
 }
 
 // All props.

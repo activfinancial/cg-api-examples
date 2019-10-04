@@ -15,7 +15,7 @@ import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import { AppState } from "../../state/store";
 import { dispatchUpdateMetaData } from "../../state/actions/metaDataActions";
 
-import { Client, PermissionLevel } from "@activfinancial/cg-api";
+import { IClient, PermissionLevel } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps extends LiftedState {
-    client: Client | null;
+    client: IClient | null;
     connectionState: ConnectionState;
 }
 
@@ -74,7 +74,7 @@ class ComponentImpl extends React.PureComponent<Props> {
         MakeRequest.initiate(
             "client.metaData.getSubscriptionInfo",
             `${this.props.permissionLevel}`,
-            "MetaData.SubscriptionInfo",
+            "MetaData.ISubscriptionInfo",
             () => this.props.client!.metaData.getSubscriptionInfo(this.props.permissionLevel!)
         );
     };

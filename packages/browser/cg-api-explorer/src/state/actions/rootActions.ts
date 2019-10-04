@@ -5,7 +5,7 @@
 import { ActionBase, ActionType } from "./actionType";
 import { ConnectionInfo } from "../../connectionInfo";
 
-import { Client } from "@activfinancial/cg-api";
+import { IClient } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -41,11 +41,11 @@ export function dispatchIsInternalNetworkAction(isInternalNetwork: boolean): IsI
 
 /** Set client action interface. */
 export interface SetClientAction extends ActionBase<ActionType.setClient> {
-    client: Client | null;
+    client: IClient | null;
 }
 
 /** Dispatch function to set client. */
-export function dispatchSetClient(client: Client | null): SetClientAction {
+export function dispatchSetClient(client: IClient | null): SetClientAction {
     return {
         type: ActionType.setClient,
         client

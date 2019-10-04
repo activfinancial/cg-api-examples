@@ -12,6 +12,9 @@ import Col from "react-bootstrap/Col";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import Nav from "react-bootstrap/Nav";
+import Tab from "react-bootstrap/Tab";
+import uuid from "uuid/v4";
 
 import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import { ConnectionInfo, ConnectionState } from "../../connectionInfo";
@@ -30,8 +33,10 @@ import { dispatchResetPendingRequestCounter, dispatchAppendOutput, OutputType } 
 import { dispatchUnsubscribeAll } from "../../state/actions/subscriptionManagementActions";
 
 import contentGatewayList from "../../../../../common/contentGateways";
+import { addUnloadHandler } from "../../../../../common/utils";
 
-import { connect, ConnectParameters, Client, windowLoaded, asyncSleep, Streaming } from "@activfinancial/cg-api";
+import { connect as cgConnect, IConnectParameters, IClient, Streaming, windowLoaded, asyncSleep } from "@activfinancial/cg-api";
+import { connect as fsblConnect } from "@activfinancial/cg-api-fsbl";
 
 // Could be a polyfill for Edge.
 import "url-search-params-polyfill";
@@ -66,6 +71,32 @@ function renderUrlList() {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
+// Types of connection.
+enum ConnectionType {
+    direct = "Direct",
+    finsemble = "Finsemble",
+    openfin = "OpenFin"
+}
+
+const isFsbl = typeof window !== "undefined" && (window as any).FSBL != null;
+// NB Don't count Finsemble on OpenFin as OpenFin.
+const isOpenFin = !isFsbl && typeof window !== "undefined" && (window as any).fin != null;
+const numberOfConnectionTypes = 1 + (isFsbl ? 1 : 0) + (isOpenFin ? 1 : 0);
+
+const defaultConnectionType = (function() {
+    if (isFsbl) {
+        return ConnectionType.finsemble;
+    }
+
+    // if (isOpenFin) {
+    //     return ConnectionType.openfin;
+    // }
+
+    return ConnectionType.direct;
+})();
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+
 // State to be lifted up elsewhere (redux in our case).
 export interface LiftedState {
     url: string;
@@ -76,7 +107,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps extends LiftedState {
-    client: Client | null;
+    client: IClient | null;
     connectionInfo: ConnectionInfo;
 }
 
@@ -94,9 +125,12 @@ const mapDispatchToProps = {
 // All props.
 type Props = OwnProps & ReduxStateProps & typeof mapDispatchToProps;
 
-// Remove url from ConnectParameters as we'll store it in redux instead.
-interface State extends Pick<ConnectParameters, Exclude<keyof ConnectParameters, "url">> {
+// Remove url from IConnectParameters as we'll store it in redux instead.
+interface State extends Pick<IConnectParameters, Exclude<keyof IConnectParameters, "url">> {
     displayMinuteHeartbeats: boolean;
+
+    // TODO move to redux? Only if it's worth it for the copy-state-to-clipboard option, I suppose.
+    activeTab: ConnectionType;
 }
 
 class ComponentImpl extends React.Component<Props, State> {
@@ -109,7 +143,8 @@ class ComponentImpl extends React.Component<Props, State> {
         this.shouldConnectOnStartup = shouldConnectOnStartup;
         this.state = {
             ...state,
-            displayMinuteHeartbeats: false
+            displayMinuteHeartbeats: false,
+            activeTab: defaultConnectionType
         };
 
         if (shouldConnectOnStartup) {
@@ -123,179 +158,239 @@ class ComponentImpl extends React.Component<Props, State> {
                 }
             })();
         }
+
+        // Unload handler for running in Finsemble in order to disconnect from AWSD.
+        addUnloadHandler(() => {
+            if (this.props.client != null) {
+                this.props.client.disconnect();
+            }
+        });
     }
 
     /** Render. */
     render() {
+        const renderHeartbeatOption = () => {
+            return (
+                <SimpleTooltip
+                    text="The ContentGateway will send a heartbeat at the start of every minute.
+                    Set this option to display those heartbeats when received."
+                >
+                    <ToggleButton
+                        type="checkbox"
+                        value="showMinuteHeartbeats"
+                        variant="outline-primary"
+                        size="sm"
+                        checked={this.state.displayMinuteHeartbeats}
+                        onChange={this.onDisplayMinuteHeartbeatsChange}
+                    >
+                        Display minute heartbeats?
+                    </ToggleButton>
+                </SimpleTooltip>
+            );
+        };
+
         return (
             <Col>
                 <CollapsibleSection.Component title="Connection Management" ref={this.collapsibleSectionRef}>
-                    <Card bg="light" body>
-                        <Form onSubmit={this.processSubmit}>
-                            <Form.Group as={Form.Row} className="form-group-margin">
-                                {/* sm={5} not working on Form.Label! Docs lie?! */}
-                                <Form.Label column className={`${labelColumnClass} text-right`}>
-                                    URL (or host, or host:port):
-                                </Form.Label>
-                                <Col sm={inputColumnWidth}>
-                                    <InputGroup>
-                                        <Form.Control
-                                            type="text"
-                                            size="sm"
-                                            required
-                                            name="url"
-                                            value={this.props.url}
-                                            list="urlList"
-                                            onChange={this.onUrlChange}
+                    <Tab.Container id={`${this.id}-tabs`} defaultActiveKey={this.state.activeTab} transition={false}>
+                        {numberOfConnectionTypes > 1 && (
+                            <Nav variant="tabs" onSelect={(value: string) => this.setState({ activeTab: value as ConnectionType })}>
+                                <SimpleTooltip text="Connect directly to a ContentGateway">
+                                    <Nav.Item>
+                                        <Nav.Link eventKey={ConnectionType.direct}>{ConnectionType.direct}</Nav.Link>
+                                    </Nav.Item>
+                                </SimpleTooltip>
+
+                                {isFsbl && (
+                                    <SimpleTooltip text="Connect via Finsemble">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey={ConnectionType.finsemble}>{ConnectionType.finsemble}</Nav.Link>
+                                        </Nav.Item>
+                                    </SimpleTooltip>
+                                )}
+                            </Nav>
+                        )}
+
+                        <Card className="tab-body-card" body bg="light">
+                            <Form onSubmit={this.processSubmit}>
+                                <Tab.Content>
+                                    {/* I'm not sure this is really cricket, but if we render the inactive tabs
+                                    then any required fields on the inactive tabs will stop the active tab
+                                    from working with an odd error in the console (since presumably it can't
+                                    render the normal please-fill-in-this-field popup). */}
+
+                                    {this.state.activeTab === ConnectionType.direct && (
+                                        <Tab.Pane eventKey={ConnectionType.direct}>
+                                            <Form.Group as={Form.Row} className="form-group-margin">
+                                                {/* sm={5} not working on Form.Label! Docs lie?! */}
+                                                <Form.Label column className={`${labelColumnClass} text-right`}>
+                                                    URL (or host, or host:port):
+                                                </Form.Label>
+                                                <Col sm={inputColumnWidth}>
+                                                    <InputGroup>
+                                                        <Form.Control
+                                                            type="text"
+                                                            size="sm"
+                                                            required
+                                                            name="url"
+                                                            value={this.props.url}
+                                                            list="urlList"
+                                                            onChange={this.onUrlChange}
+                                                        />
+                                                        <InputGroup.Append>
+                                                            <Button size="sm" variant="outline-secondary" onClick={this.onUrlClear}>
+                                                                <span className="fas fa-trash-alt" />
+                                                            </Button>
+                                                        </InputGroup.Append>
+                                                    </InputGroup>
+                                                </Col>
+                                                <datalist id="urlList">{renderUrlList()}</datalist>
+                                            </Form.Group>
+
+                                            <Form.Group as={Form.Row} className="form-group-margin">
+                                                <Form.Label column className={`${labelColumnClass} text-right`}>
+                                                    User id:
+                                                </Form.Label>
+                                                <Col sm={inputColumnWidth}>
+                                                    <Form.Control
+                                                        type="text"
+                                                        size="sm"
+                                                        required
+                                                        name="userId"
+                                                        value={this.state.userId}
+                                                        onChange={this.onUserIdChange}
+                                                    />
+                                                </Col>
+                                            </Form.Group>
+
+                                            <Form.Group as={Form.Row} className="form-group-margin">
+                                                <Form.Label column className={`${labelColumnClass} text-right`}>
+                                                    Password:
+                                                </Form.Label>
+                                                <Col sm={inputColumnWidth}>
+                                                    <Form.Control
+                                                        type="password"
+                                                        size="sm"
+                                                        required
+                                                        name="password"
+                                                        value={this.state.password}
+                                                        onChange={this.onPasswordChange}
+                                                    />
+                                                </Col>
+                                            </Form.Group>
+
+                                            <Form.Group as={Form.Row} className="form-group-margin">
+                                                <Form.Label column className={`${labelColumnClass} text-right`}>
+                                                    Information to pass to the server:
+                                                </Form.Label>
+                                                <Col sm={inputColumnWidth}>
+                                                    <Form.Control
+                                                        type="text"
+                                                        size="sm"
+                                                        value={this.state.userContext}
+                                                        placeholder="Anything entered here is simply logged by the server"
+                                                        onChange={this.onUserContextChange}
+                                                    />
+                                                </Col>
+                                            </Form.Group>
+
+                                            <Form.Group as={Form.Row} className="form-group-margin">
+                                                <Form.Label column className={`${labelColumnClass} text-right`}>
+                                                    Options:
+                                                </Form.Label>
+
+                                                <Col sm={inputColumnWidth}>
+                                                    <ButtonGroup vertical toggle className="btn-block">
+                                                        <SimpleTooltip
+                                                            text="If this user id is concurrently in use as many times as permitted,
+                                                            disconnect an instance of the user to allow this logon to succeed."
+                                                        >
+                                                            <ToggleButton
+                                                                type="checkbox"
+                                                                value="disconnectExisting"
+                                                                variant="outline-primary"
+                                                                size="sm"
+                                                                checked={this.state.disconnectExisting}
+                                                                onChange={this.onDisconnectExistingChange}
+                                                            >
+                                                                Disconnect existing logon with this id?
+                                                            </ToggleButton>
+                                                        </SimpleTooltip>
+
+                                                        <SimpleTooltip
+                                                            text="If a feed goes in to a failure state, disconnect this logon rather
+                                                            than receiving a status change notification."
+                                                        >
+                                                            <ToggleButton
+                                                                type="checkbox"
+                                                                value="disconnectOnFeedFailure"
+                                                                variant="outline-primary"
+                                                                size="sm"
+                                                                checked={this.state.disconnectOnFeedFailure}
+                                                                onChange={this.onDisconnectOnFeedFailureChange}
+                                                            >
+                                                                Disconnect on feed failure?
+                                                            </ToggleButton>
+                                                        </SimpleTooltip>
+
+                                                        {renderHeartbeatOption()}
+                                                    </ButtonGroup>
+                                                </Col>
+                                            </Form.Group>
+                                        </Tab.Pane>
+                                    )}
+
+                                    {this.state.activeTab === ConnectionType.finsemble && (
+                                        <Tab.Pane eventKey={ConnectionType.finsemble}>
+                                            <Form.Group as={Form.Row} className="form-group-margin">
+                                                <Form.Label column className={`${labelColumnClass} text-right`}>
+                                                    Options:
+                                                </Form.Label>
+
+                                                <Col sm={inputColumnWidth}>
+                                                    <ButtonGroup vertical toggle className="btn-block">
+                                                        {renderHeartbeatOption()}
+                                                    </ButtonGroup>
+                                                </Col>
+                                            </Form.Group>
+                                        </Tab.Pane>
+                                    )}
+                                </Tab.Content>
+
+                                <hr />
+
+                                <ButtonToolbar className="float-right">
+                                    <Button
+                                        variant="primary"
+                                        size="sm"
+                                        disabled={ConnectionState.disconnected !== this.props.connectionInfo.connectionState}
+                                        type="submit"
+                                    >
+                                        Connect&nbsp;
+                                        <span
+                                            className={`fas ${
+                                                ConnectionState.connecting === this.props.connectionInfo.connectionState
+                                                    ? "fa-spinner fa-spin"
+                                                    : "fa-sign-in-alt"
+                                            }`}
+                                            aria-hidden="true"
                                         />
-                                        <InputGroup.Append>
-                                            <Button size="sm" variant="outline-secondary" onClick={this.onUrlClear}>
-                                                <span className="fas fa-trash-alt" />
-                                            </Button>
-                                        </InputGroup.Append>
-                                    </InputGroup>
-                                </Col>
-                                <datalist id="urlList">{renderUrlList()}</datalist>
-                            </Form.Group>
-
-                            <Form.Group as={Form.Row} className="form-group-margin">
-                                <Form.Label column className={`${labelColumnClass} text-right`}>
-                                    User id:
-                                </Form.Label>
-                                <Col sm={inputColumnWidth}>
-                                    <Form.Control
-                                        type="text"
+                                    </Button>
+                                    {/* HACK ButtonToolbar doesn't space buttons for some reason. */}
+                                    &nbsp;
+                                    <Button
+                                        variant="primary"
                                         size="sm"
-                                        required
-                                        name="userId"
-                                        value={this.state.userId}
-                                        onChange={this.onUserIdChange}
-                                    />
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Form.Row} className="form-group-margin">
-                                <Form.Label column className={`${labelColumnClass} text-right`}>
-                                    Password:
-                                </Form.Label>
-                                <Col sm={inputColumnWidth}>
-                                    <Form.Control
-                                        type="password"
-                                        size="sm"
-                                        required
-                                        name="password"
-                                        value={this.state.password}
-                                        onChange={this.onPasswordChange}
-                                    />
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Form.Row} className="form-group-margin">
-                                <Form.Label column className={`${labelColumnClass} text-right`}>
-                                    Information to pass to the server:
-                                </Form.Label>
-                                <Col sm={inputColumnWidth}>
-                                    <Form.Control
-                                        type="text"
-                                        size="sm"
-                                        value={this.state.userContext}
-                                        placeholder="Anything entered here is simply logged by the server"
-                                        onChange={this.onUserContextChange}
-                                    />
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Form.Row} className="form-group-margin">
-                                <Form.Label column className={`${labelColumnClass} text-right`}>
-                                    Options:
-                                </Form.Label>
-
-                                <Col sm={inputColumnWidth}>
-                                    <ButtonGroup vertical toggle className="btn-block">
-                                        <SimpleTooltip
-                                            text="If this user id is concurrently in use as many times as permitted,
-                                            disconnect an instance of the user to allow this logon to succeed."
-                                        >
-                                            <ToggleButton
-                                                type="checkbox"
-                                                value="disconnectExisting"
-                                                variant="outline-primary"
-                                                size="sm"
-                                                checked={this.state.disconnectExisting}
-                                                onChange={this.onDisconnectExistingChange}
-                                            >
-                                                Disconnect existing logon with this id?
-                                            </ToggleButton>
-                                        </SimpleTooltip>
-
-                                        <SimpleTooltip
-                                            text="If a feed goes in to a failure state, disconnect this logon rather
-                                            than receiving a status change notification."
-                                        >
-                                            <ToggleButton
-                                                type="checkbox"
-                                                value="disconnectOnFeedFailure"
-                                                variant="outline-primary"
-                                                size="sm"
-                                                checked={this.state.disconnectOnFeedFailure}
-                                                onChange={this.onDisconnectOnFeedFailureChange}
-                                            >
-                                                Disconnect on feed failure?
-                                            </ToggleButton>
-                                        </SimpleTooltip>
-
-                                        <SimpleTooltip
-                                            text="The ContentGateway will send a heartbeat at the start of every minute.
-                                            Set this option to display those heartbeats when received."
-                                        >
-                                            <ToggleButton
-                                                type="checkbox"
-                                                value="showMinuteHeartbeats"
-                                                variant="outline-primary"
-                                                size="sm"
-                                                checked={this.state.displayMinuteHeartbeats}
-                                                onChange={this.onDisplayMinuteHeartbeatsChange}
-                                            >
-                                                Display minute heartbeats?
-                                            </ToggleButton>
-                                        </SimpleTooltip>
-                                    </ButtonGroup>
-                                </Col>
-                            </Form.Group>
-
-                            <hr />
-
-                            <ButtonToolbar className="float-right">
-                                <Button
-                                    variant="primary"
-                                    size="sm"
-                                    disabled={ConnectionState.disconnected !== this.props.connectionInfo.connectionState}
-                                    type="submit"
-                                >
-                                    Connect&nbsp;
-                                    <span
-                                        className={`fas ${
-                                            ConnectionState.connecting === this.props.connectionInfo.connectionState
-                                                ? "fa-spinner fa-spin"
-                                                : "fa-sign-in-alt"
-                                        }`}
-                                        aria-hidden="true"
-                                    />
-                                </Button>
-                                {/* HACK ButtonToolbar doesn't space buttons for some reason. */}
-                                &nbsp;
-                                <Button
-                                    variant="primary"
-                                    size="sm"
-                                    disabled={ConnectionState.connected !== this.props.connectionInfo.connectionState}
-                                    onClick={this.processDisconnectClick}
-                                >
-                                    Disconnect&nbsp;
-                                    <span className="fas fa-sign-out-alt" aria-hidden="true" />
-                                </Button>
-                            </ButtonToolbar>
-                        </Form>
-                    </Card>
+                                        disabled={ConnectionState.connected !== this.props.connectionInfo.connectionState}
+                                        onClick={this.processDisconnectClick}
+                                    >
+                                        Disconnect&nbsp;
+                                        <span className="fas fa-sign-out-alt" aria-hidden="true" />
+                                    </Button>
+                                </ButtonToolbar>
+                            </Form>
+                        </Card>
+                    </Tab.Container>
                 </CollapsibleSection.Component>
             </Col>
         );
@@ -347,7 +442,7 @@ class ComponentImpl extends React.Component<Props, State> {
 
     private async connect() {
         const initialTitle = document.title;
-        const connectParameters: ConnectParameters = {
+        const connectParameters: IConnectParameters = {
             ...this.state,
             url: makeContentGatewayUrl(this.props.url),
             onHeartbeatMessage: this.state.displayMinuteHeartbeats ? this.onHeartbeatMessage : undefined,
@@ -366,7 +461,21 @@ class ComponentImpl extends React.Component<Props, State> {
                 connectionState: ConnectionState.connecting
             });
 
-            const client = await connect(connectParameters);
+            const connectionType = this.state.activeTab;
+            let client: IClient;
+
+            switch (connectionType) {
+                case ConnectionType.direct:
+                    client = await cgConnect(connectParameters);
+                    break;
+
+                case ConnectionType.finsemble:
+                    client = await fsblConnect(connectParameters);
+                    break;
+
+                default:
+                    throw new Error("Unknown connection type");
+            }
 
             this.props.dispatchSetConnectionInfo({
                 ...this.props.connectionInfo,
@@ -502,27 +611,28 @@ class ComponentImpl extends React.Component<Props, State> {
         this.props.dispatchAddServerMessage(message);
     };
 
-    private readonly onAliasUpdate = (aliasUpdateInfo: Streaming.AliasUpdateInfo) => {
+    private readonly onAliasUpdate = (aliasUpdateInfo: Streaming.IAliasUpdateInfo) => {
         this.props.dispatchAppendOutput(
             OutputType.always,
             <>
                 {createHeaderTimestamp()}Alias update:
-                <div>{renderObject(this.props.client!, "AliasUpdateInfo", aliasUpdateInfo)}</div>
+                <div>{renderObject(this.props.client!, "IAliasUpdateInfo", aliasUpdateInfo)}</div>
             </>
         );
     };
 
-    private readonly onFeedConflationUpdate = (feedConflationInfo: Streaming.FeedConflationInfo) => {
+    private readonly onFeedConflationUpdate = (feedConflationInfo: Streaming.IFeedConflationInfo) => {
         this.props.dispatchAppendOutput(
             OutputType.always,
             <>
                 {createHeaderTimestamp()}Feed conflation update:
-                <div>{renderObject(this.props.client!, "FeedConflationInfo", feedConflationInfo)}</div>
+                <div>{renderObject(this.props.client!, "IFeedConflationInfo", feedConflationInfo)}</div>
             </>
         );
     };
 
     private readonly initialTitle = document.title;
+    private readonly id = uuid();
 
     // We need a ref to the CollapsibleSection so we can programmatically close it on auto-connect.
     // Moving the collapse state up out of CollapsibleSection will make usage messy for the general

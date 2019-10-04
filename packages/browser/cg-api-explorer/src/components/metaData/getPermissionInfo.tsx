@@ -11,7 +11,7 @@ import { ConnectionState } from "../../connectionInfo";
 
 import { AppState } from "../../state/store";
 
-import { Client, PermissionLevel } from "@activfinancial/cg-api";
+import { IClient, PermissionLevel } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps {
-    client: Client | null;
+    client: IClient | null;
     connectionState: ConnectionState;
 }
 
@@ -51,7 +51,7 @@ class ComponentImpl extends React.PureComponent<Props, State> {
     private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        MakeRequest.initiate("client.metaData.getPermissionInfo", "", "MetaData.PermissionInfo", () =>
+        MakeRequest.initiate("client.metaData.getPermissionInfo", "", "MetaData.IPermissionInfo", () =>
             this.props.client!.metaData.getPermissionInfo()
         );
     };

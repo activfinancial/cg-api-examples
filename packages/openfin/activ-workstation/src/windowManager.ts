@@ -9,7 +9,7 @@ import NewsViewer from "@activfinancial/news-viewer";
 import OptionChain from "@activfinancial/option-chain";
 import RecordViewer from "@activfinancial/record-viewer";
 
-import { Client } from "@activfinancial/cg-api";
+import { IClient } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -150,7 +150,7 @@ export class WindowManager {
     }
 
     /** Pass a new Promise<Client> to all windows. */
-    reconnectAllWindows(contentGatewayClientPromise: Promise<Client>) {
+    reconnectAllWindows(contentGatewayClientPromise: Promise<IClient>) {
         for (const key in this.windowSet) {
             this.windowSet[key].component.connect(contentGatewayClientPromise);
         }

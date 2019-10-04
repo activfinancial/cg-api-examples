@@ -27,7 +27,7 @@ function timeToISOString(date: Date) {
 
 // State to be lifted up and managed elsewhere.
 // Note have to use type X & Y as interface can't extend a union (TimeSeries.Period).
-export type LiftedState = TimeSeries.Period & {
+export type LiftedState = TimeSeries.IPeriod & {
     key: string;
 };
 

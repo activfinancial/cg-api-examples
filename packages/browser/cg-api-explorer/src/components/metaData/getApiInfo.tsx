@@ -11,7 +11,7 @@ import { ConnectionState } from "../../connectionInfo";
 
 import { AppState } from "../../state/store";
 
-import { Client } from "@activfinancial/cg-api";
+import { IClient } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps {
-    client: Client | null;
+    client: IClient | null;
     connectionState: ConnectionState;
 }
 

@@ -18,7 +18,7 @@ import { WindowType, WindowInfo, WindowManager } from "./windowManager";
 import contentGatewayList from "../../../common/contentGateways";
 
 import {
-    Client,
+    IClient,
     connect as cgConnect,
     asyncSleep,
     FieldId,
@@ -62,7 +62,7 @@ class SymbolInfo {
     readonly uuid: string = uuid();
 
     /** Request for name and other info. */
-    requestHandle: Streaming.RequestHandle | null = null;
+    requestHandle: Streaming.IRequestHandle | null = null;
 
     permissionId: PermissionId = PermissionId.unknown;
     name: string = "";
@@ -117,8 +117,8 @@ class App extends React.Component<Props, State> {
     private readonly symbolInputRef = React.createRef<HTMLInputElement>();
 
     // cg-api client.
-    private clientPromise: Promise<Client> | null = null;
-    private client: Client | null = null;
+    private clientPromise: Promise<IClient> | null = null;
+    private client: IClient | null = null;
 
     // Child window manager.
     private readonly windowManager: WindowManager;
@@ -322,8 +322,8 @@ class App extends React.Component<Props, State> {
         let isConnected = false;
 
         while (true) {
-            let clientPromise: Promise<Client>;
-            let cgInfoRequest: MetaData.ContentGatewayInfoRequestHandle | null = null;
+            let clientPromise: Promise<IClient>;
+            let cgInfoRequest: MetaData.IContentGatewayInfoRequestHandle | null = null;
 
             try {
                 this.setState({ cgState: CgState.connecting, statusText: "Connecting..." });

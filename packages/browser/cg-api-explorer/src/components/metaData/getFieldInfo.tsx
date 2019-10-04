@@ -15,7 +15,7 @@ import { labelColumnClass, inputColumnWidth } from "../../columnDefinitions";
 import { AppState } from "../../state/store";
 import { dispatchUpdateMetaData } from "../../state/actions/metaDataActions";
 
-import { Client } from "@activfinancial/cg-api";
+import { IClient } from "@activfinancial/cg-api";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ interface OwnProps {}
 
 // Redux state we'll see as props.
 interface ReduxStateProps extends LiftedState {
-    client: Client | null;
+    client: IClient | null;
     connectionState: ConnectionState;
 }
 
@@ -74,14 +74,14 @@ class ComponentImpl extends React.PureComponent<Props> {
     };
 
     private async makeGetUniversalFieldHelperListRequest() {
-        MakeRequest.initiate("client.metaData.getUniversalFieldHelperList", "", "MetaData.UniversalFieldHelperList", () =>
+        MakeRequest.initiate("client.metaData.getUniversalFieldHelperList", "", "MetaData.IUniversalFieldHelper[]", () =>
             this.props.client!.metaData.getUniversalFieldHelperList()
         );
     }
 
     private async makeGetUniversalFieldHelperRequest() {
         for (const fieldId of this.props.fieldIds) {
-            MakeRequest.initiate("client.metaData.getUniversalFieldHelper", `${fieldId}`, "MetaData.UniversalFieldHelper", () =>
+            MakeRequest.initiate("client.metaData.getUniversalFieldHelper", `${fieldId}`, "MetaData.IUniversalFieldHelper", () =>
                 this.props.client!.metaData.getUniversalFieldHelper(fieldId)
             );
         }

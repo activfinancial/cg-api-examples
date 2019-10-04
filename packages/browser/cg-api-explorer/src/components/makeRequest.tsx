@@ -59,7 +59,7 @@ type ErrorHandler = () => void;
  * Initiate a request that returns an async iterable.
  *
  * @param requestName name of the request to display in output, e.g. "getEqual".
- * @param recordTypeName name of the response record type, e.g. "Streaming.Record".
+ * @param recordTypeName name of the response record type, e.g. "Streaming.IImage".
  * @param requestParameters for pretty-printed output.
  * @param initiateRequest function to actually initiate the request. Should return a requestHandle async iterable.
  * @param errorHandler function for handling errors after initiating the request (e.g. cleanup unsubscription UIs).
@@ -110,7 +110,7 @@ export async function initiateAsyncIterable<T>(
  * Initiate a request.
  *
  * @param requestName name of the request to display in output, e.g. "getEqual".
- * @param recordTypeName name of the response record type, e.g. "Streaming.Record".
+ * @param recordTypeName name of the response record type, e.g. "Streaming.IImage".
  * @param requestParameters pretty-printed request parameters.
  * @param initiateRequest function to actually initiate the request. Should return a requestHandle async iterable.
  */
