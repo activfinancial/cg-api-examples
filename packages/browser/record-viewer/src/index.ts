@@ -270,6 +270,7 @@ class RecordViewer extends LitElement implements IExample {
             const requestParameters: Streaming.GetMatchParameters = {
                 key: this.symbol,
                 matchType: Streaming.GetMatchType.composite,
+                shouldMatchExact: true,
                 subscription: {
                     updateHandler: this.processUpdate
                 }
