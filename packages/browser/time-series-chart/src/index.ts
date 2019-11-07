@@ -151,10 +151,14 @@ class Chart extends LitElement implements IExample {
         this.setStatus("Getting data...");
 
         // Some metadata. Fire off in the background and render when we get a response.
+        // FID_NAME from the record itself, or company nav.
         (async () => {
             this.symbolInfoRequestHandle = this.api!.streaming.getEqual({
                 key: this.symbol,
                 relationships: {
+                    [RelationshipId.none]: {
+                        fieldIds: [FieldId.FID_NAME]
+                    },
                     [RelationshipId.company]: {
                         fieldIds: [FieldId.FID_NAME]
                     }
@@ -163,7 +167,7 @@ class Chart extends LitElement implements IExample {
 
             for await (const record of this.symbolInfoRequestHandle) {
                 const nameField = record.getField(FieldId.FID_NAME);
-                if (nameField.value != null) {
+                if (nameField.value != null && this.nameLabel.textContent === "") {
                     this.nameLabel.textContent = nameField.value as string;
                 }
             }
@@ -278,6 +282,9 @@ class Chart extends LitElement implements IExample {
 
     private destroyChart() {
         this.chartElement.innerHTML = "";
+        this.symbolLabel.textContent = "";
+        this.nameLabel.textContent = "";
+
         if (this.chart != null) {
             this.chart.destroy();
             this.chart = null;
