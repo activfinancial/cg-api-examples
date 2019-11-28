@@ -392,7 +392,7 @@ class ComponentImpl extends React.PureComponent<Props> {
         this.makeRequest();
     };
 
-    private async makeRequest() {
+    private makeRequest() {
         const requestName = this.props.activeTab;
         const requestParameters = this.requestParametersBuilder[requestName]();
         let key: string | null = null;

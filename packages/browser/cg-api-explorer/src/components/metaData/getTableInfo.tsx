@@ -86,13 +86,13 @@ class ComponentImpl extends React.PureComponent<Props> {
         this.props.dispatchUpdateMetaData({ permissionLevel });
     };
 
-    private readonly processSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    private readonly processSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         this.makeRequest();
     };
 
-    private async makeRequest() {
+    private makeRequest() {
         if (this.props.tableNumber == null) {
             this.makeGetTableInfoListRequest();
         } else {
@@ -100,13 +100,13 @@ class ComponentImpl extends React.PureComponent<Props> {
         }
     }
 
-    private async makeGetTableInfoListRequest() {
+    private makeGetTableInfoListRequest() {
         MakeRequest.initiate("client.metaData.getTableInfoList", `${this.props.permissionLevel}`, "MetaData.ITableInfoList", () =>
             this.props.client!.metaData.getTableInfoList(this.props.permissionLevel)
         );
     }
 
-    private async makeGetTableSpecificationRequest() {
+    private makeGetTableSpecificationRequest() {
         MakeRequest.initiate(
             "client.metaData.getTableSpecification",
             `${this.props.permissionLevel}, ${this.props.tableNumber}`,

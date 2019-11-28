@@ -73,13 +73,13 @@ class ComponentImpl extends React.PureComponent<Props> {
         }
     };
 
-    private async makeGetUniversalFieldHelperListRequest() {
+    private makeGetUniversalFieldHelperListRequest() {
         MakeRequest.initiate("client.metaData.getUniversalFieldHelperList", "", "MetaData.IUniversalFieldHelper[]", () =>
             this.props.client!.metaData.getUniversalFieldHelperList()
         );
     }
 
-    private async makeGetUniversalFieldHelperRequest() {
+    private makeGetUniversalFieldHelperRequest() {
         for (const fieldId of this.props.fieldIds) {
             MakeRequest.initiate("client.metaData.getUniversalFieldHelper", `${fieldId}`, "MetaData.IUniversalFieldHelper", () =>
                 this.props.client!.metaData.getUniversalFieldHelper(fieldId)

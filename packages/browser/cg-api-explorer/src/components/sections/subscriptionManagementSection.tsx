@@ -208,7 +208,7 @@ class ComponentImpl extends React.PureComponent<Props, State> {
         this.props.dispatchUpdateSubscriptionInfo(subscriptionInfo.key, { conflationParameters });
     };
 
-    private async onUpdateConflation(subscriptionInfo: SubscriptionInfo) {
+    private onUpdateConflation(subscriptionInfo: SubscriptionInfo) {
         if (subscriptionInfo.conflationParameters) {
             const requestHandle = subscriptionInfo.requestHandle as Streaming.IRequestHandle;
 

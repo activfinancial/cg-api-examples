@@ -287,7 +287,7 @@ class TpiViewer extends LitElement {
         this.renderingCompleteTimestamp = performance.now();
     }
 
-    private async processRecord(requestHandle: Streaming.IRequestHandle, record: Streaming.IImage) {
+    private processRecord(requestHandle: Streaming.IRequestHandle, record: Streaming.IImage) {
         ++this.responsesReturned;
 
         // Successfully subscribed to new record, so kill any old one.

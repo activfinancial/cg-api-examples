@@ -361,7 +361,7 @@ class RecordViewer extends LitElement implements IExample {
         }
     }
 
-    private async processRecord(record: Streaming.IImage) {
+    private processRecord(record: Streaming.IImage) {
         ++this.stats.responsesReturned;
 
         this.resolvedSymbol = record.responseKey.symbol;

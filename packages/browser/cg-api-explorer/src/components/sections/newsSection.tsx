@@ -314,7 +314,7 @@ class Component extends React.PureComponent<Props> {
     };
 
     // TODO same code as SD pretty much. Factor out?
-    private async makeRequest() {
+    private makeRequest() {
         // TODO surely can do a runtime pick of properties based on the RequestParameters type.
         const requestParameters: News.IRequestParameters = {
             query: this.props.query,
