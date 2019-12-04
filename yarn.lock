@@ -2,21 +2,21 @@
 # yarn lockfile v1
 
 
-"@activfinancial/cg-api-common@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api-common/-/cg-api-common-0.0.1.tgz#80b9b05843aa189e5694e64861b36250c4fe798c"
-  integrity sha512-QRj3w5Jzwy9C9ZflUdOb1A7HI8Xa7Yl7iB2bzmZlqgYZGrgqbZr16QI+oKwnv+OgF3SsGaViImD/AhA2cIr7zQ==
+"@activfinancial/cg-api-common@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api-common/-/cg-api-common-0.1.0.tgz#9dc7200f91598aa7a394c05633dadd4496f84079"
+  integrity sha512-76yPjxJeKQUrTTcED8+WkNaubcsrp0N3DRfn4o9AH7YU8YYzcqA0b1iy4DwE3nTBPz9PEcxmZq+bs+8/S8lhhw==
   dependencies:
-    "@activfinancial/middleware" "^0.0.1"
+    "@activfinancial/middleware" "^0.1.0"
 
-"@activfinancial/cg-api-fsbl@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api-fsbl/-/cg-api-fsbl-0.0.2.tgz#41ba096f67e40e9e0b76f09849c164483d4e2a7b"
-  integrity sha512-3gtXMeKMc3LQ5GMQVrHcGUgufxzU6/bhGpQ2R9owJTKq+k0VgbgbEUX9eSPa9BWjlY5uf+ZK1ylcxECcS/Mk2w==
+"@activfinancial/cg-api-fsbl@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api-fsbl/-/cg-api-fsbl-0.1.0.tgz#b2f51ae81e17c0e22b47826f06236351e7322c00"
+  integrity sha512-O5PxeMjl3eXLGuAsb+xh76oz1Bw0Wj4p+Hanf1c9gCUbbJ8Ak6nnNXHBCCFREzfxVIUMFyFe2vlHShGQTsaz5Q==
   dependencies:
-    "@activfinancial/cg-api-common" "^0.0.1"
-    "@activfinancial/cg-api-json" "^0.0.1"
-    "@activfinancial/middleware" "^0.0.1"
+    "@activfinancial/cg-api-common" "^0.1.0"
+    "@activfinancial/cg-api-json" "^0.1.0"
+    "@activfinancial/middleware" "^0.1.0"
     base64-js "^1.3.1"
     bluebird "^3.7.2"
     crypto-js "^3.1.9-1"
@@ -27,21 +27,21 @@
     bufferutil "^4.0.1"
     utf-8-validate "^5.0.2"
 
-"@activfinancial/cg-api-json@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api-json/-/cg-api-json-0.0.1.tgz#a76ffd4660fb7bb9de5f7969fea2e09df6fab094"
-  integrity sha512-p3dwiHLzfx2r2DVuIY5GjdBXi+9EUQu67FyxjNj8LqU5BCT7pR3VcRRLyTFcL5aZFeiH8Zg5f3UNgltbQLBN0w==
+"@activfinancial/cg-api-json@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api-json/-/cg-api-json-0.1.0.tgz#df635482296dbaa2636fbc3c14f5f1f6d8d33513"
+  integrity sha512-bfNPsCotgaIM8XYskk86WQnPPFZbhYT91NPEu6i6HT+Qm/ekiWX6gh64wAam0AgrNm3oj1wytaeVvkUfwfAH9w==
   dependencies:
-    "@activfinancial/cg-api-common" "^0.0.1"
-    "@activfinancial/middleware" "^0.0.1"
+    "@activfinancial/cg-api-common" "^0.1.0"
+    "@activfinancial/middleware" "^0.1.0"
 
-"@activfinancial/cg-api@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api/-/cg-api-0.14.1.tgz#d9db861583222754ffb55829c882d1d7cd512a70"
-  integrity sha512-b0XN1YzHK+OrC6z6gOnQ0OxxfSKgYwEF5W4BgmDZpGVtqiHCqpbrNy8zcQC6Ll57+R4o6LYQMfYN8rQJhlJjGg==
+"@activfinancial/cg-api@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@activfinancial/cg-api/-/cg-api-0.15.0.tgz#1e5b627481cf5221a2fe063bcbf9a6ba1b03ee3f"
+  integrity sha512-EHh4Ax2r3s1BQAm2h5bJIxwA+cMPQyQVCNydqCDmIOyp00CAvcEnnw4MDmF9klzsfYbqz+ECf2wZgJoBughf+w==
   dependencies:
-    "@activfinancial/cg-api-common" "^0.0.1"
-    "@activfinancial/middleware" "^0.0.1"
+    "@activfinancial/cg-api-common" "^0.1.0"
+    "@activfinancial/middleware" "^0.1.0"
     base64-js "^1.3.1"
     bluebird "^3.7.2"
     crypto-js "^3.1.9-1"
@@ -52,10 +52,10 @@
     bufferutil "^4.0.1"
     utf-8-validate "^5.0.2"
 
-"@activfinancial/middleware@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@activfinancial/middleware/-/middleware-0.0.1.tgz#c6e5b5092f91aebc8ab23380c5819eb7a6ab0818"
-  integrity sha512-cbwnR/jjkQHhiLZE6Lo/rWUDMMFoIEZxXg4iHDQRx0AGAH4q/p2P3r6OiiXbqAcKJMv1nqdH43F7P2ZKSg4Fjw==
+"@activfinancial/middleware@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@activfinancial/middleware/-/middleware-0.1.0.tgz#dac97ba2d853e855118a2d4c73422b3d30159a5f"
+  integrity sha512-r8bfZHtuMc3y5vlHihROW/dV6sdlQ6Uh3uGUifmsbmd+x3WpXwbrxzrvLLvzs/YLm7kl5gmwW5s7cyMvV/Btfw==
   dependencies:
     ts-enum-util "^4.0.1"
 

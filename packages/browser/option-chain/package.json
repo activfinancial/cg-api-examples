@@ -32,18 +32,16 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.14.1",
+        "@activfinancial/cg-api": "^0.15.0",
         "@activfinancial/cg-api-examples-common": "^0.0.0",
         "@webcomponents/webcomponentsjs": "^2.4.0",
         "detect-browser": "^4.8.0",
         "lit-element": "^2.2.1",
-        "resize-observer": "^1.0.0",
-        "sprintf-js": "^1.1.2"
+        "resize-observer": "^1.0.0"
     },
     "devDependencies": {
         "@microsoft/api-extractor": "^7.6.2",
         "@types/detect-browser": "^4.0.0",
-        "@types/sprintf-js": "^1.1.2",
         "raw-loader": "^4.0.0",
         "rimraf": "^3.0.0",
         "source-map-loader": "^0.2.4",

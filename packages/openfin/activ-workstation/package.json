@@ -33,7 +33,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.14.1",
+        "@activfinancial/cg-api": "^0.15.0",
         "@activfinancial/montage-viewer": "^0.3.44",
         "@activfinancial/news-viewer": "^0.5.13",
         "@activfinancial/option-chain": "^0.5.1",

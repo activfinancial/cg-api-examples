@@ -32,16 +32,14 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.14.1",
+        "@activfinancial/cg-api": "^0.15.0",
         "@activfinancial/cg-api-examples-common": "^0.0.0",
         "@fortawesome/fontawesome-free": "^5.11.2",
         "@webcomponents/webcomponentsjs": "^2.4.0",
-        "lit-element": "^2.2.1",
-        "sprintf-js": "^1.1.2"
+        "lit-element": "^2.2.1"
     },
     "devDependencies": {
         "@microsoft/api-extractor": "^7.6.2",
-        "@types/sprintf-js": "^1.1.2",
         "raw-loader": "^4.0.0",
         "rimraf": "^3.0.0",
         "source-map-loader": "^0.2.4",
