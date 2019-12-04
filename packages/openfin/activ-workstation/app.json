@@ -15,7 +15,7 @@
     "licenseKey": "1a760a0d-4d88-41f3-93f5-a85152f110ab",
     "runtime": {
         "arguments": "",
-        "version": "stable"
+        "version": "stable-v13"
     },
     "services": [{ "name": "layouts" }],
     "shortcut": {
