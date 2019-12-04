@@ -2,8 +2,7 @@
  * Time series chart example using ChartIQ.
  */
 
-import { connect, IClient, asyncSleep } from "@activfinancial/cg-api";
-import { domReady } from "../../../common/utils";
+import { connect, domReady, IClient, asyncSleep } from "@activfinancial/cg-api";
 import { ActivQuoteFeed, ActivLookupDriver, UpdateType } from "@activfinancial/chartiq-adapter";
 
 // Import the pretty much vanilla ChartIQ example JS code.

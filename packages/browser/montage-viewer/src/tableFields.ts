@@ -5,7 +5,7 @@
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 import { FieldId } from "@activfinancial/cg-api";
-import { TrendHelper, getValueTrend } from "../../common/trendingHelpers";
+import { TrendHelper, getValueTrend } from "@activfinancial/cg-api-examples-common";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

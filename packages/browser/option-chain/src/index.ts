@@ -2,8 +2,8 @@
  * OptionChain custom element.
  */
 
-import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
 import {
+    addUnloadHandler,
     IClient,
     IField,
     IFieldData,
@@ -17,10 +17,17 @@ import {
     Trend,
     TRational
 } from "@activfinancial/cg-api";
+import {
+    formatField,
+    FormatFieldOptions,
+    getTrendHelperFromElement,
+    IExample,
+    IExampleStats,
+    ExampleStats,
+    NumberFormat
+} from "@activfinancial/cg-api-examples-common";
 
-import { getTrendHelperFromElement, applyTrendStyle, clearTrendStyle } from "../../common/trendingHelpers";
-import { addUnloadHandler } from "../../../common/utils";
-import { formatField, FormatFieldOptions, NumberFormat } from "../../../common/formatField";
+import { applyTrendStyle, clearTrendStyle } from "../../common/trendingHelpers";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";

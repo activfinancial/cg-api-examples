@@ -32,6 +32,7 @@
     },
     "dependencies": {
         "@activfinancial/cg-api": "^0.14.1",
+        "@activfinancial/cg-api-examples-common": "^0.0.0",
         "@activfinancial/cg-api-fsbl": "^0.0.2",
         "@fortawesome/fontawesome-free": "^5.11.2",
         "@welldone-software/why-did-you-render": "^2.6.0",
@@ -47,6 +48,7 @@
         "react-textarea-autosize": "^7.1.2",
         "redux": "^4.0.4",
         "sprintf-js": "^1.1.2",
+        "text-encoding": "^0.7.0",
         "ts-enum-util": "^4.0.1",
         "url-search-params-polyfill": "^7.0.0",
         "uuid": "^3.3.3"
@@ -59,6 +61,7 @@
         "@types/react-split-pane": "^0.1.67",
         "@types/react-textarea-autosize": "^4.3.5",
         "@types/sprintf-js": "^1.1.2",
+        "@types/text-encoding": "^0.0.35",
         "@types/uuid": "^3.4.6",
         "bootstrap": "^4.4.1",
         "copy-webpack-plugin": "^5.0.5",

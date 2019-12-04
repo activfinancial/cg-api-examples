@@ -403,7 +403,7 @@ class ComponentImpl extends React.PureComponent<Props> {
             "Streaming.IImage",
             () => {
                 // TODO see if we can't get rid of that last cast...
-                const requestHandle = this.props.client!.streaming[requestName](requestParameters as any);
+                const requestHandle = (this.props.client!.streaming[requestName] as any)(requestParameters);
 
                 // Add an unsubscription link.
                 if (requestHandle.isSubscription) {
@@ -557,7 +557,4 @@ function mapStateToProps(state: AppState): ReduxStateProps {
 }
 
 // Generate redux connected component.
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ComponentImpl);
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentImpl);

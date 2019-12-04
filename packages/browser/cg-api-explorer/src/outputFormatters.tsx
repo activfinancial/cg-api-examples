@@ -19,8 +19,6 @@ import {
     OutputType
 } from "./state/actions/outputContainerActions";
 
-import { formatField } from "../../../common/formatField";
-
 import reactHtmlParse from "html-react-parser";
 
 import {
@@ -44,6 +42,7 @@ import {
     TableType,
     TimeSeries
 } from "@activfinancial/cg-api";
+import { formatField } from "@activfinancial/cg-api-examples-common";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 

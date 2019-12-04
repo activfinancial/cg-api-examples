@@ -9,9 +9,9 @@ import App from "./App";
 import "index.scss";
 import "@fortawesome/fontawesome-free/css/all.css";
 
-import { domReady, isOpenFin } from "../../../common/utils";
-import { desktopReady, getWindowOptions } from "../../common/utils";
+import { domReady, isOpenFin } from "@activfinancial/cg-api";
 
+import { desktopReady, getWindowOptions } from "../../common/utils";
 import { version as appVersion } from "../package.json";
 
 // ---------------------------------------------------------------------------------------------------------------------------------

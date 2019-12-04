@@ -3,6 +3,7 @@
  */
 
 import {
+    addUnloadHandler,
     IClient,
     Streaming,
     IField,
@@ -15,11 +16,13 @@ import {
     TableNumber,
     RelationshipId
 } from "@activfinancial/cg-api";
-import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
-
-import { getTrendHelperFromString } from "../../common/trendingHelpers";
-import { addUnloadHandler } from "../../../common/utils";
-import { formatField as formatFieldInternal } from "../../../common/formatField";
+import {
+    formatField as formatFieldInternal,
+    getTrendHelperFromString,
+    IExample,
+    IExampleStats,
+    ExampleStats
+} from "@activfinancial/cg-api-examples-common";
 
 // Note just using css-loader explicitly to get an object; not loading in to the page.
 import commonCss from "!css-loader!../../common/common.css";

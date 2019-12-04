@@ -15,8 +15,6 @@ import { ConnectDialog, LiftedState as CgCredentials } from "./connectDialog";
 import CgState from "./cgState";
 import { WindowType, WindowInfo, WindowManager } from "./windowManager";
 
-import contentGatewayList from "../../../common/contentGateways";
-
 import {
     IClient,
     connect as cgConnect,
@@ -28,6 +26,7 @@ import {
     Streaming,
     PermissionId
 } from "@activfinancial/cg-api";
+import { contentGateways } from "@activfinancial/cg-api-examples-common";
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -132,7 +131,7 @@ class App extends React.Component<Props, State> {
         const password = localStorage.getItem("password");
 
         const connectionState = {
-            url: url || Object.values(contentGatewayList)[0],
+            url: url || Object.values(contentGateways)[0],
             userId: userId || "",
             password: password || ""
         };

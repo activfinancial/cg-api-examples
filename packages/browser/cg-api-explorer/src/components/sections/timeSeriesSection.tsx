@@ -366,12 +366,12 @@ class ComponentImpl extends React.PureComponent<Props> {
         const { requestName } = builder;
         const requestParameters = builder.fn();
 
-        // TODO be nice to get rid of the anys.
+        // TODO be nice to get rid of the any.
         MakeRequest.initiateAsyncIterable<any>(
             `client.timeSeries.${requestName}`,
             JSON.stringify(requestParameters, null, 2),
             `TimeSeries.${builder.recordName}`,
-            () => this.props.client!.timeSeries[requestName](requestParameters as any)
+            () => (this.props.client!.timeSeries[requestName] as any)(requestParameters)
         );
     };
 
@@ -455,7 +455,4 @@ function mapStateToProps(state: AppState): ReduxStateProps {
 }
 
 // Generate redux connected component.
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ComponentImpl);
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentImpl);

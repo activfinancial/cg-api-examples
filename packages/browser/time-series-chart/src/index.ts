@@ -2,10 +2,8 @@
  * Time series chart custom element.
  */
 
-import { IClient, FieldId, TimeSeries, RelationshipId, Streaming } from "@activfinancial/cg-api";
-import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
-
-import { addUnloadHandler } from "../../../common/utils";
+import { addUnloadHandler, IClient, FieldId, TimeSeries, RelationshipId, Streaming } from "@activfinancial/cg-api";
+import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api-examples-common";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";

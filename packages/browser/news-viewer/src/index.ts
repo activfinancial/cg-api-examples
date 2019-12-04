@@ -2,11 +2,8 @@
  * News viewer custom element.
  */
 
-import { IClient, IField, FieldId, News } from "@activfinancial/cg-api";
-import { IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api";
-
-import { addUnloadHandler } from "../../../common/utils";
-import { formatField } from "../../../common/formatField";
+import { addUnloadHandler, IClient, IField, FieldId, News } from "@activfinancial/cg-api";
+import { formatField, IExample, IExampleStats, ExampleStats } from "@activfinancial/cg-api-examples-common";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";
@@ -338,8 +335,9 @@ class NewsViewer extends LitElement implements IExample {
         magazineElement.textContent = formatField(magazineField);
 
         const headlineElement = rowElement.querySelector(".news-viewer-headline-column") as HTMLElement;
-        headlineElement.textContent = formatField(headlineField);
-        headlineElement.title = headlineElement.textContent;
+        const headlineText = formatField(headlineField);
+        headlineElement.textContent = headlineText;
+        headlineElement.title = headlineText;
 
         const symbol = story.newsSymbol;
         rowElement.addEventListener("click", () => this.getStoryBody(symbol));

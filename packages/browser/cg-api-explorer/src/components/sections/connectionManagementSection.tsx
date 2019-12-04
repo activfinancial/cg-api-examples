@@ -32,11 +32,17 @@ import {
 import { dispatchResetPendingRequestCounter, dispatchAppendOutput, OutputType } from "../../state/actions/outputContainerActions";
 import { dispatchUnsubscribeAll } from "../../state/actions/subscriptionManagementActions";
 
-import contentGatewayList from "../../../../../common/contentGateways";
-import { addUnloadHandler } from "../../../../../common/utils";
-
-import { connect as cgConnect, IConnectParameters, IClient, Streaming, windowLoaded, asyncSleep } from "@activfinancial/cg-api";
+import {
+    addUnloadHandler,
+    connect as cgConnect,
+    IConnectParameters,
+    IClient,
+    Streaming,
+    windowLoaded,
+    asyncSleep
+} from "@activfinancial/cg-api";
 import { connect as fsblConnect } from "@activfinancial/cg-api-fsbl";
+import { contentGateways } from "@activfinancial/cg-api-examples-common";
 
 // Could be a polyfill for Edge.
 import "url-search-params-polyfill";
@@ -55,18 +61,18 @@ export function makeContentGatewayUrl(host: string | null): string {
         return `ams://${host}/ContentGateway:Service`;
     }
 
-    for (const location in contentGatewayList) {
-        return (contentGatewayList as any)[location];
+    for (const location in contentGateways) {
+        return (contentGateways as any)[location];
     }
 
-    return Object.values(contentGatewayList)[0];
+    return Object.values(contentGateways)[0];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 /** Generate <option> child elements for the urlList <datalist> element from the static list of CGs. */
 function renderUrlList() {
-    return Object.keys(contentGatewayList).map((key) => <option key={key} value={contentGatewayList[key]} />);
+    return Object.keys(contentGateways).map((key) => <option key={key} value={contentGateways[key]} />);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------

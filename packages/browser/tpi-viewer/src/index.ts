@@ -2,10 +2,8 @@
  * TpiViewer custom element.
  */
 
-import { IClient, Streaming, IFieldData } from "@activfinancial/cg-api";
-
-import { addUnloadHandler } from "../../../common/utils";
-import { formatField } from "../../../common/formatField";
+import { addUnloadHandler, IClient, Streaming, IFieldData } from "@activfinancial/cg-api";
+import { formatField } from "@activfinancial/cg-api-examples-common";
 
 // Note leading ! overrides webpack config matching css files.
 import commonCss from "!raw-loader!../../common/common.css";

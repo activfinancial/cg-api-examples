@@ -33,6 +33,7 @@
     },
     "dependencies": {
         "@activfinancial/cg-api": "^0.14.1",
+        "@activfinancial/cg-api-examples-common": "^0.0.0",
         "@webcomponents/webcomponentsjs": "^2.4.0",
         "detect-browser": "^4.8.0",
         "lit-element": "^2.2.1",
