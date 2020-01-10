@@ -2066,13 +2066,6 @@
   resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.4.1.tgz#7baadec56ed2fd79b94ddfd509132d8c0c295c5c"
   integrity sha512-7jxBb+KoWncKb/JGFyTY40PjV4yRx2zd35ZLuvRP+6WndJDL7X32ZIZ7bN3sSQIl+NzJkCo7chfXJyzn+6WZaQ==
 
-"@welldone-software/why-did-you-render@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@welldone-software/why-did-you-render/-/why-did-you-render-2.6.0.tgz#c507bfcdcbeaf1933d2bc5eca8e7de4446a3af22"
-  integrity sha512-IRzhyTiWh8mD0UkYBjxy0oCx7DmxNs9DAUPLb+DRp0WXWdcFawRr3ueiUp6Q0o2wtpIUevAe/MQj0/04adpw5g==
-  dependencies:
-    lodash "^4.17.11"
-
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
