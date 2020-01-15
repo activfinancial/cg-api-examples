@@ -29,7 +29,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.15.1",
+        "@activfinancial/cg-api": "^0.15.2",
         "commander": "^4.1.0"
     },
     "devDependencies": {
