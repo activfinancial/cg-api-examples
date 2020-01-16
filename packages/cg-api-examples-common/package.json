@@ -32,7 +32,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.15.2",
+        "@activfinancial/cg-api": "^0.15.3",
         "sprintf-js": "^1.1.2",
         "text-encoding": "^0.7.0"
     },
@@ -44,7 +44,7 @@
         "source-map-loader": "^0.2.4",
         "terser-webpack-plugin": "^2.3.2",
         "ts-loader": "^6.2.1",
-        "typescript": "^3.7.4",
+        "typescript": "^3.7.5",
         "webpack": "^4.41.5",
         "webpack-cli": "^3.3.10"
     }
