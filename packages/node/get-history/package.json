@@ -33,6 +33,7 @@
         "commander": "^4.1.0"
     },
     "devDependencies": {
+        "copy-webpack-plugin": "^5.1.1",
         "rimraf": "^3.0.0",
         "terser-webpack-plugin": "^2.3.2",
         "ts-loader": "^6.2.1",
