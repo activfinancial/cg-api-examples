@@ -50,6 +50,7 @@
 *.bat      text eol=crlf
 *.bmp  binary
 *.bowerrc      text
+*.cmd      text eol=crlf
 *.cnf          text
 *.coffee   text
 *.conf         text

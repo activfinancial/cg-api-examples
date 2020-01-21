@@ -23,6 +23,10 @@ The command-line node example in `packages/node/get-match` should be runnable af
 
 The file is self contained, aside from requiring `node` to be in the path.
 
+Note for Windows users, there is a `cmd` script which can be run instead of the .js file in a Command Prompt / PowerShell. This avoids Windows Scripting Host trying to run the program. E.g.
+
+```drive:\path\to\packages\node\get-match\lib\get-match --help```
+
 ### get-history
 
 Similarly, `packages/node/get-history` demonstrates some time series requests:
@@ -41,6 +45,10 @@ Similarly, `packages/node/get-history` demonstrates some time series requests:
     --no-display           don't display records
     -h, --help             output usage information
 ```
+
+Note for Windows users, there is a `cmd` script which can be run instead of the .js file in a Command Prompt / PowerShell. This avoids Windows Scripting Host trying to run the program. E.g.
+
+```drive:\path\to\packages\node\get-history\lib\get-history --help```
 
 ### Visual Studio Code
 

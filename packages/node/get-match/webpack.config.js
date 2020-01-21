@@ -1,5 +1,6 @@
 // get-match example webpack config.
 const webpack = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const PermissionsPlugin = require("webpack-permissions-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
@@ -7,6 +8,7 @@ const path = require("path");
 
 const outputPath = path.resolve(__dirname, "lib");
 const outputFile = "get-match.js";
+const cmdFile = `get-match.cmd`;
 
 const config = {
     target: "node",
@@ -38,11 +40,17 @@ const config = {
             banner: "#!/usr/bin/env node",
             raw: true
         }),
-        // Add make the file executable.
+        // .cmd for Windows.
+        new CopyWebpackPlugin([{ from: `./src/${cmdFile}`, to: `${outputPath}/${cmdFile}` }]),
+        // Add make the files executable.
         new PermissionsPlugin({
             buildFiles: [
                 {
                     path: path.resolve(__dirname, `${outputPath}/${outputFile}`),
+                    fileMode: "755"
+                },
+                {
+                    path: path.resolve(__dirname, `${outputPath}/${cmdFile}`),
                     fileMode: "755"
                 }
             ]
