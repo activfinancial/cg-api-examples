@@ -1,4 +1,4 @@
-/**
+/*
  * Simple node getMatch sample.
  */
 
