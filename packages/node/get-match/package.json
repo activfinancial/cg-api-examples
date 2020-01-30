@@ -29,15 +29,15 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.15.3",
+        "@activfinancial/cg-api": "^0.16.0",
         "commander": "^4.1.0",
         "sprintf-js": "^1.1.2"
     },
     "devDependencies": {
         "@types/sprintf-js": "^1.1.2",
         "copy-webpack-plugin": "^5.1.1",
-        "rimraf": "^3.0.0",
-        "terser-webpack-plugin": "^2.3.2",
+        "rimraf": "^3.0.1",
+        "terser-webpack-plugin": "^2.3.3",
         "ts-loader": "^6.2.1",
         "typescript": "^3.7.5",
         "webpack": "^4.41.5",
