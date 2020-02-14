@@ -33,13 +33,13 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@activfinancial/cg-api": "^0.16.0",
+        "@activfinancial/cg-api": "^0.16.1",
         "@activfinancial/montage-viewer": "^0.3.49",
         "@activfinancial/news-viewer": "^0.5.18",
         "@activfinancial/option-chain": "^0.5.6",
         "@activfinancial/record-viewer": "^0.7.6",
-        "@fortawesome/fontawesome-free": "^5.12.0",
-        "openfin-cli": "2.0.12",
+        "@fortawesome/fontawesome-free": "^5.12.1",
+        "openfin-cli": "3.0.1",
         "react": "^16.12.0",
         "react-bootstrap": "^1.0.0-beta.16",
         "react-contextmenu": "^2.13.0",
@@ -47,7 +47,7 @@
         "uuid": "^3.4.0"
     },
     "devDependencies": {
-        "@types/jest": "^25.1.1",
+        "@types/jest": "^25.1.2",
         "@types/openfin": "^49.0.0",
         "@types/react-dom": "^16.9.5",
         "@types/uuid": "^3.4.7",
@@ -60,17 +60,17 @@
         "jest": "^25.1.0",
         "mini-css-extract-plugin": "^0.9.0",
         "node-sass": "^4.13.1",
-        "rimraf": "^3.0.1",
+        "rimraf": "^3.0.2",
         "sass-loader": "^8.0.2",
         "source-map-loader": "^0.2.4",
         "style-loader": "^1.1.3",
-        "terser-webpack-plugin": "^2.3.3",
-        "ts-jest": "^25.1.0",
+        "terser-webpack-plugin": "^2.3.5",
+        "ts-jest": "^25.2.0",
         "ts-loader": "^6.2.1",
         "typescript": "^3.7.5",
-        "webpack": "^4.41.5",
-        "webpack-cli": "^3.3.10",
-        "webpack-dev-server": "^3.10.1"
+        "webpack": "^4.41.6",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.10.3"
     },
     "jest": {
         "roots": [
